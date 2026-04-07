@@ -68306,7 +68306,7 @@ function UpgradeModal({
                 /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center w-10 h-10 rounded-xl bg-[#b900ff]/15 border border-[#b900ff]/40", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "h-5 w-5 text-[#b900ff]" }) }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-xl font-bold text-foreground", children: "Upgrade to Pro" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Unlock your full trading potential" })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "$9.99/month · Cancel anytime" })
                 ] })
               ] }),
               triggerReason && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-[#b900ff] bg-[#b900ff]/10 rounded-lg px-3 py-2 border border-[#b900ff]/20", children: triggerReason }),
@@ -75826,7 +75826,7 @@ const testimonials = [
     color: "#00ff41"
   },
   {
-    quote: "no cap the best $19 I spend every month. i used to screenshot trades and forget about them. now I have actual data to work with.",
+    quote: "no cap the best $9.99 I spend every month. i used to screenshot trades and forget about them. now I have actual data to work with.",
     name: "Priya K.",
     handle: "@priyaonfx",
     color: "#b900ff"
@@ -76169,7 +76169,7 @@ function PricingPage() {
                           )
                         ] }),
                         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-baseline gap-1 mt-3", children: [
-                          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-display text-5xl font-extrabold text-foreground", children: "$19" }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-display text-5xl font-extrabold text-foreground", children: "$9.99" }),
                           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground text-sm", children: "/month" })
                         ] }),
                         /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -76358,7 +76358,7 @@ function PricingPage() {
                     style: { boxShadow: "0 0 24px rgba(185,0,255,0.3)" },
                     children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "h-4 w-4" }),
-                      "Upgrade to Pro — $19/month"
+                      "Upgrade to Pro — $9.99/month"
                     ]
                   }
                 ),
@@ -78506,6 +78506,338 @@ function ChartUploadZone({
     error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-destructive-foreground bg-destructive/15 border border-destructive/30 rounded-lg px-3 py-1.5", children: error })
   ] });
 }
+const INSTRUMENTS = [
+  // Forex Majors
+  { symbol: "EUR/USD", category: "Forex Major" },
+  { symbol: "GBP/USD", category: "Forex Major" },
+  { symbol: "USD/JPY", category: "Forex Major" },
+  { symbol: "USD/CHF", category: "Forex Major" },
+  { symbol: "AUD/USD", category: "Forex Major" },
+  { symbol: "USD/CAD", category: "Forex Major" },
+  { symbol: "NZD/USD", category: "Forex Major" },
+  // Forex Minors
+  { symbol: "EUR/GBP", category: "Forex Minor" },
+  { symbol: "EUR/JPY", category: "Forex Minor" },
+  { symbol: "GBP/JPY", category: "Forex Minor" },
+  { symbol: "EUR/AUD", category: "Forex Minor" },
+  { symbol: "AUD/JPY", category: "Forex Minor" },
+  { symbol: "CHF/JPY", category: "Forex Minor" },
+  { symbol: "GBP/CHF", category: "Forex Minor" },
+  { symbol: "EUR/CHF", category: "Forex Minor" },
+  { symbol: "AUD/NZD", category: "Forex Minor" },
+  // Forex Exotics
+  { symbol: "USD/MXN", category: "Forex Exotic" },
+  { symbol: "USD/SGD", category: "Forex Exotic" },
+  { symbol: "USD/HKD", category: "Forex Exotic" },
+  { symbol: "USD/NOK", category: "Forex Exotic" },
+  { symbol: "USD/SEK", category: "Forex Exotic" },
+  { symbol: "USD/DKK", category: "Forex Exotic" },
+  { symbol: "USD/ZAR", category: "Forex Exotic" },
+  { symbol: "USD/TRY", category: "Forex Exotic" },
+  // Crypto
+  { symbol: "BTC/USD", category: "Crypto" },
+  { symbol: "ETH/USD", category: "Crypto" },
+  { symbol: "BTC/USDT", category: "Crypto" },
+  { symbol: "ETH/USDT", category: "Crypto" },
+  { symbol: "SOL/USD", category: "Crypto" },
+  { symbol: "SOL/USDT", category: "Crypto" },
+  { symbol: "BNB/USD", category: "Crypto" },
+  { symbol: "XRP/USD", category: "Crypto" },
+  { symbol: "DOGE/USD", category: "Crypto" },
+  { symbol: "ADA/USD", category: "Crypto" },
+  { symbol: "AVAX/USD", category: "Crypto" },
+  { symbol: "MATIC/USD", category: "Crypto" },
+  { symbol: "LTC/USD", category: "Crypto" },
+  { symbol: "DOT/USD", category: "Crypto" },
+  { symbol: "LINK/USD", category: "Crypto" },
+  // US Stocks & Indices
+  { symbol: "SPY", label: "S&P 500 ETF", category: "US Stock/Index" },
+  { symbol: "QQQ", label: "Nasdaq 100 ETF", category: "US Stock/Index" },
+  { symbol: "AAPL", label: "Apple", category: "US Stock/Index" },
+  { symbol: "TSLA", label: "Tesla", category: "US Stock/Index" },
+  { symbol: "NVDA", label: "NVIDIA", category: "US Stock/Index" },
+  { symbol: "MSFT", label: "Microsoft", category: "US Stock/Index" },
+  { symbol: "AMZN", label: "Amazon", category: "US Stock/Index" },
+  { symbol: "GOOGL", label: "Alphabet", category: "US Stock/Index" },
+  { symbol: "META", label: "Meta Platforms", category: "US Stock/Index" },
+  {
+    symbol: "AMD",
+    label: "Advanced Micro Devices",
+    category: "US Stock/Index"
+  },
+  { symbol: "NFLX", label: "Netflix", category: "US Stock/Index" },
+  { symbol: "SPX", label: "S&P 500 Index", category: "US Stock/Index" },
+  { symbol: "NDX", label: "Nasdaq 100 Index", category: "US Stock/Index" },
+  { symbol: "DJI", label: "Dow Jones", category: "US Stock/Index" },
+  { symbol: "VIX", label: "Volatility Index", category: "US Stock/Index" },
+  // Commodities
+  { symbol: "XAUUSD", label: "Gold", category: "Commodity" },
+  { symbol: "XAGUSD", label: "Silver", category: "Commodity" },
+  { symbol: "USOIL", label: "WTI Crude Oil", category: "Commodity" },
+  { symbol: "UKOIL", label: "Brent Crude Oil", category: "Commodity" },
+  { symbol: "NATGAS", label: "Natural Gas", category: "Commodity" },
+  // Futures
+  { symbol: "ES", label: "E-mini S&P 500", category: "Futures" },
+  { symbol: "NQ", label: "E-mini Nasdaq", category: "Futures" },
+  { symbol: "YM", label: "E-mini Dow", category: "Futures" },
+  { symbol: "RTY", label: "E-mini Russell 2000", category: "Futures" },
+  { symbol: "CL", label: "Crude Oil Futures", category: "Futures" },
+  { symbol: "GC", label: "Gold Futures", category: "Futures" },
+  { symbol: "SI", label: "Silver Futures", category: "Futures" }
+];
+const MAX_SUGGESTIONS = 8;
+function filterInstruments(query) {
+  const q2 = query.toLowerCase().trim();
+  if (!q2) return [];
+  return INSTRUMENTS.filter(
+    (inst) => {
+      var _a3;
+      return inst.symbol.toLowerCase().includes(q2) || ((_a3 = inst.label) == null ? void 0 : _a3.toLowerCase().includes(q2));
+    }
+  ).slice(0, MAX_SUGGESTIONS);
+}
+function PairAutocomplete({
+  value,
+  onChange,
+  onBlur,
+  placeholder = "EUR/USD, BTC/USDT…",
+  className,
+  hasError,
+  recentPairs = [],
+  id: id2,
+  "data-ocid": dataOcid
+}) {
+  const [open, setOpen] = reactExports.useState(false);
+  const [activeIndex, setActiveIndex] = reactExports.useState(-1);
+  const containerRef = reactExports.useRef(null);
+  const inputRef = reactExports.useRef(null);
+  const listRef = reactExports.useRef(null);
+  const catalogueSuggestions = filterInstruments(value);
+  const q2 = value.toLowerCase().trim();
+  const matchedRecent = recentPairs.filter((p2) => p2.toLowerCase().includes(q2) && q2.length > 0).slice(0, 3);
+  const recentSet = new Set(matchedRecent.map((r2) => r2.toUpperCase()));
+  const dedupedCatalogue = catalogueSuggestions.filter(
+    (inst) => !recentSet.has(inst.symbol.toUpperCase())
+  );
+  const recentItems = matchedRecent.map((r2) => ({
+    symbol: r2.toUpperCase(),
+    category: "Recent",
+    isRecent: true
+  }));
+  const allSuggestions = [
+    ...recentItems,
+    ...dedupedCatalogue
+  ].slice(0, MAX_SUGGESTIONS);
+  const showDropdown = open && allSuggestions.length > 0;
+  reactExports.useEffect(() => {
+    const handleClick = (e3) => {
+      var _a3;
+      if (!((_a3 = containerRef.current) == null ? void 0 : _a3.contains(e3.target))) {
+        setOpen(false);
+        setActiveIndex(-1);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+  reactExports.useEffect(() => {
+    if (activeIndex >= 0 && listRef.current) {
+      const item = listRef.current.children[activeIndex];
+      item == null ? void 0 : item.scrollIntoView({ block: "nearest" });
+    }
+  }, [activeIndex]);
+  const selectSuggestion = (symbol) => {
+    var _a3;
+    onChange(symbol);
+    setOpen(false);
+    setActiveIndex(-1);
+    (_a3 = inputRef.current) == null ? void 0 : _a3.focus();
+  };
+  const handleKeyDown = (e3) => {
+    if (!showDropdown) {
+      if (e3.key === "ArrowDown" && allSuggestions.length > 0) {
+        setOpen(true);
+        setActiveIndex(0);
+        e3.preventDefault();
+      }
+      return;
+    }
+    switch (e3.key) {
+      case "ArrowDown":
+        e3.preventDefault();
+        setActiveIndex((i) => Math.min(i + 1, allSuggestions.length - 1));
+        break;
+      case "ArrowUp":
+        e3.preventDefault();
+        setActiveIndex((i) => Math.max(i - 1, -1));
+        break;
+      case "Enter":
+        e3.preventDefault();
+        if (activeIndex >= 0 && allSuggestions[activeIndex]) {
+          selectSuggestion(allSuggestions[activeIndex].symbol);
+        }
+        break;
+      case "Escape":
+        setOpen(false);
+        setActiveIndex(-1);
+        break;
+      case "Tab":
+        setOpen(false);
+        setActiveIndex(-1);
+        break;
+    }
+  };
+  const categoryColor = {
+    Recent: "#00ffff",
+    "Forex Major": "#00ff41",
+    "Forex Minor": "#00ff41",
+    "Forex Exotic": "#00ff41",
+    Crypto: "#b900ff",
+    "US Stock/Index": "#00ffff",
+    Commodity: "#f59e0b",
+    Futures: "#f59e0b"
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { ref: containerRef, className: "relative", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Input,
+      {
+        ref: inputRef,
+        id: id2,
+        placeholder,
+        value,
+        role: "combobox",
+        "aria-haspopup": "listbox",
+        "aria-expanded": showDropdown,
+        "aria-autocomplete": "list",
+        "aria-controls": "pair-suggestions-list",
+        "aria-activedescendant": activeIndex >= 0 ? `pair-suggestion-${activeIndex}` : void 0,
+        onChange: (e3) => {
+          onChange(e3.target.value.toUpperCase());
+          setOpen(true);
+          setActiveIndex(-1);
+        },
+        onFocus: () => {
+          if (value.trim()) setOpen(true);
+        },
+        onBlur: () => {
+          setTimeout(() => {
+            onBlur == null ? void 0 : onBlur();
+          }, 150);
+        },
+        onKeyDown: handleKeyDown,
+        className: cn(
+          "bg-card/60 focus-visible:border-[#00ff41]/50 focus-visible:ring-[#00ff41]/20",
+          hasError && "border-destructive",
+          className
+        ),
+        autoComplete: "off",
+        "data-ocid": dataOcid
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: showDropdown && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      motion.div,
+      {
+        initial: { opacity: 0, y: -6, scale: 0.98 },
+        animate: { opacity: 1, y: 0, scale: 1 },
+        exit: { opacity: 0, y: -4, scale: 0.98 },
+        transition: { duration: 0.15, ease: "easeOut" },
+        className: "absolute z-50 left-0 right-0 mt-1.5 rounded-xl overflow-hidden",
+        style: {
+          background: "oklch(0.10 0.01 258 / 0.97)",
+          border: "1px solid rgba(0,255,65,0.22)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(0,255,65,0.08), 0 0 20px rgba(0,255,65,0.06)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)"
+        },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "ul",
+          {
+            ref: listRef,
+            id: "pair-suggestions-list",
+            className: "max-h-64 overflow-y-auto py-1.5",
+            children: [
+              matchedRecent.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "li",
+                {
+                  className: "px-3 pt-1 pb-0.5 text-[10px] font-bold uppercase tracking-widest",
+                  style: { color: "#00ffff", opacity: 0.6 },
+                  children: "Recent"
+                }
+              ),
+              allSuggestions.map((item, idx) => {
+                var _a3;
+                const isFirstNonRecent = !item.isRecent && (idx === 0 || ((_a3 = allSuggestions[idx - 1]) == null ? void 0 : _a3.isRecent));
+                const color2 = categoryColor[item.category] ?? "#888";
+                const isActive = idx === activeIndex;
+                return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "li",
+                  {
+                    id: `pair-suggestion-${idx}`,
+                    children: [
+                      isFirstNonRecent && matchedRecent.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "p",
+                        {
+                          className: "px-3 pt-2 pb-0.5 text-[10px] font-bold uppercase tracking-widest",
+                          style: { color: "#00ff41", opacity: 0.6 },
+                          children: "Suggestions"
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        "button",
+                        {
+                          type: "button",
+                          onMouseDown: (e3) => {
+                            e3.preventDefault();
+                            selectSuggestion(item.symbol);
+                          },
+                          onMouseEnter: () => setActiveIndex(idx),
+                          className: cn(
+                            "w-full flex items-center justify-between gap-3 px-3 py-2 text-left transition-colors duration-100",
+                            isActive ? "bg-[#00ff41]/10" : "hover:bg-white/5"
+                          ),
+                          "aria-label": `Select ${item.symbol}${item.label ? ` (${item.label})` : ""}`,
+                          "data-ocid": `pair-suggestion-${item.symbol.toLowerCase().replace(/\//g, "-")}`,
+                          children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5 min-w-0", children: [
+                              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                "span",
+                                {
+                                  className: "font-mono text-sm font-semibold",
+                                  style: {
+                                    color: isActive ? "#fff" : "rgba(255,255,255,0.9)"
+                                  },
+                                  children: item.symbol
+                                }
+                              ),
+                              item.label && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground truncate", children: item.label })
+                            ] }),
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(
+                              "span",
+                              {
+                                className: "text-[10px] font-semibold uppercase tracking-wide shrink-0 px-1.5 py-0.5 rounded-full",
+                                style: {
+                                  color: color2,
+                                  background: `${color2}18`,
+                                  border: `1px solid ${color2}30`
+                                },
+                                children: item.isRecent ? "Recent" : item.category
+                              }
+                            )
+                          ]
+                        }
+                      )
+                    ]
+                  },
+                  `${item.isRecent ? "recent" : "cat"}-${item.symbol}`
+                );
+              })
+            ]
+          }
+        )
+      }
+    ) })
+  ] });
+}
 function Textarea({ className, ...props }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "textarea",
@@ -78699,17 +79031,13 @@ function TradeForm({ onSuccess, onCancel }) {
                   /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-destructive-foreground", children: "*" })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Input,
+                  PairAutocomplete,
                   {
                     id: "pair",
-                    placeholder: "EUR/USD, BTC/USDT…",
                     value: form.pair,
-                    onChange: (e3) => set("pair", e3.target.value.toUpperCase()),
+                    onChange: (v2) => set("pair", v2),
                     onBlur: () => handleBlur("pair"),
-                    className: cn(
-                      "bg-card/60 focus-visible:border-[#00ff41]/50 focus-visible:ring-[#00ff41]/20",
-                      fieldError("pair") && "border-destructive"
-                    ),
+                    hasError: !!fieldError("pair"),
                     "data-ocid": "new-trade-pair"
                   }
                 ),

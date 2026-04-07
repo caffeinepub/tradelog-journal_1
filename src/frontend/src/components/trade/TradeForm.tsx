@@ -4,6 +4,7 @@ import { AnnotationCanvas } from "@/components/trade/AnnotationCanvas";
 import { ChartUploadZone } from "@/components/trade/ChartUploadZone";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { NeonButton } from "@/components/ui/NeonButton";
+import { PairAutocomplete } from "@/components/ui/PairAutocomplete";
 import { UpgradeModal } from "@/components/ui/UpgradeModal";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -267,16 +268,12 @@ export function TradeForm({ onSuccess, onCancel }: TradeFormProps) {
                 Pair / Instrument{" "}
                 <span className="text-destructive-foreground">*</span>
               </Label>
-              <Input
+              <PairAutocomplete
                 id="pair"
-                placeholder="EUR/USD, BTC/USDT…"
                 value={form.pair}
-                onChange={(e) => set("pair", e.target.value.toUpperCase())}
+                onChange={(v) => set("pair", v)}
                 onBlur={() => handleBlur("pair")}
-                className={cn(
-                  "bg-card/60 focus-visible:border-[#00ff41]/50 focus-visible:ring-[#00ff41]/20",
-                  fieldError("pair") && "border-destructive",
-                )}
+                hasError={!!fieldError("pair")}
                 data-ocid="new-trade-pair"
               />
               {fieldError("pair") && (

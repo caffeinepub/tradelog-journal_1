@@ -66,7 +66,7 @@ export function UpgradeModal({
               Upgrade to Pro
             </h2>
             <p className="text-xs text-muted-foreground">
-              Unlock your full trading potential
+              $9.99/month · Cancel anytime
             </p>
           </div>
         </div>

@@ -61,7 +61,7 @@ const testimonials = [
   },
   {
     quote:
-      "no cap the best $19 I spend every month. i used to screenshot trades and forget about them. now I have actual data to work with.",
+      "no cap the best $9.99 I spend every month. i used to screenshot trades and forget about them. now I have actual data to work with.",
     name: "Priya K.",
     handle: "@priyaonfx",
     color: "#b900ff",
@@ -414,7 +414,7 @@ function PricingPage() {
                   </div>
                   <div className="flex items-baseline gap-1 mt-3">
                     <span className="font-display text-5xl font-extrabold text-foreground">
-                      $19
+                      $9.99
                     </span>
                     <span className="text-muted-foreground text-sm">
                       /month
@@ -613,7 +613,7 @@ function PricingPage() {
               style={{ boxShadow: "0 0 24px rgba(185,0,255,0.3)" }}
             >
               <Zap className="h-4 w-4" />
-              Upgrade to Pro — $19/month
+              Upgrade to Pro — $9.99/month
             </NeonButton>
             <p className="text-xs text-muted-foreground mt-2">
               Payment integration coming soon · Questions?{" "}

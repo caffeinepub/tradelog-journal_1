@@ -2028,6 +2028,9 @@ video {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
 }
+.pb-0\.5 {
+  padding-bottom: 0.125rem;
+}
 .pb-3 {
   padding-bottom: 0.75rem;
 }
@@ -2066,6 +2069,9 @@ video {
 }
 .pt-0 {
   padding-top: 0px;
+}
+.pt-1 {
+  padding-top: 0.25rem;
 }
 .pt-2 {
   padding-top: 0.5rem;
@@ -2479,6 +2485,9 @@ video {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
+.duration-100 {
+  transition-duration: 100ms;
+}
 .duration-1000 {
   transition-duration: 1000ms;
 }
@@ -2535,6 +2544,9 @@ video {
 }
 .zoom-in-95 {
   --tw-enter-scale: .95;
+}
+.duration-100 {
+  animation-duration: 100ms;
 }
 .duration-1000 {
   animation-duration: 1000ms;
@@ -2900,6 +2912,10 @@ video {
 
 .hover\:bg-sidebar-accent:hover {
   background-color: oklch(var(--sidebar-accent));
+}
+
+.hover\:bg-white\/5:hover {
+  background-color: rgb(255 255 255 / 0.05);
 }
 
 .hover\:text-\[\#00ff41\]:hover {
