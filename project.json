@@ -1,0 +1,23 @@
+{
+  "overview": "TradeLog Journal is a Gen Z-styled trading journal web app with dark mode, neon accents, and glassmorphism panels. It lets traders log trades, import CSV histories, annotate chart screenshots, and analyze performance — with a freemium model that gates full analytics and unlimited entries behind a paid tier.",
+  "features": [
+    "Trade log with pair, direction, entry/exit price, P&L, R:R, strategy/mistake tags, session, notes",
+    "CSV import with column mapping wizard to retroactively populate trade history",
+    "Chart screenshot upload with annotation tools (arrows, boxes, lines, text labels)",
+    "Performance dashboard with win rate, P&L, drawdown, best/worst pairs, weekly/monthly summaries",
+    "Freemium model: 5 trades/day and 25 total cap for free, with teaser overlays and upgrade prompts",
+    "Stripe checkout placeholder for paid tier upgrade",
+    "Gen Z dark mode design with neon accents, glassmorphism, bold typography, smooth animations"
+  ],
+  "category": "productivity",
+  "tags": [
+    "trading",
+    "journal",
+    "finance",
+    "analytics",
+    "freemium",
+    "dark-mode",
+    "glassmorphism"
+  ],
+  "last_updated": "2026-04-07T22:21:03.830Z"
+}

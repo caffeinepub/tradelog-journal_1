@@ -1,0 +1,196 @@
+type UserPublic = 
+ record {
+   createdAt: Timestamp;
+   id: UserId;
+   stripeCustomerId: opt text;
+   tier: Tier;
+ };
+type UserId = principal;
+type TradePublic = 
+ record {
+   chartImageUrl: opt text;
+   createdAt: Timestamp;
+   direction: Direction;
+   entryDate: Timestamp;
+   entryPrice: float64;
+   exitDate: Timestamp;
+   exitPrice: float64;
+   id: TradeId;
+   marketCondition: MarketCondition;
+   mistakeTag: opt text;
+   notes: text;
+   pair: text;
+   pnl: float64;
+   riskReward: float64;
+   sessionTime: SessionTime;
+   strategyTag: text;
+   updatedAt: Timestamp;
+   userId: UserId;
+ };
+type TradeInput = 
+ record {
+   chartImageUrl: opt text;
+   direction: Direction;
+   entryDate: Timestamp;
+   entryPrice: float64;
+   exitDate: Timestamp;
+   exitPrice: float64;
+   marketCondition: MarketCondition;
+   mistakeTag: opt text;
+   notes: text;
+   pair: text;
+   sessionTime: SessionTime;
+   stopLoss: opt float64;
+   strategyTag: text;
+   takeProfit: opt float64;
+ };
+type TradeId = nat;
+type TradeFilter = 
+ record {
+   dateFrom: opt Timestamp;
+   dateTo: opt Timestamp;
+   mistakeTag: opt text;
+   pair: opt text;
+   sessionTime: opt SessionTime;
+   strategyTag: opt text;
+ };
+type Timestamp = int;
+type TierLimitStatus = 
+ record {
+   dailyCount: nat;
+   dailyLimit: nat;
+   dailyLimitReached: bool;
+   tier: Tier;
+   totalCount: nat;
+   totalLimit: nat;
+   totalLimitReached: bool;
+ };
+type Tier = 
+ variant {
+   FREE;
+   PAID;
+ };
+type StrategyStats = 
+ record {
+   tag: text;
+   totalPnl: float64;
+   tradeCount: nat;
+   winRate: float64;
+ };
+type SessionTime = 
+ variant {
+   ASIAN;
+   LONDON;
+   NY;
+   OTHER;
+ };
+type SessionStats = 
+ record {
+   session: SessionTime;
+   totalPnl: float64;
+   tradeCount: nat;
+   winRate: float64;
+ };
+type PnlDataPoint = 
+ record {
+   periodLabel: text;
+   pnl: float64;
+   tradeCount: nat;
+ };
+type PerformanceMetrics = 
+ record {
+   avgRiskReward: float64;
+   bestPair: opt text;
+   computedAt: Timestamp;
+   maxDrawdown: float64;
+   monthlyPnl: vec PnlDataPoint;
+   pnlByPair: vec PairStats;
+   pnlBySession: vec SessionStats;
+   pnlByStrategy: vec StrategyStats;
+   totalPnl: float64;
+   userId: UserId;
+   weeklyPnl: vec PnlDataPoint;
+   winRate: float64;
+   worstPair: opt text;
+ };
+type PairStats = 
+ record {
+   pair: text;
+   totalPnl: float64;
+   tradeCount: nat;
+   winRate: float64;
+ };
+type MarketCondition = 
+ variant {
+   CHOPPY;
+   OTHER;
+   RANGING;
+   TRENDING;
+   VOLATILE;
+ };
+type ImportStatus = 
+ variant {
+   COMPLETE;
+   FAILED;
+   PENDING;
+   PROCESSING;
+ };
+type ImportLineError = 
+ record {
+   lineNumber: nat;
+   reason: text;
+ };
+type ImportJobPublic = 
+ record {
+   completedAt: opt Timestamp;
+   createdAt: Timestamp;
+   errors: vec ImportLineError;
+   id: ImportJobId;
+   importedCount: nat;
+   status: ImportStatus;
+   userId: UserId;
+ };
+type ImportJobId = nat;
+type Direction = 
+ variant {
+   LONG;
+   SHORT;
+ };
+type CsvTradeRow = 
+ record {
+   chartImageUrl: opt text;
+   direction: Direction;
+   entryDate: Timestamp;
+   entryPrice: float64;
+   exitDate: Timestamp;
+   exitPrice: float64;
+   marketCondition: opt MarketCondition;
+   mistakeTag: opt text;
+   notes: opt text;
+   pair: text;
+   pnl: opt float64;
+   riskReward: opt float64;
+   sessionTime: opt SessionTime;
+   strategyTag: opt text;
+ };
+service : {
+  bulkImportTrades: (rows: vec CsvTradeRow) -> (ImportJobPublic);
+  computeMetrics: () -> (PerformanceMetrics);
+  createTrade: (input: TradeInput) ->
+   (variant {
+      limitReached: text;
+      ok: TradePublic;
+    });
+  deleteTrade: (tradeId: TradeId) -> (bool);
+  getImportJob: (jobId: ImportJobId) -> (opt ImportJobPublic) query;
+  getMetrics: () -> (opt PerformanceMetrics) query;
+  getOrCreateUser: () -> (UserPublic);
+  getTrade: (tradeId: TradeId) -> (opt TradePublic) query;
+  getTradeLimitStatus: () -> (TierLimitStatus) query;
+  getTrades: (filter: TradeFilter) -> (vec TradePublic) query;
+  getUserTier: () -> (Tier) query;
+  saveChartAnnotation: (tradeId: TradeId, imageUrl: text) ->
+   (opt TradePublic);
+  updateTrade: (tradeId: TradeId, input: TradeInput) -> (opt TradePublic);
+  upgradeToPaid: () -> (UserPublic);
+}

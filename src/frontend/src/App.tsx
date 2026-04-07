@@ -1,0 +1,33 @@
+import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { Route as RootRoute } from "./routes/__root";
+import { Route as AnalyticsRoute } from "./routes/analytics/index";
+import { Route as ImportRoute } from "./routes/import/index";
+import { Route as IndexRoute } from "./routes/index";
+import { Route as LoginRoute } from "./routes/login/index";
+import { Route as PricingRoute } from "./routes/pricing/index";
+import { Route as TradesIdRoute } from "./routes/trades/$id";
+import { Route as TradesIndexRoute } from "./routes/trades/index";
+import { Route as TradesNewRoute } from "./routes/trades/new";
+
+const routeTree = RootRoute.addChildren([
+  IndexRoute,
+  TradesNewRoute,
+  TradesIdRoute,
+  TradesIndexRoute,
+  ImportRoute,
+  AnalyticsRoute,
+  PricingRoute,
+  LoginRoute,
+]);
+
+const router = createRouter({ routeTree });
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
+
+export default function App() {
+  return <RouterProvider router={router} />;
+}

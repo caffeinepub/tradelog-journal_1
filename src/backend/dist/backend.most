@@ -1,0 +1,118 @@
+// Version: 1.0.0
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type Direction__568662548 = {#LONG; #SHORT};
+type ImportJobId__1038423830 = Nat;
+type ImportJob__16069439 =
+  {
+    var completedAt : ?Timestamp__301639476;
+    createdAt : Timestamp__301639476;
+    var errors : [ImportLineError__1043284429];
+    id : ImportJobId__1038423830;
+    var importedCount : Nat;
+    var status : ImportStatus__409421756;
+    userId : UserId__158757552
+  };
+type ImportLineError__1043284429 = {lineNumber : Nat; reason : Text};
+type ImportStatus__409421756 = {#COMPLETE; #FAILED; #PENDING; #PROCESSING};
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type MarketCondition__984540245 =
+  {#CHOPPY; #OTHER; #RANGING; #TRENDING; #VOLATILE};
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type PairStats__151252442 =
+  {pair : Text; totalPnl : Float; tradeCount : Nat; winRate : Float};
+type PerformanceMetrics__323855633 =
+  {
+    avgRiskReward : Float;
+    bestPair : ?Text;
+    computedAt : Timestamp__301639476;
+    maxDrawdown : Float;
+    monthlyPnl : [PnlDataPoint__740969442];
+    pnlByPair : [PairStats__151252442];
+    pnlBySession : [SessionStats__196489802];
+    pnlByStrategy : [StrategyStats__772065330];
+    totalPnl : Float;
+    userId : UserId__158757552;
+    weeklyPnl : [PnlDataPoint__740969442];
+    winRate : Float;
+    worstPair : ?Text
+  };
+type PnlDataPoint__740969442 =
+  {periodLabel : Text; pnl : Float; tradeCount : Nat};
+type SessionStats__196489802 =
+  {
+    session : SessionTime__718267856;
+    totalPnl : Float;
+    tradeCount : Nat;
+    winRate : Float
+  };
+type SessionTime__718267856 = {#ASIAN; #LONDON; #NY; #OTHER};
+type StrategyStats__772065330 =
+  {tag : Text; totalPnl : Float; tradeCount : Nat; winRate : Float};
+type Tier__337424587 = {#FREE; #PAID};
+type Timestamp__301639476 = Int;
+type TradeId__674499473 = Nat;
+type Trade__612828401 =
+  {
+    var chartImageUrl : ?Text;
+    createdAt : Timestamp__301639476;
+    var direction : Direction__568662548;
+    entryDate : Timestamp__301639476;
+    var entryPrice : Float;
+    exitDate : Timestamp__301639476;
+    var exitPrice : Float;
+    id : TradeId__674499473;
+    var marketCondition : MarketCondition__984540245;
+    var mistakeTag : ?Text;
+    var notes : Text;
+    var pair : Text;
+    var pnl : Float;
+    var riskReward : Float;
+    var sessionTime : SessionTime__718267856;
+    var strategyTag : Text;
+    var updatedAt : Timestamp__301639476;
+    userId : UserId__158757552
+  };
+type UserId__158757552 = Principal;
+type User__933515552 =
+  {
+    createdAt : Timestamp__301639476;
+    id : UserId__158757552;
+    var stripeCustomerId : ?Text;
+    var tier : Tier__337424587
+  };
+actor {
+  stable dailyCounts :
+    {var root : Node__46230540<Text, Nat>; var size : Nat__490723111};
+  stable importJobs :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?ImportJob__16069439]];
+      var elementIndex : Nat__490723111
+    };
+  stable metricsCache :
+    {
+      var root :
+        Node__46230540<UserId__158757552, PerformanceMetrics__323855633>;
+      var size : Nat__490723111
+    };
+  stable nextImportJobId : [var Nat];
+  stable nextTradeId : [var Nat];
+  stable trades :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Trade__612828401]];
+      var elementIndex : Nat__490723111
+    };
+  stable users :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?User__933515552]];
+      var elementIndex : Nat__490723111
+    }
+};
