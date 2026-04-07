@@ -65,14 +65,14 @@ const METRIC_CONFIGS: MetricConfig[] = [
   },
 ];
 
-// Sample fallback for skeleton/blur effect
-const SAMPLE_METRICS: PerformanceMetrics = {
-  winRate: 0.685,
-  totalPnl: 2920,
-  maxDrawdown: 205,
-  bestPair: "EUR/USD",
-  worstPair: "GBP/USD",
-  avgRiskReward: 2.3,
+// Zero-value metrics for empty state (no fake data)
+const EMPTY_METRICS: PerformanceMetrics = {
+  winRate: 0,
+  totalPnl: 0,
+  maxDrawdown: 0,
+  bestPair: undefined,
+  worstPair: undefined,
+  avgRiskReward: 0,
   pnlByPair: [],
   pnlByStrategy: [],
   pnlBySession: [],
@@ -137,7 +137,7 @@ export function MetricsCards({
   isFree,
   onUpgrade,
 }: MetricsCardsProps) {
-  const data = metrics ?? SAMPLE_METRICS;
+  const data = metrics ?? EMPTY_METRICS;
 
   const grid = (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">

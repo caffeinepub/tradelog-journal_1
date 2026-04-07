@@ -2,11 +2,7 @@ import { createActor } from "@/backend";
 import type { PairStats } from "@/backend.d";
 import { MetricsCards } from "@/components/analytics/MetricsCards";
 import { PairBreakdown } from "@/components/analytics/PairBreakdown";
-import {
-  PnlBarChart,
-  SAMPLE_MONTHLY,
-  SAMPLE_WEEKLY,
-} from "@/components/analytics/PnlBarChart";
+import { PnlBarChart } from "@/components/analytics/PnlBarChart";
 import { SessionBreakdown } from "@/components/analytics/SessionBreakdown";
 import { BlurredTeaser } from "@/components/ui/BlurredTeaser";
 import { GlassCard } from "@/components/ui/GlassCard";
@@ -22,7 +18,6 @@ import { useState } from "react";
 import {
   Bar,
   BarChart,
-  Cell,
   Legend,
   ResponsiveContainer,
   Tooltip,
@@ -56,15 +51,6 @@ const TOOLTIP_STYLE = {
 
 const AXIS_TICK = { fill: "#6b7280", fontSize: 11 };
 
-// Win/loss per pair sample data for free users
-const SAMPLE_WIN_LOSS: Array<{ pair: string; wins: number; losses: number }> = [
-  { pair: "EUR/USD", wins: 8, losses: 4 },
-  { pair: "NQ", wins: 5, losses: 3 },
-  { pair: "XAU/USD", wins: 7, losses: 3 },
-  { pair: "GBP/JPY", wins: 4, losses: 3 },
-  { pair: "BTC/USDT", wins: 2, losses: 3 },
-];
-
 function WinLossChart({
   pairStats,
   isFree,
@@ -81,53 +67,62 @@ function WinLossChart({
           wins: Math.round(Number(p.tradeCount) * p.winRate),
           losses: Math.round(Number(p.tradeCount) * (1 - p.winRate)),
         }))
-      : SAMPLE_WIN_LOSS;
+      : [];
 
   const chart = (
     <GlassCard>
       <h2 className="font-semibold text-xs text-muted-foreground uppercase tracking-widest mb-4">
         Win / Loss per Pair
       </h2>
-      <ResponsiveContainer width="100%" height={200}>
-        <BarChart
-          data={isFree ? SAMPLE_WIN_LOSS : data}
-          margin={{ top: 4, right: 4, bottom: 0, left: 0 }}
-        >
-          <XAxis
-            dataKey="pair"
-            tick={AXIS_TICK}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis
-            tick={AXIS_TICK}
-            axisLine={false}
-            tickLine={false}
-            width={28}
-          />
-          <Tooltip
-            contentStyle={TOOLTIP_STYLE}
-            cursor={{ fill: "oklch(0.2 0 0 / 0.5)" }}
-          />
-          <Legend wrapperStyle={{ fontSize: "11px", color: "#9ca3af" }} />
-          <Bar
-            dataKey="wins"
-            name="Wins"
-            fill="#00ff41"
-            fillOpacity={0.8}
-            radius={[3, 3, 0, 0]}
-            maxBarSize={24}
-          />
-          <Bar
-            dataKey="losses"
-            name="Losses"
-            fill="#f87171"
-            fillOpacity={0.8}
-            radius={[3, 3, 0, 0]}
-            maxBarSize={24}
-          />
-        </BarChart>
-      </ResponsiveContainer>
+      {data.length === 0 ? (
+        <div className="h-[200px] flex flex-col items-center justify-center gap-2">
+          <p className="text-sm text-muted-foreground">No data available yet</p>
+          <p className="text-xs text-muted-foreground/60">
+            Log trades to see your win/loss breakdown
+          </p>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart
+            data={data}
+            margin={{ top: 4, right: 4, bottom: 0, left: 0 }}
+          >
+            <XAxis
+              dataKey="pair"
+              tick={AXIS_TICK}
+              axisLine={false}
+              tickLine={false}
+            />
+            <YAxis
+              tick={AXIS_TICK}
+              axisLine={false}
+              tickLine={false}
+              width={28}
+            />
+            <Tooltip
+              contentStyle={TOOLTIP_STYLE}
+              cursor={{ fill: "oklch(0.2 0 0 / 0.5)" }}
+            />
+            <Legend wrapperStyle={{ fontSize: "11px", color: "#9ca3af" }} />
+            <Bar
+              dataKey="wins"
+              name="Wins"
+              fill="#00ff41"
+              fillOpacity={0.8}
+              radius={[3, 3, 0, 0]}
+              maxBarSize={24}
+            />
+            <Bar
+              dataKey="losses"
+              name="Losses"
+              fill="#f87171"
+              fillOpacity={0.8}
+              radius={[3, 3, 0, 0]}
+              maxBarSize={24}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
     </GlassCard>
   );
 
@@ -279,16 +274,14 @@ function AnalyticsPage() {
         <PnlBarChart
           data={metrics?.weeklyPnl}
           title="Weekly P&L"
-          sampleData={SAMPLE_WEEKLY}
           isFree={isFree}
-          teaserText="Your best week was 3x your worst — unlock weekly P&L to see the full picture"
+          teaserText="Unlock weekly P&L to see your performance trends over time"
           onUpgrade={() => setUpgradeOpen(true)}
           variant="weekly"
         />
         <PnlBarChart
           data={metrics?.monthlyPnl}
           title="Monthly P&L"
-          sampleData={SAMPLE_MONTHLY}
           isFree={isFree}
           teaserText="Monthly P&L breakdown reveals your best months and growth trajectory — unlock to see more"
           onUpgrade={() => setUpgradeOpen(true)}

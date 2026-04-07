@@ -21,22 +21,6 @@ const TOOLTIP_STYLE = {
 
 const AXIS_TICK = { fill: "#6b7280", fontSize: 11 };
 
-const SAMPLE_PAIRS: PairStats[] = [
-  { pair: "EUR/USD", totalPnl: 845, winRate: 0.72, tradeCount: BigInt(12) },
-  { pair: "NQ", totalPnl: 720, winRate: 0.65, tradeCount: BigInt(8) },
-  { pair: "XAU/USD", totalPnl: 580, winRate: 0.68, tradeCount: BigInt(10) },
-  { pair: "GBP/JPY", totalPnl: 380, winRate: 0.6, tradeCount: BigInt(7) },
-  { pair: "BTC/USDT", totalPnl: -125, winRate: 0.4, tradeCount: BigInt(5) },
-  { pair: "GBP/USD", totalPnl: -210, winRate: 0.38, tradeCount: BigInt(6) },
-];
-
-const SAMPLE_STRATEGIES: StrategyStats[] = [
-  { tag: "Breakout", totalPnl: 1240, winRate: 0.71, tradeCount: BigInt(15) },
-  { tag: "Reversal", totalPnl: 620, winRate: 0.62, tradeCount: BigInt(11) },
-  { tag: "Scalp", totalPnl: -180, winRate: 0.45, tradeCount: BigInt(9) },
-  { tag: "Trend Follow", totalPnl: 860, winRate: 0.67, tradeCount: BigInt(13) },
-];
-
 interface PairBreakdownProps {
   pairStats: PairStats[] | undefined;
   strategyStats: StrategyStats[] | undefined;
@@ -44,7 +28,25 @@ interface PairBreakdownProps {
   onUpgrade: () => void;
 }
 
+function EmptyChart({ title }: { title: string }) {
+  return (
+    <GlassCard>
+      <h2 className="font-semibold text-xs text-muted-foreground uppercase tracking-widest mb-4">
+        {title}
+      </h2>
+      <div className="h-[220px] flex flex-col items-center justify-center gap-2">
+        <p className="text-sm text-muted-foreground">No data available yet</p>
+        <p className="text-xs text-muted-foreground/60">
+          Log trades to see your breakdown
+        </p>
+      </div>
+    </GlassCard>
+  );
+}
+
 function PairChart({ data }: { data: PairStats[] }) {
+  if (!data.length) return <EmptyChart title="P&L by Pair" />;
+
   return (
     <GlassCard>
       <h2 className="font-semibold text-xs text-muted-foreground uppercase tracking-widest mb-4">
@@ -100,6 +102,8 @@ function PairChart({ data }: { data: PairStats[] }) {
 
 function StrategyChart({ data }: { data: StrategyStats[] }) {
   const STRATEGY_COLORS = ["#00ff41", "#00ffff", "#b900ff", "#f59e0b"];
+
+  if (!data.length) return <EmptyChart title="P&L by Strategy" />;
 
   return (
     <GlassCard>
@@ -158,26 +162,20 @@ export function PairBreakdown({
   isFree,
   onUpgrade,
 }: PairBreakdownProps) {
-  const pData = pairStats && pairStats.length > 0 ? pairStats : SAMPLE_PAIRS;
-  const sData =
-    strategyStats && strategyStats.length > 0
-      ? strategyStats
-      : SAMPLE_STRATEGIES;
-
   if (isFree) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <BlurredTeaser
-          teaserText="You lose most on GBP/USD — want to know why? Unlock pair analytics"
+          teaserText="See which pairs you profit from most — unlock pair analytics"
           onUpgrade={onUpgrade}
         >
-          <PairChart data={SAMPLE_PAIRS} />
+          <EmptyChart title="P&L by Pair" />
         </BlurredTeaser>
         <BlurredTeaser
-          teaserText="Your Breakout strategy outperforms all others — unlock to see the full breakdown"
+          teaserText="Discover which strategies work best for you — unlock to see the full breakdown"
           onUpgrade={onUpgrade}
         >
-          <StrategyChart data={SAMPLE_STRATEGIES} />
+          <EmptyChart title="P&L by Strategy" />
         </BlurredTeaser>
       </div>
     );
@@ -185,10 +183,8 @@ export function PairBreakdown({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-      <PairChart data={pData} />
-      <StrategyChart data={sData} />
+      <PairChart data={pairStats ?? []} />
+      <StrategyChart data={strategyStats ?? []} />
     </div>
   );
 }
-
-export { SAMPLE_PAIRS };

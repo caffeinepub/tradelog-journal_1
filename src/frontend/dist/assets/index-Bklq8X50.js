@@ -45657,13 +45657,13 @@ const METRIC_CONFIGS = [
     icon: Award
   }
 ];
-const SAMPLE_METRICS = {
-  winRate: 0.685,
-  totalPnl: 2920,
-  maxDrawdown: 205,
-  bestPair: "EUR/USD",
-  worstPair: "GBP/USD",
-  avgRiskReward: 2.3,
+const EMPTY_METRICS = {
+  winRate: 0,
+  totalPnl: 0,
+  maxDrawdown: 0,
+  bestPair: void 0,
+  worstPair: void 0,
+  avgRiskReward: 0,
   pnlByPair: [],
   pnlByStrategy: [],
   pnlBySession: [],
@@ -45721,7 +45721,7 @@ function MetricsCards({
   isFree,
   onUpgrade
 }) {
-  const data = metrics ?? SAMPLE_METRICS;
+  const data = metrics ?? EMPTY_METRICS;
   const grid = /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3", children: METRIC_CONFIGS.map((config2, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
     MetricCard$1,
     {
@@ -67840,21 +67840,17 @@ const TOOLTIP_STYLE$3 = {
   fontSize: "12px"
 };
 const AXIS_TICK$3 = { fill: "#6b7280", fontSize: 11 };
-const SAMPLE_PAIRS = [
-  { pair: "EUR/USD", totalPnl: 845, winRate: 0.72, tradeCount: BigInt(12) },
-  { pair: "NQ", totalPnl: 720, winRate: 0.65, tradeCount: BigInt(8) },
-  { pair: "XAU/USD", totalPnl: 580, winRate: 0.68, tradeCount: BigInt(10) },
-  { pair: "GBP/JPY", totalPnl: 380, winRate: 0.6, tradeCount: BigInt(7) },
-  { pair: "BTC/USDT", totalPnl: -125, winRate: 0.4, tradeCount: BigInt(5) },
-  { pair: "GBP/USD", totalPnl: -210, winRate: 0.38, tradeCount: BigInt(6) }
-];
-const SAMPLE_STRATEGIES = [
-  { tag: "Breakout", totalPnl: 1240, winRate: 0.71, tradeCount: BigInt(15) },
-  { tag: "Reversal", totalPnl: 620, winRate: 0.62, tradeCount: BigInt(11) },
-  { tag: "Scalp", totalPnl: -180, winRate: 0.45, tradeCount: BigInt(9) },
-  { tag: "Trend Follow", totalPnl: 860, winRate: 0.67, tradeCount: BigInt(13) }
-];
+function EmptyChart({ title }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-xs text-muted-foreground uppercase tracking-widest mb-4", children: title }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-[220px] flex flex-col items-center justify-center gap-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "No data available yet" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground/60", children: "Log trades to see your breakdown" })
+    ] })
+  ] });
+}
 function PairChart({ data }) {
+  if (!data.length) return /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyChart, { title: "P&L by Pair" });
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-xs text-muted-foreground uppercase tracking-widest mb-4", children: "P&L by Pair" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(ResponsiveContainer, { width: "100%", height: 220, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -67914,6 +67910,7 @@ function PairChart({ data }) {
 }
 function StrategyChart({ data }) {
   const STRATEGY_COLORS = ["#00ff41", "#00ffff", "#b900ff", "#f59e0b"];
+  if (!data.length) return /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyChart, { title: "P&L by Strategy" });
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-xs text-muted-foreground uppercase tracking-widest mb-4", children: "P&L by Strategy" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(ResponsiveContainer, { width: "100%", height: 220, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(BarChart, { data, margin: { top: 4, right: 4, bottom: 0, left: 0 }, children: [
@@ -67967,31 +67964,29 @@ function PairBreakdown({
   isFree,
   onUpgrade
 }) {
-  const pData = pairStats && pairStats.length > 0 ? pairStats : SAMPLE_PAIRS;
-  const sData = strategyStats && strategyStats.length > 0 ? strategyStats : SAMPLE_STRATEGIES;
   if (isFree) {
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-5", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         BlurredTeaser,
         {
-          teaserText: "You lose most on GBP/USD — want to know why? Unlock pair analytics",
+          teaserText: "See which pairs you profit from most — unlock pair analytics",
           onUpgrade,
-          children: /* @__PURE__ */ jsxRuntimeExports.jsx(PairChart, { data: SAMPLE_PAIRS })
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyChart, { title: "P&L by Pair" })
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         BlurredTeaser,
         {
-          teaserText: "Your Breakout strategy outperforms all others — unlock to see the full breakdown",
+          teaserText: "Discover which strategies work best for you — unlock to see the full breakdown",
           onUpgrade,
-          children: /* @__PURE__ */ jsxRuntimeExports.jsx(StrategyChart, { data: SAMPLE_STRATEGIES })
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyChart, { title: "P&L by Strategy" })
         }
       )
     ] });
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-5", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(PairChart, { data: pData }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(StrategyChart, { data: sData })
+    /* @__PURE__ */ jsxRuntimeExports.jsx(PairChart, { data: pairStats ?? [] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(StrategyChart, { data: strategyStats ?? [] })
   ] });
 }
 const TOOLTIP_STYLE$2 = {
@@ -68002,26 +67997,20 @@ const TOOLTIP_STYLE$2 = {
   fontSize: "12px"
 };
 const AXIS_TICK$2 = { fill: "#6b7280", fontSize: 11 };
-const SAMPLE_WEEKLY = [
-  { periodLabel: "W1", pnl: 480, tradeCount: BigInt(5) },
-  { periodLabel: "W2", pnl: -120, tradeCount: BigInt(4) },
-  { periodLabel: "W3", pnl: 720, tradeCount: BigInt(7) },
-  { periodLabel: "W4", pnl: 340, tradeCount: BigInt(6) },
-  { periodLabel: "W5", pnl: -80, tradeCount: BigInt(3) },
-  { periodLabel: "W6", pnl: 920, tradeCount: BigInt(8) }
-];
-const SAMPLE_MONTHLY = [
-  { periodLabel: "Jan", pnl: 1280, tradeCount: BigInt(22) },
-  { periodLabel: "Feb", pnl: -340, tradeCount: BigInt(18) },
-  { periodLabel: "Mar", pnl: 2100, tradeCount: BigInt(31) },
-  { periodLabel: "Apr", pnl: 760, tradeCount: BigInt(24) },
-  { periodLabel: "May", pnl: -180, tradeCount: BigInt(15) },
-  { periodLabel: "Jun", pnl: 1450, tradeCount: BigInt(28) }
-];
+function EmptyChartBody({ title }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-xs text-muted-foreground uppercase tracking-widest mb-4", children: title }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-[200px] flex flex-col items-center justify-center gap-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "No P&L data yet" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground/60", children: "Log trades to see your performance chart" })
+    ] })
+  ] });
+}
 function ChartBody({
   data,
   title
 }) {
+  if (!data.length) return /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyChartBody, { title });
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-xs text-muted-foreground uppercase tracking-widest mb-4", children: title }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(ResponsiveContainer, { width: "100%", height: 200, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(BarChart, { data, margin: { top: 4, right: 4, bottom: 0, left: 0 }, children: [
@@ -68070,16 +68059,14 @@ function ChartBody({
 function PnlBarChart({
   data,
   title,
-  sampleData,
   isFree,
   teaserText,
   onUpgrade
 }) {
   if (isFree) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(BlurredTeaser, { teaserText, onUpgrade, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ChartBody, { data: sampleData, title }) });
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(BlurredTeaser, { teaserText, onUpgrade, children: /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyChartBody, { title }) });
   }
-  const chartData = data && data.length > 0 ? data : sampleData;
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(ChartBody, { data: chartData, title });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(ChartBody, { data: data ?? [], title });
 }
 const TOOLTIP_STYLE$1 = {
   background: "oklch(0.14 0 0)",
@@ -68095,40 +68082,14 @@ const SESSION_COLORS = {
   ASIAN: "#b900ff",
   OTHER: "#f59e0b"
 };
-const SAMPLE_SESSIONS = [
-  {
-    session: "LONDON",
-    totalPnl: 1205,
-    winRate: 0.73,
-    tradeCount: BigInt(18)
-  },
-  {
-    session: "NY",
-    totalPnl: 595,
-    winRate: 0.62,
-    tradeCount: BigInt(14)
-  },
-  {
-    session: "ASIAN",
-    totalPnl: -80,
-    winRate: 0.44,
-    tradeCount: BigInt(8)
-  },
-  {
-    session: "OTHER",
-    totalPnl: 200,
-    winRate: 0.55,
-    tradeCount: BigInt(5)
-  }
-];
 function getBestSession$1(sessions) {
-  if (!sessions.length) return "London";
+  if (!sessions.length) return "—";
   const best = sessions.reduce((a2, b2) => a2.totalPnl > b2.totalPnl ? a2 : b2);
   const label = String(best.session);
   return label.charAt(0) + label.slice(1).toLowerCase();
 }
 function getWorstSession(sessions) {
-  if (!sessions.length) return "Asian";
+  if (!sessions.length) return "—";
   const worst = sessions.reduce((a2, b2) => a2.totalPnl < b2.totalPnl ? a2 : b2);
   const label = String(worst.session);
   return label.charAt(0) + label.slice(1).toLowerCase();
@@ -68263,25 +68224,33 @@ function SessionChart({ data }) {
     )) })
   ] });
 }
+function EmptySessionChart() {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { className: "flex flex-col items-center justify-center py-14 gap-3 text-center", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "No session data available" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground/60", children: "Log trades to see your session breakdown" })
+  ] });
+}
 function SessionBreakdown({
   sessions,
   isFree,
   onUpgrade
 }) {
-  const data = sessions && sessions.length > 0 ? sessions : SAMPLE_SESSIONS;
-  const bestSession = getBestSession$1(SAMPLE_SESSIONS);
-  const worstSession = getWorstSession(SAMPLE_SESSIONS);
+  const data = sessions && sessions.length > 0 ? sessions : [];
+  const bestSession = getBestSession$1(data);
+  const worstSession = getWorstSession(data);
+  const teaserText = bestSession !== "—" ? `Your best session is ${bestSession} — upgrade to unlock details. You underperform most during ${worstSession} session.` : "Log trades to unlock your session performance breakdown";
   if (isFree) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(
       BlurredTeaser,
       {
-        teaserText: `Your best session is ${bestSession} mornings — upgrade to unlock details. You underperform most during ${worstSession} session.`,
+        teaserText,
         ctaText: "Unlock Session Analytics",
         onUpgrade,
-        children: /* @__PURE__ */ jsxRuntimeExports.jsx(SessionChart, { data: SAMPLE_SESSIONS })
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(EmptySessionChart, {})
       }
     );
   }
+  if (!data.length) return /* @__PURE__ */ jsxRuntimeExports.jsx(EmptySessionChart, {});
   return /* @__PURE__ */ jsxRuntimeExports.jsx(SessionChart, { data });
 }
 const proFeatures$1 = [
@@ -68406,13 +68375,6 @@ const TOOLTIP_STYLE = {
   fontSize: "12px"
 };
 const AXIS_TICK = { fill: "#6b7280", fontSize: 11 };
-const SAMPLE_WIN_LOSS = [
-  { pair: "EUR/USD", wins: 8, losses: 4 },
-  { pair: "NQ", wins: 5, losses: 3 },
-  { pair: "XAU/USD", wins: 7, losses: 3 },
-  { pair: "GBP/JPY", wins: 4, losses: 3 },
-  { pair: "BTC/USDT", wins: 2, losses: 3 }
-];
 function WinLossChart({
   pairStats,
   isFree,
@@ -68422,13 +68384,16 @@ function WinLossChart({
     pair: p2.pair,
     wins: Math.round(Number(p2.tradeCount) * p2.winRate),
     losses: Math.round(Number(p2.tradeCount) * (1 - p2.winRate))
-  })) : SAMPLE_WIN_LOSS;
+  })) : [];
   const chart = /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-xs text-muted-foreground uppercase tracking-widest mb-4", children: "Win / Loss per Pair" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(ResponsiveContainer, { width: "100%", height: 200, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    data.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "h-[200px] flex flex-col items-center justify-center gap-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "No data available yet" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground/60", children: "Log trades to see your win/loss breakdown" })
+    ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(ResponsiveContainer, { width: "100%", height: 200, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
       BarChart,
       {
-        data: isFree ? SAMPLE_WIN_LOSS : data,
+        data,
         margin: { top: 4, right: 4, bottom: 0, left: 0 },
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -68630,9 +68595,8 @@ function AnalyticsPage() {
         {
           data: metrics == null ? void 0 : metrics.weeklyPnl,
           title: "Weekly P&L",
-          sampleData: SAMPLE_WEEKLY,
           isFree,
-          teaserText: "Your best week was 3x your worst — unlock weekly P&L to see the full picture",
+          teaserText: "Unlock weekly P&L to see your performance trends over time",
           onUpgrade: () => setUpgradeOpen(true),
           variant: "weekly"
         }
@@ -68642,7 +68606,6 @@ function AnalyticsPage() {
         {
           data: metrics == null ? void 0 : metrics.monthlyPnl,
           title: "Monthly P&L",
-          sampleData: SAMPLE_MONTHLY,
           isFree,
           teaserText: "Monthly P&L breakdown reveals your best months and growth trajectory — unlock to see more",
           onUpgrade: () => setUpgradeOpen(true),
@@ -74954,92 +74917,15 @@ const Route$5 = createRoute({
   path: "/",
   component: DashboardPage
 });
-const SAMPLE_TRADES = [
-  {
-    id: "1",
-    pair: "EUR/USD",
-    direction: "LONG",
-    entryPrice: 1.0821,
-    exitPrice: 1.0865,
-    pnl: 245,
-    riskReward: 2.1,
-    strategyTag: "Breakout",
-    sessionTime: "LONDON",
-    marketCondition: "TRENDING",
-    entryDate: BigInt(Date.now() - 36e5),
-    exitDate: BigInt(Date.now() - 18e5),
-    createdAt: BigInt(Date.now() - 36e5)
-  },
-  {
-    id: "2",
-    pair: "BTC/USDT",
-    direction: "SHORT",
-    entryPrice: 67800,
-    exitPrice: 68250,
-    pnl: -125,
-    riskReward: -0.8,
-    strategyTag: "Reversal",
-    sessionTime: "NY",
-    marketCondition: "VOLATILE",
-    entryDate: BigInt(Date.now() - 72e5),
-    exitDate: BigInt(Date.now() - 54e5),
-    createdAt: BigInt(Date.now() - 72e5)
-  },
-  {
-    id: "3",
-    pair: "GBP/JPY",
-    direction: "LONG",
-    entryPrice: 192.45,
-    exitPrice: 193.12,
-    pnl: 380,
-    riskReward: 3.4,
-    strategyTag: "Trend Follow",
-    sessionTime: "LONDON",
-    marketCondition: "TRENDING",
-    entryDate: BigInt(Date.now() - 864e5),
-    exitDate: BigInt(Date.now() - 828e5),
-    createdAt: BigInt(Date.now() - 864e5)
-  },
-  {
-    id: "4",
-    pair: "NQ",
-    direction: "LONG",
-    entryPrice: 19420,
-    exitPrice: 19580,
-    pnl: 720,
-    riskReward: 4.2,
-    strategyTag: "Momentum",
-    sessionTime: "NY",
-    marketCondition: "TRENDING",
-    entryDate: BigInt(Date.now() - 9e7),
-    exitDate: BigInt(Date.now() - 864e5),
-    createdAt: BigInt(Date.now() - 9e7)
-  },
-  {
-    id: "5",
-    pair: "XAU/USD",
-    direction: "SHORT",
-    entryPrice: 2318.5,
-    exitPrice: 2305.2,
-    pnl: 195,
-    riskReward: 1.8,
-    strategyTag: "Range Fade",
-    sessionTime: "ASIAN",
-    marketCondition: "RANGING",
-    entryDate: BigInt(Date.now() - 1728e5),
-    exitDate: BigInt(Date.now() - 1692e5),
-    createdAt: BigInt(Date.now() - 1728e5)
-  }
-];
 function useRecentTrades() {
   const { actor, isFetching } = useActor(createActor);
   return useQuery({
     queryKey: ["recentTrades"],
     queryFn: async () => {
-      if (!actor) return SAMPLE_TRADES;
+      if (!actor) return [];
       try {
         const raw = await actor.getTrades({});
-        const mapped = raw.slice(0, 5).map((t2) => ({
+        return raw.slice(0, 5).map((t2) => ({
           id: String(t2.id),
           pair: t2.pair,
           direction: t2.direction === "LONG" ? "LONG" : "SHORT",
@@ -75057,9 +74943,8 @@ function useRecentTrades() {
           exitDate: t2.exitDate,
           createdAt: t2.createdAt
         }));
-        return mapped.length > 0 ? mapped : SAMPLE_TRADES;
       } catch {
-        return SAMPLE_TRADES;
+        return [];
       }
     },
     enabled: !!actor && !isFetching,
@@ -75233,12 +75118,12 @@ function DashboardPage() {
   const { data: trades, isLoading: tradesLoading } = useRecentTrades();
   const { data: metrics } = useDashboardMetrics();
   const [upgradeOpen, setUpgradeOpen] = reactExports.useState(false);
-  const displayTrades = trades ?? SAMPLE_TRADES;
-  const winRate = metrics ? `${metrics.winRate.toFixed(1)}%` : "68.5%";
-  const totalPnl = metrics ? formatPnl(metrics.totalPnl) : "+$1,420.50";
+  const displayTrades = trades ?? [];
+  const winRate = metrics ? `${metrics.winRate.toFixed(1)}%` : "0.0%";
+  const totalPnl = metrics ? formatPnl(metrics.totalPnl) : "$0.00";
   const totalTrades = String(limits.totalCount || displayTrades.length);
-  const avgRR = metrics ? `${metrics.avgRiskReward.toFixed(2)}R` : "2.4R";
-  const bestPair = (metrics == null ? void 0 : metrics.bestPair) ?? "EUR/USD";
+  const avgRR = metrics ? `${metrics.avgRiskReward.toFixed(2)}R` : "0.00R";
+  const bestPair = (metrics == null ? void 0 : metrics.bestPair) ?? "—";
   const metricCards = [
     {
       label: "Win Rate",
@@ -75252,7 +75137,7 @@ function DashboardPage() {
       value: totalPnl,
       sub: "Cumulative",
       icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "h-4 w-4" }),
-      color: Number(totalPnl.replace(/[^0-9.-]/g, "")) >= 0 ? "#00ff41" : "#f87171"
+      color: metrics && metrics.totalPnl < 0 ? "#f87171" : "#00ff41"
     },
     {
       label: "Trades Logged",
@@ -75441,7 +75326,38 @@ function DashboardPage() {
                 }
               )
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(GlassCard, { className: "p-0 overflow-hidden", children: tradesLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center py-10", children: /* @__PURE__ */ jsxRuntimeExports.jsx(LoadingSpinner, { size: "sm", label: "Loading trades..." }) }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(GlassCard, { className: "p-0 overflow-hidden", children: tradesLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center py-10", children: /* @__PURE__ */ jsxRuntimeExports.jsx(LoadingSpinner, { size: "sm", label: "Loading trades..." }) }) : displayTrades.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                className: "flex flex-col items-center justify-center py-14 gap-3 text-center",
+                "data-ocid": "recent-trades-empty",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Zap,
+                    {
+                      className: "h-8 w-8 text-muted-foreground/40",
+                      style: { filter: "drop-shadow(0 0 4px rgba(0,255,65,0.2))" }
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground", children: [
+                    "No trades yet.",
+                    " ",
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: () => navigate({ to: "/trades/new" }),
+                        className: "text-[#00ff41] hover:underline",
+                        "data-ocid": "recent-trades-empty-cta",
+                        children: "Log your first trade"
+                      }
+                    ),
+                    " ",
+                    "to get started."
+                  ] })
+                ]
+              }
+            ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "tr",
                 {
@@ -75521,7 +75437,7 @@ function DashboardPage() {
             isFree ? /* @__PURE__ */ jsxRuntimeExports.jsx(
               BlurredTeaser,
               {
-                teaserText: "Your best performing pair is ?? — unlock to see",
+                teaserText: "Log trades to unlock your best performing pair and session insights",
                 ctaText: "Unlock Pro",
                 onUpgrade: () => setUpgradeOpen(true),
                 className: "min-h-[200px]",
@@ -75532,7 +75448,7 @@ function DashboardPage() {
                       icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "h-4 w-4" }),
                       color: "#00ff41",
                       label: "Best pair",
-                      value: "EUR/USD"
+                      value: "—"
                     }
                   ),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -75541,7 +75457,7 @@ function DashboardPage() {
                       icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingDown, { className: "h-4 w-4" }),
                       color: "#f87171",
                       label: "Worst session",
-                      value: "Tue AM"
+                      value: "—"
                     }
                   ),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -75550,7 +75466,7 @@ function DashboardPage() {
                       icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { className: "h-4 w-4" }),
                       color: "#00ffff",
                       label: "Win streak",
-                      value: "4 trades"
+                      value: "—"
                     }
                   )
                 ] }) })
@@ -75571,7 +75487,7 @@ function DashboardPage() {
                   icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingDown, { className: "h-4 w-4" }),
                   color: "#f87171",
                   label: "Worst pair",
-                  value: (metrics == null ? void 0 : metrics.worstPair) ?? "GBP/AUD"
+                  value: (metrics == null ? void 0 : metrics.worstPair) ?? "—"
                 }
               ),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -75587,11 +75503,7 @@ function DashboardPage() {
             isFree && /* @__PURE__ */ jsxRuntimeExports.jsx(GlassCard, { className: "p-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground leading-snug", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[#b900ff] font-semibold", children: "Pro tip:" }),
               " ",
-              "Your worst session is",
-              " ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground/60 blur-sm select-none", children: "Tuesday mornings" }),
-              " ",
-              "—",
+              "Upgrade to Pro to see which sessions and pairs you perform best in —",
               " ",
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "button",
@@ -75684,7 +75596,7 @@ function InsightRow({
 }
 function getBestSession(metrics) {
   var _a3;
-  if (!((_a3 = metrics == null ? void 0 : metrics.pnlBySession) == null ? void 0 : _a3.length)) return "London Open";
+  if (!((_a3 = metrics == null ? void 0 : metrics.pnlBySession) == null ? void 0 : _a3.length)) return "—";
   const best = [...metrics.pnlBySession].sort(
     (a2, b2) => b2.totalPnl - a2.totalPnl
   )[0];
@@ -77016,116 +76928,19 @@ const Route$2 = createRoute({
   path: "/trades/$id",
   component: TradeDetailPage
 });
-const sampleTrades$1 = {
-  "1": {
-    id: "1",
-    pair: "EUR/USD",
-    direction: "LONG",
-    entryPrice: 1.0842,
-    exitPrice: 1.0889,
-    pnl: 245,
-    riskReward: 2.1,
-    strategyTag: "Breakout",
-    sessionTime: "LONDON",
-    marketCondition: "TRENDING",
-    notes: "Clean break above key resistance at 1.0840. Entered on retest. Target hit within 45 minutes of London open. No issues with execution. Textbook setup.",
-    entryDate: Date.now() - 36e5,
-    exitDate: Date.now() - 18e5
-  },
-  "2": {
-    id: "2",
-    pair: "BTC/USDT",
-    direction: "SHORT",
-    entryPrice: 68450,
-    exitPrice: 68725,
-    pnl: -125,
-    riskReward: -0.8,
-    strategyTag: "Reversal",
-    mistakeTag: "Moved stop loss",
-    sessionTime: "NY",
-    marketCondition: "VOLATILE",
-    notes: "Moved stop too early — got stopped out. Market continued as expected after.",
-    entryDate: Date.now() - 72e5,
-    exitDate: Date.now() - 54e5
-  },
-  "3": {
-    id: "3",
-    pair: "GBP/JPY",
-    direction: "LONG",
-    entryPrice: 194.25,
-    exitPrice: 194.87,
-    pnl: 380,
-    riskReward: 3.4,
-    strategyTag: "Trend Follow",
-    sessionTime: "LONDON",
-    marketCondition: "TRENDING",
-    notes: "Perfect structure follow-through. Held through two pullbacks.",
-    entryDate: Date.now() - 864e5,
-    exitDate: Date.now() - 792e5
-  },
-  "4": {
-    id: "4",
-    pair: "NQ",
-    direction: "LONG",
-    entryPrice: 20125,
-    exitPrice: 20289,
-    pnl: 720,
-    riskReward: 4.2,
-    strategyTag: "Open Drive",
-    sessionTime: "NY",
-    marketCondition: "TRENDING",
-    notes: "Classic gap-and-go at the open. Full target reached.",
-    entryDate: Date.now() - 1728e5,
-    exitDate: Date.now() - 1692e5
-  },
-  "5": {
-    id: "5",
-    pair: "XAU/USD",
-    direction: "SHORT",
-    entryPrice: 2342.5,
-    exitPrice: 2328,
-    pnl: 580,
-    riskReward: 2.9,
-    strategyTag: "Breakdown",
-    sessionTime: "LONDON",
-    marketCondition: "RANGING",
-    notes: "Supply zone rejection with confirmation. Clean entry.",
-    entryDate: Date.now() - 2592e5,
-    exitDate: Date.now() - 2556e5
-  }
-};
 function TradeDetailPage() {
   const navigate = useNavigate();
   const { id: id2 } = Route$2.useParams();
   const [deleteOpen, setDeleteOpen] = reactExports.useState(false);
   const [showChartUpload, setShowChartUpload] = reactExports.useState(false);
-  const trade = sampleTrades$1[id2] ?? {
-    pair: "UNKNOWN",
-    direction: "LONG",
-    entryPrice: 0,
-    exitPrice: 0,
-    pnl: 0,
-    riskReward: 0,
-    strategyTag: "—",
-    sessionTime: "OTHER",
-    marketCondition: "OTHER",
-    notes: "",
-    entryDate: Date.now(),
-    exitDate: Date.now()
-  };
-  const isWin = trade.pnl >= 0;
-  function handleDelete() {
-    setDeleteOpen(false);
-    navigate({ to: "/trades" });
-  }
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    "div",
-    {
-      className: "max-w-2xl mx-auto space-y-5 fade-in",
-      "data-ocid": "trade-detail-page",
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
+  {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        className: "max-w-2xl mx-auto space-y-5 fade-in",
+        "data-ocid": "trade-detail-page",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             "button",
             {
               type: "button",
@@ -77135,326 +76950,46 @@ function TradeDetailPage() {
               "data-ocid": "trade-detail-back",
               children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { className: "h-4 w-4" })
             }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 flex-wrap", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-2xl font-bold text-foreground", children: trade.pair }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                "span",
-                {
-                  className: `inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-semibold ${trade.direction === "LONG" ? "bg-[#00ff41]/10 text-[#00ff41] border border-[#00ff41]/25" : "bg-red-500/10 text-red-400 border border-red-500/25"}`,
-                  children: [
-                    trade.direction === "LONG" ? /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "h-3 w-3" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingDown, { className: "h-3 w-3" }),
-                    trade.direction
-                  ]
-                }
-              )
+          ) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { className: "py-16 flex flex-col items-center justify-center gap-4 text-center", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                className: "w-16 h-16 rounded-2xl flex items-center justify-center",
+                style: {
+                  background: "oklch(0.72 0.2 142 / 0.08)",
+                  border: "1px solid oklch(0.72 0.2 142 / 0.25)"
+                },
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "h-8 w-8 text-muted-foreground" })
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-xl font-bold text-foreground", children: "Trade not found" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground mt-1 max-w-xs", children: [
+                "Trade ID",
+                " ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-foreground/70", children: id2 }),
+                " doesn't exist or may have been deleted."
+              ] })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground mt-0.5 flex items-center gap-1", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Calendar, { className: "h-3 w-3" }),
-              new Date(trade.entryDate).toLocaleDateString("en-US", {
-                weekday: "short",
-                month: "long",
-                day: "numeric",
-                year: "numeric"
-              })
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 shrink-0", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
               NeonButton,
               {
                 variant: "outline",
-                size: "sm",
-                onClick: () => navigate({ to: "/trades/new" }),
-                "data-ocid": "trade-detail-edit",
+                size: "md",
+                onClick: () => navigate({ to: "/trades" }),
+                "data-ocid": "trade-not-found-back",
                 children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(SquarePen, { className: "h-3.5 w-3.5" }),
-                  "Edit"
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { className: "h-4 w-4" }),
+                  "Back to Journal"
                 ]
-              }
-            ),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              NeonButton,
-              {
-                variant: "purple",
-                size: "sm",
-                onClick: () => setDeleteOpen(true),
-                "data-ocid": "trade-detail-delete",
-                children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "h-3.5 w-3.5" })
               }
             )
           ] })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          motion.div,
-          {
-            className: "grid grid-cols-3 gap-3",
-            initial: { opacity: 0, y: 8 },
-            animate: { opacity: 1, y: 0 },
-            transition: { delay: 0.05 },
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                GlassCard,
-                {
-                  glow: "green",
-                  className: "text-center py-4 px-3 space-y-1",
-                  style: {
-                    borderColor: isWin ? "rgba(0,255,65,0.3)" : "rgba(248,113,113,0.3)",
-                    boxShadow: isWin ? "0 0 20px rgba(0,255,65,0.1)" : "0 0 20px rgba(248,113,113,0.1)"
-                  },
-                  children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "P&L" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                      "p",
-                      {
-                        className: "font-display text-2xl font-bold",
-                        style: { color: isWin ? "#00ff41" : "#f87171" },
-                        children: [
-                          isWin ? "+" : "",
-                          "$",
-                          Math.abs(trade.pnl).toFixed(2)
-                        ]
-                      }
-                    ),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: isWin ? "Profit" : "Loss" })
-                  ]
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                GlassCard,
-                {
-                  glow: "cyan",
-                  className: "text-center py-4 px-3 space-y-1",
-                  style: {
-                    borderColor: "rgba(0,255,255,0.3)",
-                    boxShadow: "0 0 20px rgba(0,255,255,0.1)"
-                  },
-                  children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Risk:Reward" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-display text-2xl font-bold text-[#00ffff]", children: [
-                      trade.riskReward >= 0 ? "+" : "",
-                      trade.riskReward.toFixed(2),
-                      "R"
-                    ] }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Ratio" })
-                  ]
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { className: "text-center py-4 px-3 space-y-1", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Session" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "p",
-                  {
-                    className: "font-display text-2xl font-bold",
-                    style: { color: "#b900ff" },
-                    children: trade.sessionTime
-                  }
-                ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Market" })
-              ] })
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          motion.div,
-          {
-            initial: { opacity: 0, y: 8 },
-            animate: { opacity: 1, y: 0 },
-            transition: { delay: 0.1 },
-            children: /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-4", children: "Entry & Exit" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm", children: [
-                {
-                  label: "Entry Price",
-                  value: trade.entryPrice.toString(),
-                  mono: true
-                },
-                {
-                  label: "Exit Price",
-                  value: trade.exitPrice.toString(),
-                  mono: true
-                },
-                {
-                  label: "Entry Time",
-                  value: new Date(trade.entryDate).toLocaleTimeString("en-US", {
-                    hour: "2-digit",
-                    minute: "2-digit"
-                  }),
-                  icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { className: "h-3 w-3" })
-                },
-                {
-                  label: "Exit Time",
-                  value: new Date(trade.exitDate).toLocaleTimeString("en-US", {
-                    hour: "2-digit",
-                    minute: "2-digit"
-                  }),
-                  icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { className: "h-3 w-3" })
-                }
-              ].map(({ label, value, mono, icon }) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground mb-1 flex items-center gap-1", children: [
-                  icon,
-                  label
-                ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "p",
-                  {
-                    className: `font-medium text-foreground ${mono ? "font-mono" : ""}`,
-                    children: value
-                  }
-                )
-              ] }, label)) })
-            ] })
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          motion.div,
-          {
-            initial: { opacity: 0, y: 8 },
-            animate: { opacity: 1, y: 0 },
-            transition: { delay: 0.15 },
-            children: /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-3", children: "Tags & Classification" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-2", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { className: "bg-[#00ff41]/10 text-[#00ff41] border-[#00ff41]/30 hover:bg-[#00ff41]/10", children: [
-                  "📈 ",
-                  trade.strategyTag
-                ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { className: "bg-muted/60 text-foreground border-border hover:bg-muted/60", children: [
-                  "📊 ",
-                  trade.marketCondition
-                ] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { className: "bg-[#00ffff]/10 text-[#00ffff] border-[#00ffff]/30 hover:bg-[#00ffff]/10", children: [
-                  "🕐 ",
-                  trade.sessionTime
-                ] }),
-                trade.mistakeTag && /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { className: "bg-red-500/10 text-red-400 border-red-500/30 hover:bg-red-500/10", children: [
-                  "⚠ ",
-                  trade.mistakeTag
-                ] })
-              ] })
-            ] })
-          }
-        ),
-        trade.notes && /* @__PURE__ */ jsxRuntimeExports.jsx(
-          motion.div,
-          {
-            initial: { opacity: 0, y: 8 },
-            animate: { opacity: 1, y: 0 },
-            transition: { delay: 0.2 },
-            children: /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-3", children: "Notes & Reflections" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-foreground leading-relaxed", children: trade.notes })
-            ] })
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          motion.div,
-          {
-            initial: { opacity: 0, y: 8 },
-            animate: { opacity: 1, y: 0 },
-            transition: { delay: 0.25 },
-            children: /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-xs text-muted-foreground uppercase tracking-wider mb-3", children: "Chart Screenshot" }),
-              trade.chartImageUrl ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "img",
-                {
-                  src: trade.chartImageUrl,
-                  alt: `${trade.pair} chart`,
-                  className: "w-full rounded-lg object-cover"
-                }
-              ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                "div",
-                {
-                  className: "flex flex-col items-center justify-center h-44 rounded-lg border border-dashed bg-muted/10 gap-3",
-                  style: { borderColor: "oklch(0.22 0.04 258)" },
-                  children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      "div",
-                      {
-                        className: "p-3 rounded-full",
-                        style: { background: "oklch(0.72 0.2 142 / 0.08)" },
-                        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Image$1, { className: "h-6 w-6 text-muted-foreground" })
-                      }
-                    ),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-foreground font-medium", children: "No chart uploaded" }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mt-0.5", children: "Upload a screenshot to annotate your trade" })
-                    ] }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      NeonButton,
-                      {
-                        variant: "outline",
-                        size: "sm",
-                        onClick: () => setShowChartUpload(!showChartUpload),
-                        "data-ocid": "trade-detail-upload-chart",
-                        children: "Upload Chart"
-                      }
-                    )
-                  ]
-                }
-              )
-            ] })
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Dialog,
-          {
-            open: deleteOpen,
-            onOpenChange: (v2) => !v2 && setDeleteOpen(false),
-            children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              DialogContent,
-              {
-                className: "max-w-sm",
-                style: {
-                  background: "oklch(0.14 0.04 258 / 0.97)",
-                  backdropFilter: "blur(20px)"
-                },
-                "data-ocid": "trade-delete-dialog",
-                children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogHeader, { children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { className: "font-display text-lg font-bold text-foreground", children: "Delete Trade?" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogDescription, { children: [
-                      "This will permanently remove",
-                      " ",
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono font-semibold text-foreground", children: trade.pair }),
-                      " ",
-                      "from your journal. This action cannot be undone."
-                    ] })
-                  ] }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      NeonButton,
-                      {
-                        variant: "outline",
-                        size: "md",
-                        onClick: () => setDeleteOpen(false),
-                        "data-ocid": "delete-cancel",
-                        children: "Cancel"
-                      }
-                    ),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                      NeonButton,
-                      {
-                        variant: "purple",
-                        size: "md",
-                        onClick: handleDelete,
-                        "data-ocid": "delete-confirm",
-                        children: [
-                          /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "h-4 w-4" }),
-                          "Delete"
-                        ]
-                      }
-                    )
-                  ] })
-                ]
-              }
-            )
-          }
-        )
-      ]
-    }
-  );
+        ]
+      }
+    );
+  }
 }
 function Input({ className, type, ...props }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -77556,138 +77091,6 @@ const Route$1 = createRoute({
   path: "/trades",
   component: TradesPage
 });
-const sampleTrades = [
-  {
-    id: "1",
-    pair: "EUR/USD",
-    direction: "LONG",
-    entryPrice: 1.0842,
-    exitPrice: 1.0889,
-    pnl: 245,
-    riskReward: 2.1,
-    strategyTag: "Breakout",
-    sessionTime: "LONDON",
-    marketCondition: "TRENDING",
-    notes: "Clean break above key resistance at 1.0840. Entered on retest. Target hit within 45 minutes of London open.",
-    entryDate: BigInt(Date.now() - 36e5),
-    exitDate: BigInt(Date.now() - 18e5),
-    createdAt: BigInt(Date.now() - 18e5)
-  },
-  {
-    id: "2",
-    pair: "BTC/USDT",
-    direction: "SHORT",
-    entryPrice: 68450,
-    exitPrice: 68725,
-    pnl: -125,
-    riskReward: -0.8,
-    strategyTag: "Reversal",
-    mistakeTag: "Moved stop loss",
-    sessionTime: "NY",
-    marketCondition: "VOLATILE",
-    notes: "Moved stop too early — got stopped out",
-    entryDate: BigInt(Date.now() - 72e5),
-    exitDate: BigInt(Date.now() - 54e5),
-    createdAt: BigInt(Date.now() - 54e5)
-  },
-  {
-    id: "3",
-    pair: "GBP/JPY",
-    direction: "LONG",
-    entryPrice: 194.25,
-    exitPrice: 194.87,
-    pnl: 380,
-    riskReward: 3.4,
-    strategyTag: "Trend Follow",
-    sessionTime: "LONDON",
-    marketCondition: "TRENDING",
-    notes: "Perfect structure follow-through. Held through two pullbacks.",
-    entryDate: BigInt(Date.now() - 864e5),
-    exitDate: BigInt(Date.now() - 792e5),
-    createdAt: BigInt(Date.now() - 792e5)
-  },
-  {
-    id: "4",
-    pair: "NQ",
-    direction: "LONG",
-    entryPrice: 20125,
-    exitPrice: 20289,
-    pnl: 720,
-    riskReward: 4.2,
-    strategyTag: "Open Drive",
-    sessionTime: "NY",
-    marketCondition: "TRENDING",
-    notes: "Classic gap-and-go at the open. Full target reached.",
-    entryDate: BigInt(Date.now() - 1728e5),
-    exitDate: BigInt(Date.now() - 1692e5),
-    createdAt: BigInt(Date.now() - 1692e5)
-  },
-  {
-    id: "5",
-    pair: "XAU/USD",
-    direction: "SHORT",
-    entryPrice: 2342.5,
-    exitPrice: 2328,
-    pnl: 580,
-    riskReward: 2.9,
-    strategyTag: "Breakdown",
-    sessionTime: "LONDON",
-    marketCondition: "RANGING",
-    notes: "Supply zone rejection with confirmation. Clean entry.",
-    entryDate: BigInt(Date.now() - 2592e5),
-    exitDate: BigInt(Date.now() - 2556e5),
-    createdAt: BigInt(Date.now() - 2556e5)
-  },
-  {
-    id: "6",
-    pair: "EUR/USD",
-    direction: "SHORT",
-    entryPrice: 1.0901,
-    exitPrice: 1.0875,
-    pnl: 195,
-    riskReward: 1.8,
-    strategyTag: "Reversal",
-    sessionTime: "ASIAN",
-    marketCondition: "RANGING",
-    notes: "Double top formation at resistance. Conservative target.",
-    entryDate: BigInt(Date.now() - 3456e5),
-    exitDate: BigInt(Date.now() - 342e6),
-    createdAt: BigInt(Date.now() - 342e6)
-  },
-  {
-    id: "7",
-    pair: "ETH/USDT",
-    direction: "LONG",
-    entryPrice: 3420,
-    exitPrice: 3390,
-    pnl: -165,
-    riskReward: -1.1,
-    strategyTag: "Breakout",
-    mistakeTag: "Entered too early",
-    sessionTime: "NY",
-    marketCondition: "CHOPPY",
-    notes: "Premature entry before confirmation. Choppy market.",
-    entryDate: BigInt(Date.now() - 432e6),
-    exitDate: BigInt(Date.now() - 4284e5),
-    createdAt: BigInt(Date.now() - 4284e5)
-  },
-  {
-    id: "8",
-    pair: "GBP/USD",
-    direction: "LONG",
-    entryPrice: 1.265,
-    exitPrice: 1.271,
-    pnl: 340,
-    riskReward: 3.1,
-    strategyTag: "Trend Follow",
-    sessionTime: "LONDON",
-    marketCondition: "TRENDING",
-    notes: "Strong bullish momentum post-CPI. Held overnight.",
-    entryDate: BigInt(Date.now() - 5184e5),
-    exitDate: BigInt(Date.now() - 432e6),
-    createdAt: BigInt(Date.now() - 432e6)
-  }
-];
 const PAGE_SIZE = 6;
 function DirectionChip({ direction }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -78161,7 +77564,6 @@ function TradesPage() {
   const [showFilters, setShowFilters] = reactExports.useState(false);
   const [selectedTrade, setSelectedTrade] = reactExports.useState(null);
   const [deleteTarget, setDeleteTarget] = reactExports.useState(null);
-  const [deletedIds, setDeletedIds] = reactExports.useState(/* @__PURE__ */ new Set());
   const [page, setPage] = reactExports.useState(1);
   const [sortKey, setSortKey] = reactExports.useState("date");
   const [sortDir, setSortDir] = reactExports.useState("desc");
@@ -78173,10 +77575,7 @@ function TradesPage() {
     strategy: "",
     mistake: ""
   });
-  const trades = reactExports.useMemo(
-    () => sampleTrades.filter((t2) => !deletedIds.has(t2.id)),
-    [deletedIds]
-  );
+  const trades = reactExports.useMemo(() => [], []);
   const strategies = reactExports.useMemo(
     () => [...new Set(trades.map((t2) => t2.strategyTag))],
     [trades]
@@ -78259,8 +77658,7 @@ function TradesPage() {
     });
     setPage(1);
   }
-  function handleDelete(id2) {
-    setDeletedIds((prev) => /* @__PURE__ */ new Set([...prev, id2]));
+  function handleDelete(_id) {
     setDeleteTarget(null);
     setSelectedTrade(null);
   }

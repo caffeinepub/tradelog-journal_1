@@ -12,7 +12,6 @@ import {
 import { createRoute, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeft,
-  Calendar,
   Clock,
   Edit,
   ImageIcon,
@@ -30,10 +29,15 @@ export const Route = createRoute({
   component: TradeDetailPage,
 });
 
-// Simulated store — in production, replace with useQuery from hooks/useQueries.ts
-const sampleTrades: Record<
-  string,
-  {
+function TradeDetailPage() {
+  const navigate = useNavigate();
+  const { id } = Route.useParams() as { id: string };
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [showChartUpload, setShowChartUpload] = useState(false);
+
+  // Trade not found — show a "not found" state
+  // In production this will be replaced by a real useQuery hook
+  const trade = null as null | {
     id: string;
     pair: string;
     direction: "LONG" | "SHORT";
@@ -49,116 +53,65 @@ const sampleTrades: Record<
     chartImageUrl?: string;
     entryDate: number;
     exitDate: number;
-  }
-> = {
-  "1": {
-    id: "1",
-    pair: "EUR/USD",
-    direction: "LONG",
-    entryPrice: 1.0842,
-    exitPrice: 1.0889,
-    pnl: 245,
-    riskReward: 2.1,
-    strategyTag: "Breakout",
-    sessionTime: "LONDON",
-    marketCondition: "TRENDING",
-    notes:
-      "Clean break above key resistance at 1.0840. Entered on retest. Target hit within 45 minutes of London open. No issues with execution. Textbook setup.",
-    entryDate: Date.now() - 3600000,
-    exitDate: Date.now() - 1800000,
-  },
-  "2": {
-    id: "2",
-    pair: "BTC/USDT",
-    direction: "SHORT",
-    entryPrice: 68450,
-    exitPrice: 68725,
-    pnl: -125,
-    riskReward: -0.8,
-    strategyTag: "Reversal",
-    mistakeTag: "Moved stop loss",
-    sessionTime: "NY",
-    marketCondition: "VOLATILE",
-    notes:
-      "Moved stop too early — got stopped out. Market continued as expected after.",
-    entryDate: Date.now() - 7200000,
-    exitDate: Date.now() - 5400000,
-  },
-  "3": {
-    id: "3",
-    pair: "GBP/JPY",
-    direction: "LONG",
-    entryPrice: 194.25,
-    exitPrice: 194.87,
-    pnl: 380,
-    riskReward: 3.4,
-    strategyTag: "Trend Follow",
-    sessionTime: "LONDON",
-    marketCondition: "TRENDING",
-    notes: "Perfect structure follow-through. Held through two pullbacks.",
-    entryDate: Date.now() - 86400000,
-    exitDate: Date.now() - 79200000,
-  },
-  "4": {
-    id: "4",
-    pair: "NQ",
-    direction: "LONG",
-    entryPrice: 20125,
-    exitPrice: 20289,
-    pnl: 720,
-    riskReward: 4.2,
-    strategyTag: "Open Drive",
-    sessionTime: "NY",
-    marketCondition: "TRENDING",
-    notes: "Classic gap-and-go at the open. Full target reached.",
-    entryDate: Date.now() - 172800000,
-    exitDate: Date.now() - 169200000,
-  },
-  "5": {
-    id: "5",
-    pair: "XAU/USD",
-    direction: "SHORT",
-    entryPrice: 2342.5,
-    exitPrice: 2328.0,
-    pnl: 580,
-    riskReward: 2.9,
-    strategyTag: "Breakdown",
-    sessionTime: "LONDON",
-    marketCondition: "RANGING",
-    notes: "Supply zone rejection with confirmation. Clean entry.",
-    entryDate: Date.now() - 259200000,
-    exitDate: Date.now() - 255600000,
-  },
-};
-
-function TradeDetailPage() {
-  const navigate = useNavigate();
-  const { id } = Route.useParams() as { id: string };
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [showChartUpload, setShowChartUpload] = useState(false);
-
-  const trade = sampleTrades[id] ?? {
-    id,
-    pair: "UNKNOWN",
-    direction: "LONG" as const,
-    entryPrice: 0,
-    exitPrice: 0,
-    pnl: 0,
-    riskReward: 0,
-    strategyTag: "—",
-    sessionTime: "OTHER",
-    marketCondition: "OTHER",
-    notes: "",
-    entryDate: Date.now(),
-    exitDate: Date.now(),
   };
-
-  const isWin = trade.pnl >= 0;
 
   function handleDelete() {
     setDeleteOpen(false);
     navigate({ to: "/trades" });
   }
+
+  if (!trade) {
+    return (
+      <div
+        className="max-w-2xl mx-auto space-y-5 fade-in"
+        data-ocid="trade-detail-page"
+      >
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/trades" })}
+            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
+            aria-label="Back to trades"
+            data-ocid="trade-detail-back"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+        </div>
+        <GlassCard className="py-16 flex flex-col items-center justify-center gap-4 text-center">
+          <div
+            className="w-16 h-16 rounded-2xl flex items-center justify-center"
+            style={{
+              background: "oklch(0.72 0.2 142 / 0.08)",
+              border: "1px solid oklch(0.72 0.2 142 / 0.25)",
+            }}
+          >
+            <TrendingUp className="h-8 w-8 text-muted-foreground" />
+          </div>
+          <div>
+            <h2 className="font-display text-xl font-bold text-foreground">
+              Trade not found
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1 max-w-xs">
+              Trade ID{" "}
+              <span className="font-mono text-foreground/70">{id}</span> doesn't
+              exist or may have been deleted.
+            </p>
+          </div>
+          <NeonButton
+            variant="outline"
+            size="md"
+            onClick={() => navigate({ to: "/trades" })}
+            data-ocid="trade-not-found-back"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Journal
+          </NeonButton>
+        </GlassCard>
+      </div>
+    );
+  }
+
+  const isWin = trade.pnl >= 0;
 
   return (
     <div
@@ -196,15 +149,6 @@ function TradeDetailPage() {
               {trade.direction}
             </span>
           </div>
-          <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
-            <Calendar className="h-3 w-3" />
-            {new Date(trade.entryDate).toLocaleDateString("en-US", {
-              weekday: "short",
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </p>
         </div>
         <div className="flex gap-2 shrink-0">
           <NeonButton

@@ -32,42 +32,15 @@ const SESSION_COLORS: Record<string, string> = {
   OTHER: "#f59e0b",
 };
 
-const SAMPLE_SESSIONS: SessionStats[] = [
-  {
-    session: "LONDON" as SessionStats["session"],
-    totalPnl: 1205,
-    winRate: 0.73,
-    tradeCount: BigInt(18),
-  },
-  {
-    session: "NY" as SessionStats["session"],
-    totalPnl: 595,
-    winRate: 0.62,
-    tradeCount: BigInt(14),
-  },
-  {
-    session: "ASIAN" as SessionStats["session"],
-    totalPnl: -80,
-    winRate: 0.44,
-    tradeCount: BigInt(8),
-  },
-  {
-    session: "OTHER" as SessionStats["session"],
-    totalPnl: 200,
-    winRate: 0.55,
-    tradeCount: BigInt(5),
-  },
-];
-
 function getBestSession(sessions: SessionStats[]): string {
-  if (!sessions.length) return "London";
+  if (!sessions.length) return "—";
   const best = sessions.reduce((a, b) => (a.totalPnl > b.totalPnl ? a : b));
   const label = String(best.session);
   return label.charAt(0) + label.slice(1).toLowerCase();
 }
 
 function getWorstSession(sessions: SessionStats[]): string {
-  if (!sessions.length) return "Asian";
+  if (!sessions.length) return "—";
   const worst = sessions.reduce((a, b) => (a.totalPnl < b.totalPnl ? a : b));
   const label = String(worst.session);
   return label.charAt(0) + label.slice(1).toLowerCase();
@@ -192,6 +165,17 @@ function SessionChart({ data }: { data: SessionStats[] }) {
   );
 }
 
+function EmptySessionChart() {
+  return (
+    <GlassCard className="flex flex-col items-center justify-center py-14 gap-3 text-center">
+      <p className="text-sm text-muted-foreground">No session data available</p>
+      <p className="text-xs text-muted-foreground/60">
+        Log trades to see your session breakdown
+      </p>
+    </GlassCard>
+  );
+}
+
 interface SessionBreakdownProps {
   sessions: SessionStats[] | undefined;
   isFree: boolean;
@@ -203,21 +187,29 @@ export function SessionBreakdown({
   isFree,
   onUpgrade,
 }: SessionBreakdownProps) {
-  const data = sessions && sessions.length > 0 ? sessions : SAMPLE_SESSIONS;
-  const bestSession = getBestSession(SAMPLE_SESSIONS);
-  const worstSession = getWorstSession(SAMPLE_SESSIONS);
+  const data = sessions && sessions.length > 0 ? sessions : [];
+
+  const bestSession = getBestSession(data);
+  const worstSession = getWorstSession(data);
+
+  const teaserText =
+    bestSession !== "—"
+      ? `Your best session is ${bestSession} — upgrade to unlock details. You underperform most during ${worstSession} session.`
+      : "Log trades to unlock your session performance breakdown";
 
   if (isFree) {
     return (
       <BlurredTeaser
-        teaserText={`Your best session is ${bestSession} mornings — upgrade to unlock details. You underperform most during ${worstSession} session.`}
+        teaserText={teaserText}
         ctaText="Unlock Session Analytics"
         onUpgrade={onUpgrade}
       >
-        <SessionChart data={SAMPLE_SESSIONS} />
+        <EmptySessionChart />
       </BlurredTeaser>
     );
   }
+
+  if (!data.length) return <EmptySessionChart />;
 
   return <SessionChart data={data} />;
 }

@@ -35,86 +35,6 @@ export const Route = createRoute({
   component: DashboardPage,
 });
 
-// ─── Sample fallback trades ────────────────────────────────────────────────
-
-const SAMPLE_TRADES: Trade[] = [
-  {
-    id: "1",
-    pair: "EUR/USD",
-    direction: "LONG",
-    entryPrice: 1.0821,
-    exitPrice: 1.0865,
-    pnl: 245,
-    riskReward: 2.1,
-    strategyTag: "Breakout",
-    sessionTime: "LONDON",
-    marketCondition: "TRENDING",
-    entryDate: BigInt(Date.now() - 3600000),
-    exitDate: BigInt(Date.now() - 1800000),
-    createdAt: BigInt(Date.now() - 3600000),
-  },
-  {
-    id: "2",
-    pair: "BTC/USDT",
-    direction: "SHORT",
-    entryPrice: 67800,
-    exitPrice: 68250,
-    pnl: -125,
-    riskReward: -0.8,
-    strategyTag: "Reversal",
-    sessionTime: "NY",
-    marketCondition: "VOLATILE",
-    entryDate: BigInt(Date.now() - 7200000),
-    exitDate: BigInt(Date.now() - 5400000),
-    createdAt: BigInt(Date.now() - 7200000),
-  },
-  {
-    id: "3",
-    pair: "GBP/JPY",
-    direction: "LONG",
-    entryPrice: 192.45,
-    exitPrice: 193.12,
-    pnl: 380,
-    riskReward: 3.4,
-    strategyTag: "Trend Follow",
-    sessionTime: "LONDON",
-    marketCondition: "TRENDING",
-    entryDate: BigInt(Date.now() - 86400000),
-    exitDate: BigInt(Date.now() - 82800000),
-    createdAt: BigInt(Date.now() - 86400000),
-  },
-  {
-    id: "4",
-    pair: "NQ",
-    direction: "LONG",
-    entryPrice: 19420,
-    exitPrice: 19580,
-    pnl: 720,
-    riskReward: 4.2,
-    strategyTag: "Momentum",
-    sessionTime: "NY",
-    marketCondition: "TRENDING",
-    entryDate: BigInt(Date.now() - 90000000),
-    exitDate: BigInt(Date.now() - 86400000),
-    createdAt: BigInt(Date.now() - 90000000),
-  },
-  {
-    id: "5",
-    pair: "XAU/USD",
-    direction: "SHORT",
-    entryPrice: 2318.5,
-    exitPrice: 2305.2,
-    pnl: 195,
-    riskReward: 1.8,
-    strategyTag: "Range Fade",
-    sessionTime: "ASIAN",
-    marketCondition: "RANGING",
-    entryDate: BigInt(Date.now() - 172800000),
-    exitDate: BigInt(Date.now() - 169200000),
-    createdAt: BigInt(Date.now() - 172800000),
-  },
-];
-
 // ─── Data hooks ────────────────────────────────────────────────────────────
 
 function useRecentTrades() {
@@ -122,10 +42,10 @@ function useRecentTrades() {
   return useQuery<Trade[]>({
     queryKey: ["recentTrades"],
     queryFn: async () => {
-      if (!actor) return SAMPLE_TRADES;
+      if (!actor) return [];
       try {
         const raw = await actor.getTrades({});
-        const mapped: Trade[] = raw.slice(0, 5).map((t) => ({
+        return raw.slice(0, 5).map((t) => ({
           id: String(t.id),
           pair: t.pair,
           direction: t.direction === "LONG" ? "LONG" : "SHORT",
@@ -143,9 +63,8 @@ function useRecentTrades() {
           exitDate: t.exitDate,
           createdAt: t.createdAt,
         }));
-        return mapped.length > 0 ? mapped : SAMPLE_TRADES;
       } catch {
-        return SAMPLE_TRADES;
+        return [];
       }
     },
     enabled: !!actor && !isFetching,
@@ -342,14 +261,14 @@ function DashboardPage() {
   const { data: metrics } = useDashboardMetrics();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
 
-  const displayTrades = trades ?? SAMPLE_TRADES;
+  const displayTrades = trades ?? [];
 
-  // Metric values — real if paid, teaser if free
-  const winRate = metrics ? `${metrics.winRate.toFixed(1)}%` : "68.5%";
-  const totalPnl = metrics ? formatPnl(metrics.totalPnl) : "+$1,420.50";
+  // Metric values — real if available, zero/empty otherwise
+  const winRate = metrics ? `${metrics.winRate.toFixed(1)}%` : "0.0%";
+  const totalPnl = metrics ? formatPnl(metrics.totalPnl) : "$0.00";
   const totalTrades = String(limits.totalCount || displayTrades.length);
-  const avgRR = metrics ? `${metrics.avgRiskReward.toFixed(2)}R` : "2.4R";
-  const bestPair = metrics?.bestPair ?? "EUR/USD";
+  const avgRR = metrics ? `${metrics.avgRiskReward.toFixed(2)}R` : "0.00R";
+  const bestPair = metrics?.bestPair ?? "—";
 
   const metricCards: Omit<MetricCardProps, "index" | "locked" | "onUnlock">[] =
     [
@@ -365,10 +284,7 @@ function DashboardPage() {
         value: totalPnl,
         sub: "Cumulative",
         icon: <TrendingUp className="h-4 w-4" />,
-        color:
-          Number(totalPnl.replace(/[^0-9.-]/g, "")) >= 0
-            ? "#00ff41"
-            : "#f87171",
+        color: metrics && metrics.totalPnl < 0 ? "#f87171" : "#00ff41",
       },
       {
         label: "Trades Logged",
@@ -562,6 +478,28 @@ function DashboardPage() {
               <div className="flex items-center justify-center py-10">
                 <LoadingSpinner size="sm" label="Loading trades..." />
               </div>
+            ) : displayTrades.length === 0 ? (
+              <div
+                className="flex flex-col items-center justify-center py-14 gap-3 text-center"
+                data-ocid="recent-trades-empty"
+              >
+                <Zap
+                  className="h-8 w-8 text-muted-foreground/40"
+                  style={{ filter: "drop-shadow(0 0 4px rgba(0,255,65,0.2))" }}
+                />
+                <p className="text-sm text-muted-foreground">
+                  No trades yet.{" "}
+                  <button
+                    type="button"
+                    onClick={() => navigate({ to: "/trades/new" })}
+                    className="text-[#00ff41] hover:underline"
+                    data-ocid="recent-trades-empty-cta"
+                  >
+                    Log your first trade
+                  </button>{" "}
+                  to get started.
+                </p>
+              </div>
             ) : (
               <table className="w-full text-sm">
                 <thead>
@@ -644,7 +582,7 @@ function DashboardPage() {
 
           {isFree ? (
             <BlurredTeaser
-              teaserText="Your best performing pair is ?? — unlock to see"
+              teaserText="Log trades to unlock your best performing pair and session insights"
               ctaText="Unlock Pro"
               onUpgrade={() => setUpgradeOpen(true)}
               className="min-h-[200px]"
@@ -655,19 +593,19 @@ function DashboardPage() {
                     icon={<TrendingUp className="h-4 w-4" />}
                     color="#00ff41"
                     label="Best pair"
-                    value="EUR/USD"
+                    value="—"
                   />
                   <InsightRow
                     icon={<TrendingDown className="h-4 w-4" />}
                     color="#f87171"
                     label="Worst session"
-                    value="Tue AM"
+                    value="—"
                   />
                   <InsightRow
                     icon={<Activity className="h-4 w-4" />}
                     color="#00ffff"
                     label="Win streak"
-                    value="4 trades"
+                    value="—"
                   />
                 </div>
               </GlassCard>
@@ -684,7 +622,7 @@ function DashboardPage() {
                 icon={<TrendingDown className="h-4 w-4" />}
                 color="#f87171"
                 label="Worst pair"
-                value={metrics?.worstPair ?? "GBP/AUD"}
+                value={metrics?.worstPair ?? "—"}
               />
               <InsightRow
                 icon={<Activity className="h-4 w-4" />}
@@ -700,11 +638,8 @@ function DashboardPage() {
             <GlassCard className="p-4">
               <p className="text-xs text-muted-foreground leading-snug">
                 <span className="text-[#b900ff] font-semibold">Pro tip:</span>{" "}
-                Your worst session is{" "}
-                <span className="text-foreground/60 blur-sm select-none">
-                  Tuesday mornings
-                </span>{" "}
-                —{" "}
+                Upgrade to Pro to see which sessions and pairs you perform best
+                in —{" "}
                 <button
                   type="button"
                   onClick={() => setUpgradeOpen(true)}
@@ -812,7 +747,7 @@ function InsightRow({
 }
 
 function getBestSession(metrics: BackendMetrics | null | undefined): string {
-  if (!metrics?.pnlBySession?.length) return "London Open";
+  if (!metrics?.pnlBySession?.length) return "—";
   const best = [...metrics.pnlBySession].sort(
     (a, b) => b.totalPnl - a.totalPnl,
   )[0];

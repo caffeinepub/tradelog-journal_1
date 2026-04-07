@@ -55,142 +55,6 @@ export const Route = createRoute({
   component: TradesPage,
 });
 
-// ─── Sample Data ──────────────────────────────────────────────────────────────
-
-const sampleTrades: Trade[] = [
-  {
-    id: "1",
-    pair: "EUR/USD",
-    direction: "LONG",
-    entryPrice: 1.0842,
-    exitPrice: 1.0889,
-    pnl: 245,
-    riskReward: 2.1,
-    strategyTag: "Breakout",
-    sessionTime: "LONDON",
-    marketCondition: "TRENDING",
-    notes:
-      "Clean break above key resistance at 1.0840. Entered on retest. Target hit within 45 minutes of London open.",
-    entryDate: BigInt(Date.now() - 3600000),
-    exitDate: BigInt(Date.now() - 1800000),
-    createdAt: BigInt(Date.now() - 1800000),
-  },
-  {
-    id: "2",
-    pair: "BTC/USDT",
-    direction: "SHORT",
-    entryPrice: 68450,
-    exitPrice: 68725,
-    pnl: -125,
-    riskReward: -0.8,
-    strategyTag: "Reversal",
-    mistakeTag: "Moved stop loss",
-    sessionTime: "NY",
-    marketCondition: "VOLATILE",
-    notes: "Moved stop too early — got stopped out",
-    entryDate: BigInt(Date.now() - 7200000),
-    exitDate: BigInt(Date.now() - 5400000),
-    createdAt: BigInt(Date.now() - 5400000),
-  },
-  {
-    id: "3",
-    pair: "GBP/JPY",
-    direction: "LONG",
-    entryPrice: 194.25,
-    exitPrice: 194.87,
-    pnl: 380,
-    riskReward: 3.4,
-    strategyTag: "Trend Follow",
-    sessionTime: "LONDON",
-    marketCondition: "TRENDING",
-    notes: "Perfect structure follow-through. Held through two pullbacks.",
-    entryDate: BigInt(Date.now() - 86400000),
-    exitDate: BigInt(Date.now() - 79200000),
-    createdAt: BigInt(Date.now() - 79200000),
-  },
-  {
-    id: "4",
-    pair: "NQ",
-    direction: "LONG",
-    entryPrice: 20125,
-    exitPrice: 20289,
-    pnl: 720,
-    riskReward: 4.2,
-    strategyTag: "Open Drive",
-    sessionTime: "NY",
-    marketCondition: "TRENDING",
-    notes: "Classic gap-and-go at the open. Full target reached.",
-    entryDate: BigInt(Date.now() - 172800000),
-    exitDate: BigInt(Date.now() - 169200000),
-    createdAt: BigInt(Date.now() - 169200000),
-  },
-  {
-    id: "5",
-    pair: "XAU/USD",
-    direction: "SHORT",
-    entryPrice: 2342.5,
-    exitPrice: 2328.0,
-    pnl: 580,
-    riskReward: 2.9,
-    strategyTag: "Breakdown",
-    sessionTime: "LONDON",
-    marketCondition: "RANGING",
-    notes: "Supply zone rejection with confirmation. Clean entry.",
-    entryDate: BigInt(Date.now() - 259200000),
-    exitDate: BigInt(Date.now() - 255600000),
-    createdAt: BigInt(Date.now() - 255600000),
-  },
-  {
-    id: "6",
-    pair: "EUR/USD",
-    direction: "SHORT",
-    entryPrice: 1.0901,
-    exitPrice: 1.0875,
-    pnl: 195,
-    riskReward: 1.8,
-    strategyTag: "Reversal",
-    sessionTime: "ASIAN",
-    marketCondition: "RANGING",
-    notes: "Double top formation at resistance. Conservative target.",
-    entryDate: BigInt(Date.now() - 345600000),
-    exitDate: BigInt(Date.now() - 342000000),
-    createdAt: BigInt(Date.now() - 342000000),
-  },
-  {
-    id: "7",
-    pair: "ETH/USDT",
-    direction: "LONG",
-    entryPrice: 3420,
-    exitPrice: 3390,
-    pnl: -165,
-    riskReward: -1.1,
-    strategyTag: "Breakout",
-    mistakeTag: "Entered too early",
-    sessionTime: "NY",
-    marketCondition: "CHOPPY",
-    notes: "Premature entry before confirmation. Choppy market.",
-    entryDate: BigInt(Date.now() - 432000000),
-    exitDate: BigInt(Date.now() - 428400000),
-    createdAt: BigInt(Date.now() - 428400000),
-  },
-  {
-    id: "8",
-    pair: "GBP/USD",
-    direction: "LONG",
-    entryPrice: 1.265,
-    exitPrice: 1.271,
-    pnl: 340,
-    riskReward: 3.1,
-    strategyTag: "Trend Follow",
-    sessionTime: "LONDON",
-    marketCondition: "TRENDING",
-    notes: "Strong bullish momentum post-CPI. Held overnight.",
-    entryDate: BigInt(Date.now() - 518400000),
-    exitDate: BigInt(Date.now() - 432000000),
-    createdAt: BigInt(Date.now() - 432000000),
-  },
-];
-
 const PAGE_SIZE = 6;
 
 type SortKey = "date" | "pnl" | "riskReward" | "pair";
@@ -748,7 +612,6 @@ function TradesPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedTrade, setSelectedTrade] = useState<Trade | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Trade | null>(null);
-  const [deletedIds, setDeletedIds] = useState<Set<string>>(new Set());
   const [page, setPage] = useState(1);
   const [sortKey, setSortKey] = useState<SortKey>("date");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
@@ -761,10 +624,8 @@ function TradesPage() {
     mistake: "",
   });
 
-  const trades = useMemo(
-    () => sampleTrades.filter((t) => !deletedIds.has(t.id)),
-    [deletedIds],
-  );
+  // No trades — empty until backend returns data
+  const trades: Trade[] = useMemo(() => [], []);
 
   const strategies = useMemo(
     () => [...new Set(trades.map((t) => t.strategyTag))],
@@ -861,8 +722,7 @@ function TradesPage() {
     setPage(1);
   }
 
-  function handleDelete(id: string) {
-    setDeletedIds((prev) => new Set([...prev, id]));
+  function handleDelete(_id: string) {
     setDeleteTarget(null);
     setSelectedTrade(null);
   }
