@@ -88,7 +88,7 @@ function LoginPage() {
               TradeLog Journal
             </h1>
             <p className="text-muted-foreground text-sm mt-1.5">
-              The trading journal built for Gen Z traders 📈
+              Track your trades. Know your edge.
             </p>
           </div>
         </motion.div>

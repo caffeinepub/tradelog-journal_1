@@ -77763,7 +77763,7 @@ function LoginPage() {
               ),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-extrabold text-foreground", children: "TradeLog Journal" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm mt-1.5", children: "The trading journal built for Gen Z traders 📈" })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm mt-1.5", children: "Track your trades. Know your edge." })
               ] })
             ]
           }
