@@ -1,14 +1,48 @@
 import { useInternetIdentity } from "@caffeineai/core-infrastructure";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+
+const INIT_TIMEOUT_MS = 3000;
 
 export function useAuth() {
   const { identity, loginStatus, login, clear, loginError, isLoginError } =
     useInternetIdentity();
 
+  // If loginStatus stays 'initializing' longer than INIT_TIMEOUT_MS, we give up
+  // waiting and treat the user as unauthenticated so the app can proceed.
+  const [initTimedOut, setInitTimedOut] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (loginStatus === "initializing") {
+      // Start the escape-hatch timer
+      timerRef.current = setTimeout(() => {
+        setInitTimedOut(true);
+      }, INIT_TIMEOUT_MS);
+    } else {
+      // Status resolved — cancel any pending timer and clear the flag
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+      setInitTimedOut(false);
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, [loginStatus]);
+
   const isAuthenticated = loginStatus === "success" && identity !== undefined;
+
+  // isLoading is true only while genuinely in-flight AND within the timeout window.
+  // Once timedOut=true the spinner is dismissed and the user is treated as logged out.
   const isLoading =
-    loginStatus === "initializing" || loginStatus === "logging-in";
+    !initTimedOut &&
+    (loginStatus === "initializing" || loginStatus === "logging-in");
 
   const principalText = identity?.getPrincipal().toText() ?? "";
   const shortPrincipal = principalText

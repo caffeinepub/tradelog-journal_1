@@ -27723,10 +27723,32 @@ var $e = reactExports.forwardRef(function(e3, t2) {
     })) : null;
   }));
 });
+const INIT_TIMEOUT_MS = 3e3;
 function useAuth() {
   const { identity: identity3, loginStatus, login, clear, loginError, isLoginError } = useInternetIdentity();
+  const [initTimedOut, setInitTimedOut] = reactExports.useState(false);
+  const timerRef = reactExports.useRef(null);
+  reactExports.useEffect(() => {
+    if (loginStatus === "initializing") {
+      timerRef.current = setTimeout(() => {
+        setInitTimedOut(true);
+      }, INIT_TIMEOUT_MS);
+    } else {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+      setInitTimedOut(false);
+    }
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, [loginStatus]);
   const isAuthenticated = loginStatus === "success" && identity3 !== void 0;
-  const isLoading = loginStatus === "initializing" || loginStatus === "logging-in";
+  const isLoading = !initTimedOut && (loginStatus === "initializing" || loginStatus === "logging-in");
   const principalText = (identity3 == null ? void 0 : identity3.getPrincipal().toText()) ?? "";
   const shortPrincipal = principalText ? `${principalText.slice(0, 5)}...${principalText.slice(-3)}` : "";
   reactExports.useEffect(() => {
@@ -77289,8 +77311,8 @@ function LoginPage() {
   const { login, isAuthenticated, isLoading, isLoginError, loginError } = useAuth();
   const navigate = useNavigate();
   reactExports.useEffect(() => {
-    if (isAuthenticated) navigate({ to: "/" });
-  }, [isAuthenticated, navigate]);
+    if (!isLoading && isAuthenticated) navigate({ to: "/" });
+  }, [isAuthenticated, isLoading, navigate]);
   const errorMsg = isLoginError && loginError ? loginError.message.includes("already authenticated") ? null : loginError.message : null;
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "div",

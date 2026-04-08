@@ -45,9 +45,12 @@ function LoginPage() {
     useAuth();
   const navigate = useNavigate();
 
+  // Only redirect once auth is fully resolved — never while still loading.
+  // This prevents a flash-redirect if the timeout fires and isLoading goes false
+  // momentarily before loginStatus settles.
   useEffect(() => {
-    if (isAuthenticated) navigate({ to: "/" });
-  }, [isAuthenticated, navigate]);
+    if (!isLoading && isAuthenticated) navigate({ to: "/" });
+  }, [isAuthenticated, isLoading, navigate]);
 
   // Show an inline error banner if login failed
   const errorMsg =
