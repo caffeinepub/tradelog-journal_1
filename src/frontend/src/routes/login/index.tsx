@@ -41,12 +41,21 @@ const features = [
 ];
 
 function LoginPage() {
-  const { login, isAuthenticated, isLoading } = useAuth();
+  const { login, isAuthenticated, isLoading, isLoginError, loginError } =
+    useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isAuthenticated) navigate({ to: "/" });
   }, [isAuthenticated, navigate]);
+
+  // Show an inline error banner if login failed
+  const errorMsg =
+    isLoginError && loginError
+      ? loginError.message.includes("already authenticated")
+        ? null
+        : loginError.message
+      : null;
 
   return (
     <div
@@ -137,6 +146,20 @@ function LoginPage() {
           transition={{ delay: 0.45, duration: 0.35 }}
           className="space-y-3"
         >
+          {errorMsg && (
+            <div
+              className="rounded-xl p-3 flex items-start gap-2.5"
+              style={{
+                background: "rgba(248,113,113,0.08)",
+                border: "1px solid rgba(248,113,113,0.3)",
+              }}
+              data-ocid="login-error-banner"
+            >
+              <span className="text-red-400 text-xs font-medium leading-relaxed">
+                ⚠ {errorMsg}
+              </span>
+            </div>
+          )}
           <NeonButton
             variant="green"
             size="lg"

@@ -24,9 +24,14 @@ export function useIsAdmin() {
         // safe to attempt this on every fresh login — if admin is already
         // set the backend silently rejects it and we fall through to isAdmin().
         const myPrincipal = identity.getPrincipal();
-        await actor.setAdmin(myPrincipal as Principal).catch(() => {
+        // Fire-and-forget: do NOT await this — just attempt and ignore the result.
+        // This ensures setAdmin never blocks or delays the isAdmin() check.
+        void actor.setAdmin(myPrincipal as Principal).catch(() => {
           // Ignore errors — either we're already admin or we're not the first caller.
         });
+
+        // Small delay to let the setAdmin call reach the backend before checking
+        await new Promise((resolve) => setTimeout(resolve, 300));
 
         return await actor.isAdmin();
       } catch {
@@ -37,6 +42,8 @@ export function useIsAdmin() {
     staleTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
+    // Never throw — admin status failure should not break the UI
+    throwOnError: false,
   });
 
   return {

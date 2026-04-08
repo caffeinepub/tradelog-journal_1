@@ -32983,15 +32983,28 @@ const Toaster = ({ ...props }) => {
   );
 };
 function useAuth() {
-  const { identity: identity3, loginStatus, login, clear } = useInternetIdentity();
+  const { identity: identity3, loginStatus, login, clear, loginError, isLoginError } = useInternetIdentity();
   const isAuthenticated = loginStatus === "success" && identity3 !== void 0;
   const isLoading = loginStatus === "initializing" || loginStatus === "logging-in";
   const principalText = (identity3 == null ? void 0 : identity3.getPrincipal().toText()) ?? "";
   const shortPrincipal = principalText ? `${principalText.slice(0, 5)}...${principalText.slice(-3)}` : "";
+  reactExports.useEffect(() => {
+    if (isLoginError && loginError) {
+      const msg = loginError.message ?? "Login failed. Please try again.";
+      if (!msg.includes("already authenticated")) {
+        ue.error("Login failed", {
+          description: msg.length > 120 ? `${msg.slice(0, 120)}…` : msg,
+          duration: 6e3
+        });
+      }
+    }
+  }, [isLoginError, loginError]);
   return {
     identity: identity3,
     isAuthenticated,
     isLoading,
+    isLoginError,
+    loginError,
     loginStatus,
     principalText,
     shortPrincipal,
@@ -34192,8 +34205,9 @@ function useIsAdmin() {
       if (!actor || !isAuthenticated || !identity3) return false;
       try {
         const myPrincipal = identity3.getPrincipal();
-        await actor.setAdmin(myPrincipal).catch(() => {
+        void actor.setAdmin(myPrincipal).catch(() => {
         });
+        await new Promise((resolve) => setTimeout(resolve, 300));
         return await actor.isAdmin();
       } catch {
         return false;
@@ -34202,7 +34216,9 @@ function useIsAdmin() {
     enabled: !!actor && !isFetching && isAuthenticated,
     staleTime: 0,
     refetchOnMount: true,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    // Never throw — admin status failure should not break the UI
+    throwOnError: false
   });
   return {
     isAdmin: query.data ?? false,
@@ -77436,11 +77452,12 @@ const features = [
   }
 ];
 function LoginPage() {
-  const { login, isAuthenticated, isLoading } = useAuth();
+  const { login, isAuthenticated, isLoading, isLoginError, loginError } = useAuth();
   const navigate = useNavigate();
   reactExports.useEffect(() => {
     if (isAuthenticated) navigate({ to: "/" });
   }, [isAuthenticated, navigate]);
+  const errorMsg = isLoginError && loginError ? loginError.message.includes("already authenticated") ? null : loginError.message : null;
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "div",
     {
@@ -77531,6 +77548,21 @@ function LoginPage() {
             transition: { delay: 0.45, duration: 0.35 },
             className: "space-y-3",
             children: [
+              errorMsg && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "div",
+                {
+                  className: "rounded-xl p-3 flex items-start gap-2.5",
+                  style: {
+                    background: "rgba(248,113,113,0.08)",
+                    border: "1px solid rgba(248,113,113,0.3)"
+                  },
+                  "data-ocid": "login-error-banner",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-red-400 text-xs font-medium leading-relaxed", children: [
+                    "⚠ ",
+                    errorMsg
+                  ] })
+                }
+              ),
               /* @__PURE__ */ jsxRuntimeExports.jsxs(
                 NeonButton,
                 {
@@ -81637,7 +81669,14 @@ function App() {
 BigInt.prototype.toJSON = function() {
   return this.toString();
 };
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false
+    }
+  }
+});
 ReactDOM.createRoot(document.getElementById("root")).render(
   /* @__PURE__ */ jsxRuntimeExports.jsx(QueryClientProvider, { client: queryClient, children: /* @__PURE__ */ jsxRuntimeExports.jsx(InternetIdentityProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) }) })
 );
