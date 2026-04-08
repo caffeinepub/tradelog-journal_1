@@ -701,6 +701,15 @@ function DashboardPage() {
               <Zap className="h-4 w-4" />
               Go Pro Now!
             </NeonButton>
+            <button
+              type="button"
+              onClick={() => navigate({ to: "/redeem" })}
+              className="relative z-10 text-sm font-semibold transition-colors hover:opacity-80 shrink-0"
+              style={{ color: "#00ffff" }}
+              data-ocid="upgrade-banner-redeem-link"
+            >
+              Have a code? Redeem →
+            </button>
           </div>
         </motion.div>
       )}

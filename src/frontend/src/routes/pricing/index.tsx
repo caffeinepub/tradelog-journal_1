@@ -3,7 +3,7 @@ import { NeonButton } from "@/components/ui/NeonButton";
 import { Badge } from "@/components/ui/badge";
 import { useUserTier } from "@/hooks/use-user-tier";
 import { createRoute, useNavigate } from "@tanstack/react-router";
-import { Check, ChevronDown, Lock, Sparkles, X, Zap } from "lucide-react";
+import { Check, ChevronDown, Lock, Sparkles, Tag, X, Zap } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -285,11 +285,16 @@ function FaqItem({ q, a, index }: { q: string; a: string; index: number }) {
 
 function PricingPage() {
   const { isPaid, isLoading } = useUserTier();
+  const navigate = useNavigate();
 
   const handleUpgrade = () => {
     toast.info("Stripe integration coming soon! Stay tuned for Pro launch 🚀", {
       duration: 5000,
     });
+  };
+
+  const handleRedeemCode = () => {
+    navigate({ to: "/redeem" });
   };
 
   return (
@@ -605,16 +610,27 @@ function PricingPage() {
             <p className="text-muted-foreground text-sm mb-4">
               Ready to trade smarter?
             </p>
-            <NeonButton
-              variant="purple"
-              size="lg"
-              onClick={handleUpgrade}
-              data-ocid="pricing-bottom-cta"
-              style={{ boxShadow: "0 0 24px rgba(185,0,255,0.3)" }}
-            >
-              <Zap className="h-4 w-4" />
-              Upgrade to Pro — $9.99/month
-            </NeonButton>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <NeonButton
+                variant="purple"
+                size="lg"
+                onClick={handleUpgrade}
+                data-ocid="pricing-bottom-cta"
+                style={{ boxShadow: "0 0 24px rgba(185,0,255,0.3)" }}
+              >
+                <Zap className="h-4 w-4" />
+                Upgrade to Pro — $9.99/month
+              </NeonButton>
+              <NeonButton
+                variant="outline"
+                size="lg"
+                onClick={handleRedeemCode}
+                data-ocid="pricing-redeem-code-btn"
+              >
+                <Tag className="h-4 w-4" />
+                Redeem a Code
+              </NeonButton>
+            </div>
             <p className="text-xs text-muted-foreground mt-2">
               Payment integration coming soon · Questions?{" "}
               <a

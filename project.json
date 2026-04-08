@@ -1,23 +1,27 @@
 {
-  "overview": "TradeLog Journal is a Gen Z-styled trading journal web app with dark mode, neon accents, and glassmorphism panels. It lets traders log trades, import CSV histories, annotate chart screenshots, and analyze performance — with a freemium model that gates full analytics and unlimited entries behind a paid tier.",
+  "overview": "TradeLog Journal is a Gen Z-focused trading journal web app with a dark mode aesthetic, neon accents, and glassmorphism design. It enables traders to log, analyze, and reflect on trades with a freemium model, coupon code redemption, and an admin panel for the creator.",
   "features": [
-    "Trade log with pair, direction, entry/exit price, P&L, R:R, strategy/mistake tags, session, notes",
-    "CSV import with column mapping wizard to retroactively populate trade history",
-    "Chart screenshot upload with annotation tools (arrows, boxes, lines, text labels)",
-    "Performance dashboard with win rate, P&L, drawdown, best/worst pairs, weekly/monthly summaries",
-    "Freemium model: 5 trades/day and 25 total cap for free, with teaser overlays and upgrade prompts",
-    "Stripe checkout placeholder for paid tier upgrade",
-    "Gen Z dark mode design with neon accents, glassmorphism, bold typography, smooth animations"
+    "Full trade log with predictive pair/instrument suggestions",
+    "Performance dashboard with win rate, P&L, drawdown, and R:R metrics",
+    "CSV import with column-mapping wizard",
+    "Chart screenshot upload with annotation tools",
+    "Freemium gating: free tier (5/day, 25 total), paid tier ($9.99/month, unlimited)",
+    "Admin panel for creator with full feature access and coupon management",
+    "Coupon code system with preset perks (permanent upgrade, free months, feature unlocks, custom)",
+    "Coupon code redemption page for users",
+    "Trade history journal view",
+    "Analytics dashboard with blurred insights for free users"
   ],
   "category": "productivity",
   "tags": [
     "trading",
     "journal",
     "finance",
-    "analytics",
     "freemium",
-    "dark-mode",
-    "glassmorphism"
+    "analytics",
+    "gen-z",
+    "admin",
+    "coupon-codes"
   ],
-  "last_updated": "2026-04-07T22:21:03.830Z"
+  "last_updated": "2026-04-08T00:13:44.101Z"
 }

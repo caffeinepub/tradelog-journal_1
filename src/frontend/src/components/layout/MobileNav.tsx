@@ -1,11 +1,16 @@
+import { useIsAdmin } from "@/hooks/use-is-admin";
+import { useUserTier } from "@/hooks/use-user-tier";
 import { cn } from "@/lib/utils";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   BarChart3,
   ClipboardList,
+  Crown,
   LayoutDashboard,
   Menu,
   PlusCircle,
+  ShieldCheck,
+  Tag,
   TrendingUp,
   Upload,
   X,
@@ -13,7 +18,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-const navItems = [
+const coreNavItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/trades", label: "Trade History", icon: ClipboardList },
   { to: "/trades/new", label: "Log Trade", icon: PlusCircle },
@@ -22,9 +27,29 @@ const navItems = [
   { to: "/pricing", label: "Pricing", icon: Zap },
 ] as const;
 
+type NavTo = (typeof coreNavItems)[number]["to"] | "/redeem" | "/admin";
+
+interface NavItem {
+  to: NavTo;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   const routerState = useRouterState();
+  const { isAdmin } = useIsAdmin();
+  const { isPaid } = useUserTier();
+
+  const navItems: NavItem[] = [
+    ...coreNavItems,
+    ...(!isPaid
+      ? [{ to: "/redeem" as NavTo, label: "Redeem Code", icon: Tag }]
+      : []),
+    ...(isAdmin
+      ? [{ to: "/admin" as NavTo, label: "Admin", icon: ShieldCheck }]
+      : []),
+  ];
 
   return (
     <>
@@ -37,6 +62,18 @@ export function MobileNav() {
           <span className="font-display font-bold text-base text-foreground">
             TradeLog
           </span>
+          {isAdmin && (
+            <span
+              className="text-[9px] px-1.5 py-0.5 rounded font-bold tracking-widest"
+              style={{
+                background: "rgba(255,149,0,0.15)",
+                color: "#ff9500",
+                border: "1px solid rgba(255,149,0,0.4)",
+              }}
+            >
+              ADMIN
+            </span>
+          )}
         </div>
         <button
           type="button"
@@ -76,6 +113,15 @@ export function MobileNav() {
                   to === "/"
                     ? routerState.location.pathname === "/"
                     : routerState.location.pathname.startsWith(to);
+                const isAdminLink = to === "/admin";
+                const activeColor = isAdminLink ? "#ff9500" : "#00ff41";
+                const activeBg = isAdminLink
+                  ? "rgba(255,149,0,0.1)"
+                  : "rgba(0,255,65,0.1)";
+                const activeBorder = isAdminLink
+                  ? "rgba(255,149,0,0.25)"
+                  : "rgba(0,255,65,0.25)";
+
                 return (
                   <Link
                     key={to}
@@ -84,18 +130,37 @@ export function MobileNav() {
                     className={cn(
                       "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-smooth",
                       isActive
-                        ? "bg-[#00ff41]/10 text-[#00ff41] border border-[#00ff41]/25"
+                        ? "border"
                         : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-[#00ff41]",
                     )}
+                    style={
+                      isActive
+                        ? {
+                            background: activeBg,
+                            color: activeColor,
+                            borderColor: activeBorder,
+                          }
+                        : undefined
+                    }
                     data-ocid={`mobile-nav-link-${label.toLowerCase().replace(/\s+/g, "-")}`}
                   >
                     <Icon
                       className={cn(
                         "h-4 w-4 shrink-0",
-                        isActive ? "text-[#00ff41]" : "text-muted-foreground",
+                        isActive
+                          ? isAdminLink
+                            ? "text-[#ff9500]"
+                            : "text-[#00ff41]"
+                          : "text-muted-foreground",
                       )}
                     />
                     {label}
+                    {isAdminLink && (
+                      <Crown
+                        className="ml-auto h-3.5 w-3.5"
+                        style={{ color: "#ff9500" }}
+                      />
+                    )}
                   </Link>
                 );
               })}

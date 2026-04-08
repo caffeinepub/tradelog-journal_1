@@ -6,6 +6,8 @@ module {
     var tier : CommonTypes.Tier;
     createdAt : CommonTypes.Timestamp;
     var stripeCustomerId : ?Text;
+    var paidUntil : ?Int;
+    var unlockedFeatures : [Text];
   };
 
   // Shared-safe public type (no var fields)
@@ -14,6 +16,9 @@ module {
     tier : CommonTypes.Tier;
     createdAt : CommonTypes.Timestamp;
     stripeCustomerId : ?Text;
+    paidUntil : ?Int;
+    unlockedFeatures : [Text];
+    isAdmin : Bool;
   };
 
   public type TierLimitStatus = {

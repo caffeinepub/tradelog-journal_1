@@ -20,6 +20,36 @@ const emptyMetrics = {
   maxDrawdown: 0,
 };
 
+const mockFreeUser = {
+  id: EMPTY_PRINCIPAL,
+  createdAt: now,
+  tier: Tier.FREE,
+  stripeCustomerId: undefined,
+  isAdmin: false,
+  unlockedFeatures: [] as Array<string>,
+};
+
+const mockPaidUser = {
+  id: EMPTY_PRINCIPAL,
+  createdAt: now,
+  tier: Tier.PAID,
+  stripeCustomerId: undefined,
+  isAdmin: false,
+  unlockedFeatures: [] as Array<string>,
+};
+
+const mockCoupon = {
+  id: BigInt(1),
+  code: "MOCK10",
+  description: "Mock coupon",
+  createdAt: now,
+  usedCount: BigInt(0),
+  isActive: true,
+  maxUses: undefined,
+  expiresAt: undefined,
+  perkType: { __kind__: "upgradeToPhaid" as const, upgradeToPhaid: null },
+};
+
 export const mockBackend: backendInterface = {
   bulkImportTrades: async () => ({
     id: BigInt(1),
@@ -33,12 +63,24 @@ export const mockBackend: backendInterface = {
 
   computeMetrics: async () => emptyMetrics,
 
+  createCoupon: async () => mockCoupon,
+
   createTrade: async () => ({
     __kind__: "limitReached" as const,
     limitReached: "Mock backend — no data",
   }),
 
+  deactivateCoupon: async () => ({
+    __kind__: "ok" as const,
+    ok: null,
+  }),
+
   deleteTrade: async () => true,
+
+  getCouponStats: async () => ({
+    __kind__: "ok" as const,
+    ok: { coupon: mockCoupon, totalRedemptions: BigInt(0) },
+  }),
 
   getImportJob: async () => ({
     id: BigInt(1),
@@ -52,12 +94,7 @@ export const mockBackend: backendInterface = {
 
   getMetrics: async () => emptyMetrics,
 
-  getOrCreateUser: async () => ({
-    id: EMPTY_PRINCIPAL,
-    createdAt: now,
-    tier: Tier.FREE,
-    stripeCustomerId: undefined,
-  }),
+  getOrCreateUser: async () => mockFreeUser,
 
   getTrade: async () => null,
 
@@ -75,14 +112,23 @@ export const mockBackend: backendInterface = {
 
   getUserTier: async () => Tier.FREE,
 
+  isAdmin: async () => false,
+
+  listCoupons: async () => [mockCoupon],
+
+  redeemCoupon: async () => ({
+    __kind__: "err" as const,
+    err: "Mock backend — coupon redemption not available",
+  }),
+
   saveChartAnnotation: async () => null,
+
+  setAdmin: async () => ({
+    __kind__: "ok" as const,
+    ok: null,
+  }),
 
   updateTrade: async () => null,
 
-  upgradeToPaid: async () => ({
-    id: EMPTY_PRINCIPAL,
-    createdAt: now,
-    tier: Tier.PAID,
-    stripeCustomerId: undefined,
-  }),
+  upgradeToPaid: async () => mockPaidUser,
 };

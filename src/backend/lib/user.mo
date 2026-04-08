@@ -5,30 +5,36 @@ import Time "mo:core/Time";
 import Principal "mo:core/Principal";
 
 module {
-  public func toPublic(user : UserTypes.User) : UserTypes.UserPublic {
+  public func toPublic(user : UserTypes.User, adminPrincipal : Principal) : UserTypes.UserPublic {
     {
       id = user.id;
       tier = user.tier;
       createdAt = user.createdAt;
       stripeCustomerId = user.stripeCustomerId;
+      paidUntil = user.paidUntil;
+      unlockedFeatures = user.unlockedFeatures;
+      isAdmin = Principal.equal(user.id, adminPrincipal);
     };
   };
 
   public func getOrCreate(
     users : List.List<UserTypes.User>,
     caller : CommonTypes.UserId,
+    adminPrincipal : Principal,
   ) : UserTypes.UserPublic {
     switch (users.find(func(u : UserTypes.User) : Bool { Principal.equal(u.id, caller) })) {
-      case (?u) { toPublic(u) };
+      case (?u) { toPublic(u, adminPrincipal) };
       case null {
         let newUser : UserTypes.User = {
           id = caller;
           var tier = #FREE;
           createdAt = Time.now();
           var stripeCustomerId = null;
+          var paidUntil = null;
+          var unlockedFeatures = [];
         };
         users.add(newUser);
-        toPublic(newUser);
+        toPublic(newUser, adminPrincipal);
       };
     };
   };
@@ -36,9 +42,10 @@ module {
   public func getUser(
     users : List.List<UserTypes.User>,
     caller : CommonTypes.UserId,
+    adminPrincipal : Principal,
   ) : ?UserTypes.UserPublic {
     switch (users.find(func(u : UserTypes.User) : Bool { Principal.equal(u.id, caller) })) {
-      case (?u) { ?toPublic(u) };
+      case (?u) { ?toPublic(u, adminPrincipal) };
       case null { null };
     };
   };
@@ -56,11 +63,12 @@ module {
   public func upgradeToPaid(
     users : List.List<UserTypes.User>,
     caller : CommonTypes.UserId,
+    adminPrincipal : Principal,
   ) : UserTypes.UserPublic {
     switch (users.find(func(u : UserTypes.User) : Bool { Principal.equal(u.id, caller) })) {
       case (?u) {
         u.tier := #PAID;
-        toPublic(u);
+        toPublic(u, adminPrincipal);
       };
       case null {
         // Create user and immediately set PAID
@@ -69,9 +77,11 @@ module {
           var tier = #PAID;
           createdAt = Time.now();
           var stripeCustomerId = null;
+          var paidUntil = null;
+          var unlockedFeatures = [];
         };
         users.add(newUser);
-        toPublic(newUser);
+        toPublic(newUser, adminPrincipal);
       };
     };
   };

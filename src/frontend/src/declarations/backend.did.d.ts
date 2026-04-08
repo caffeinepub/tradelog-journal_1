@@ -10,6 +10,36 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface CouponCode {
+  'id' : bigint,
+  'expiresAt' : [] | [bigint],
+  'code' : string,
+  'createdAt' : Timestamp,
+  'usedCount' : bigint,
+  'description' : string,
+  'isActive' : boolean,
+  'maxUses' : [] | [bigint],
+  'perkType' : CouponPerkType,
+}
+export type CouponPerkType = { 'custom' : string } |
+  { 'freeMonths' : bigint } |
+  { 'upgradeToPhaid' : null } |
+  { 'featureUnlock' : Array<string> };
+export interface CouponRedemptionResult {
+  'perkApplied' : string,
+  'coupon' : CouponCode,
+}
+export interface CouponStats {
+  'coupon' : CouponCode,
+  'totalRedemptions' : bigint,
+}
+export interface CreateCouponInput {
+  'expiresAt' : [] | [bigint],
+  'code' : string,
+  'description' : string,
+  'maxUses' : [] | [bigint],
+  'perkType' : CouponPerkType,
+}
 export interface CsvTradeRow {
   'pnl' : [] | [number],
   'exitDate' : Timestamp,
@@ -150,19 +180,33 @@ export interface TradePublic {
 export type UserId = Principal;
 export interface UserPublic {
   'id' : UserId,
+  'paidUntil' : [] | [bigint],
   'createdAt' : Timestamp,
   'tier' : Tier,
   'stripeCustomerId' : [] | [string],
+  'isAdmin' : boolean,
+  'unlockedFeatures' : Array<string>,
 }
 export interface _SERVICE {
   'bulkImportTrades' : ActorMethod<[Array<CsvTradeRow>], ImportJobPublic>,
   'computeMetrics' : ActorMethod<[], PerformanceMetrics>,
+  'createCoupon' : ActorMethod<[CreateCouponInput], CouponCode>,
   'createTrade' : ActorMethod<
     [TradeInput],
     { 'ok' : TradePublic } |
       { 'limitReached' : string }
   >,
+  'deactivateCoupon' : ActorMethod<
+    [bigint],
+    { 'ok' : null } |
+      { 'err' : string }
+  >,
   'deleteTrade' : ActorMethod<[TradeId], boolean>,
+  'getCouponStats' : ActorMethod<
+    [bigint],
+    { 'ok' : CouponStats } |
+      { 'err' : string }
+  >,
   'getImportJob' : ActorMethod<[ImportJobId], [] | [ImportJobPublic]>,
   'getMetrics' : ActorMethod<[], [] | [PerformanceMetrics]>,
   'getOrCreateUser' : ActorMethod<[], UserPublic>,
@@ -170,7 +214,15 @@ export interface _SERVICE {
   'getTradeLimitStatus' : ActorMethod<[], TierLimitStatus>,
   'getTrades' : ActorMethod<[TradeFilter], Array<TradePublic>>,
   'getUserTier' : ActorMethod<[], Tier>,
+  'isAdmin' : ActorMethod<[], boolean>,
+  'listCoupons' : ActorMethod<[], Array<CouponCode>>,
+  'redeemCoupon' : ActorMethod<
+    [string],
+    { 'ok' : CouponRedemptionResult } |
+      { 'err' : string }
+  >,
   'saveChartAnnotation' : ActorMethod<[TradeId, string], [] | [TradePublic]>,
+  'setAdmin' : ActorMethod<[Principal], { 'ok' : null } | { 'err' : string }>,
   'updateTrade' : ActorMethod<[TradeId, TradeInput], [] | [TradePublic]>,
   'upgradeToPaid' : ActorMethod<[], UserPublic>,
 }

@@ -89,12 +89,32 @@ export class ExternalBlob {
         return this;
     }
 }
+export interface CouponRedemptionResult {
+    perkApplied: string;
+    coupon: CouponCode;
+}
+export type CouponPerkType = {
+    __kind__: "custom";
+    custom: string;
+} | {
+    __kind__: "freeMonths";
+    freeMonths: bigint;
+} | {
+    __kind__: "upgradeToPhaid";
+    upgradeToPhaid: null;
+} | {
+    __kind__: "featureUnlock";
+    featureUnlock: Array<string>;
+};
 export type Timestamp = bigint;
 export interface UserPublic {
     id: UserId;
+    paidUntil?: bigint;
     createdAt: Timestamp;
     tier: Tier;
     stripeCustomerId?: string;
+    isAdmin: boolean;
+    unlockedFeatures: Array<string>;
 }
 export interface TierLimitStatus {
     dailyCount: bigint;
@@ -179,8 +199,30 @@ export interface ImportJobPublic {
     errors: Array<ImportLineError>;
     importedCount: bigint;
 }
+export interface CouponStats {
+    coupon: CouponCode;
+    totalRedemptions: bigint;
+}
 export type UserId = Principal;
 export type ImportJobId = bigint;
+export interface CreateCouponInput {
+    expiresAt?: bigint;
+    code: string;
+    description: string;
+    maxUses?: bigint;
+    perkType: CouponPerkType;
+}
+export interface CouponCode {
+    id: bigint;
+    expiresAt?: bigint;
+    code: string;
+    createdAt: Timestamp;
+    usedCount: bigint;
+    description: string;
+    isActive: boolean;
+    maxUses?: bigint;
+    perkType: CouponPerkType;
+}
 export interface TradeInput {
     exitDate: Timestamp;
     direction: Direction;
@@ -249,6 +291,7 @@ export enum Tier {
 export interface backendInterface {
     bulkImportTrades(rows: Array<CsvTradeRow>): Promise<ImportJobPublic>;
     computeMetrics(): Promise<PerformanceMetrics>;
+    createCoupon(input: CreateCouponInput): Promise<CouponCode>;
     createTrade(input: TradeInput): Promise<{
         __kind__: "ok";
         ok: TradePublic;
@@ -256,7 +299,21 @@ export interface backendInterface {
         __kind__: "limitReached";
         limitReached: string;
     }>;
+    deactivateCoupon(couponId: bigint): Promise<{
+        __kind__: "ok";
+        ok: null;
+    } | {
+        __kind__: "err";
+        err: string;
+    }>;
     deleteTrade(tradeId: TradeId): Promise<boolean>;
+    getCouponStats(couponId: bigint): Promise<{
+        __kind__: "ok";
+        ok: CouponStats;
+    } | {
+        __kind__: "err";
+        err: string;
+    }>;
     getImportJob(jobId: ImportJobId): Promise<ImportJobPublic | null>;
     getMetrics(): Promise<PerformanceMetrics | null>;
     getOrCreateUser(): Promise<UserPublic>;
@@ -264,11 +321,27 @@ export interface backendInterface {
     getTradeLimitStatus(): Promise<TierLimitStatus>;
     getTrades(filter: TradeFilter): Promise<Array<TradePublic>>;
     getUserTier(): Promise<Tier>;
+    isAdmin(): Promise<boolean>;
+    listCoupons(): Promise<Array<CouponCode>>;
+    redeemCoupon(code: string): Promise<{
+        __kind__: "ok";
+        ok: CouponRedemptionResult;
+    } | {
+        __kind__: "err";
+        err: string;
+    }>;
     saveChartAnnotation(tradeId: TradeId, imageUrl: string): Promise<TradePublic | null>;
+    setAdmin(newAdmin: Principal): Promise<{
+        __kind__: "ok";
+        ok: null;
+    } | {
+        __kind__: "err";
+        err: string;
+    }>;
     updateTrade(tradeId: TradeId, input: TradeInput): Promise<TradePublic | null>;
     upgradeToPaid(): Promise<UserPublic>;
 }
-import type { CsvTradeRow as _CsvTradeRow, Direction as _Direction, ImportJobId as _ImportJobId, ImportJobPublic as _ImportJobPublic, ImportLineError as _ImportLineError, ImportStatus as _ImportStatus, MarketCondition as _MarketCondition, PairStats as _PairStats, PerformanceMetrics as _PerformanceMetrics, PnlDataPoint as _PnlDataPoint, SessionStats as _SessionStats, SessionTime as _SessionTime, StrategyStats as _StrategyStats, Tier as _Tier, TierLimitStatus as _TierLimitStatus, Timestamp as _Timestamp, TradeFilter as _TradeFilter, TradeId as _TradeId, TradeInput as _TradeInput, TradePublic as _TradePublic, UserId as _UserId, UserPublic as _UserPublic } from "./declarations/backend.did.d.ts";
+import type { CouponCode as _CouponCode, CouponPerkType as _CouponPerkType, CouponRedemptionResult as _CouponRedemptionResult, CouponStats as _CouponStats, CreateCouponInput as _CreateCouponInput, CsvTradeRow as _CsvTradeRow, Direction as _Direction, ImportJobId as _ImportJobId, ImportJobPublic as _ImportJobPublic, ImportLineError as _ImportLineError, ImportStatus as _ImportStatus, MarketCondition as _MarketCondition, PairStats as _PairStats, PerformanceMetrics as _PerformanceMetrics, PnlDataPoint as _PnlDataPoint, SessionStats as _SessionStats, SessionTime as _SessionTime, StrategyStats as _StrategyStats, Tier as _Tier, TierLimitStatus as _TierLimitStatus, Timestamp as _Timestamp, TradeFilter as _TradeFilter, TradeId as _TradeId, TradeInput as _TradeInput, TradePublic as _TradePublic, UserId as _UserId, UserPublic as _UserPublic } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async bulkImportTrades(arg0: Array<CsvTradeRow>): Promise<ImportJobPublic> {
@@ -299,6 +372,20 @@ export class Backend implements backendInterface {
             return from_candid_PerformanceMetrics_n15(this._uploadFile, this._downloadFile, result);
         }
     }
+    async createCoupon(arg0: CreateCouponInput): Promise<CouponCode> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.createCoupon(to_candid_CreateCouponInput_n23(this._uploadFile, this._downloadFile, arg0));
+                return from_candid_CouponCode_n27(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.createCoupon(to_candid_CreateCouponInput_n23(this._uploadFile, this._downloadFile, arg0));
+            return from_candid_CouponCode_n27(this._uploadFile, this._downloadFile, result);
+        }
+    }
     async createTrade(arg0: TradeInput): Promise<{
         __kind__: "ok";
         ok: TradePublic;
@@ -308,15 +395,35 @@ export class Backend implements backendInterface {
     }> {
         if (this.processError) {
             try {
-                const result = await this.actor.createTrade(to_candid_TradeInput_n23(this._uploadFile, this._downloadFile, arg0));
-                return from_candid_variant_n25(this._uploadFile, this._downloadFile, result);
+                const result = await this.actor.createTrade(to_candid_TradeInput_n33(this._uploadFile, this._downloadFile, arg0));
+                return from_candid_variant_n35(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.createTrade(to_candid_TradeInput_n23(this._uploadFile, this._downloadFile, arg0));
-            return from_candid_variant_n25(this._uploadFile, this._downloadFile, result);
+            const result = await this.actor.createTrade(to_candid_TradeInput_n33(this._uploadFile, this._downloadFile, arg0));
+            return from_candid_variant_n35(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async deactivateCoupon(arg0: bigint): Promise<{
+        __kind__: "ok";
+        ok: null;
+    } | {
+        __kind__: "err";
+        err: string;
+    }> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deactivateCoupon(arg0);
+                return from_candid_variant_n42(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deactivateCoupon(arg0);
+            return from_candid_variant_n42(this._uploadFile, this._downloadFile, result);
         }
     }
     async deleteTrade(arg0: TradeId): Promise<boolean> {
@@ -333,149 +440,249 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async getCouponStats(arg0: bigint): Promise<{
+        __kind__: "ok";
+        ok: CouponStats;
+    } | {
+        __kind__: "err";
+        err: string;
+    }> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getCouponStats(arg0);
+                return from_candid_variant_n43(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getCouponStats(arg0);
+            return from_candid_variant_n43(this._uploadFile, this._downloadFile, result);
+        }
+    }
     async getImportJob(arg0: ImportJobId): Promise<ImportJobPublic | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getImportJob(arg0);
-                return from_candid_opt_n32(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n46(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getImportJob(arg0);
-            return from_candid_opt_n32(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n46(this._uploadFile, this._downloadFile, result);
         }
     }
     async getMetrics(): Promise<PerformanceMetrics | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getMetrics();
-                return from_candid_opt_n33(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n47(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getMetrics();
-            return from_candid_opt_n33(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n47(this._uploadFile, this._downloadFile, result);
         }
     }
     async getOrCreateUser(): Promise<UserPublic> {
         if (this.processError) {
             try {
                 const result = await this.actor.getOrCreateUser();
-                return from_candid_UserPublic_n34(this._uploadFile, this._downloadFile, result);
+                return from_candid_UserPublic_n48(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getOrCreateUser();
-            return from_candid_UserPublic_n34(this._uploadFile, this._downloadFile, result);
+            return from_candid_UserPublic_n48(this._uploadFile, this._downloadFile, result);
         }
     }
     async getTrade(arg0: TradeId): Promise<TradePublic | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getTrade(arg0);
-                return from_candid_opt_n38(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getTrade(arg0);
-            return from_candid_opt_n38(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
         }
     }
     async getTradeLimitStatus(): Promise<TierLimitStatus> {
         if (this.processError) {
             try {
                 const result = await this.actor.getTradeLimitStatus();
-                return from_candid_TierLimitStatus_n39(this._uploadFile, this._downloadFile, result);
+                return from_candid_TierLimitStatus_n53(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getTradeLimitStatus();
-            return from_candid_TierLimitStatus_n39(this._uploadFile, this._downloadFile, result);
+            return from_candid_TierLimitStatus_n53(this._uploadFile, this._downloadFile, result);
         }
     }
     async getTrades(arg0: TradeFilter): Promise<Array<TradePublic>> {
         if (this.processError) {
             try {
-                const result = await this.actor.getTrades(to_candid_TradeFilter_n41(this._uploadFile, this._downloadFile, arg0));
-                return from_candid_vec_n43(this._uploadFile, this._downloadFile, result);
+                const result = await this.actor.getTrades(to_candid_TradeFilter_n55(this._uploadFile, this._downloadFile, arg0));
+                return from_candid_vec_n57(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getTrades(to_candid_TradeFilter_n41(this._uploadFile, this._downloadFile, arg0));
-            return from_candid_vec_n43(this._uploadFile, this._downloadFile, result);
+            const result = await this.actor.getTrades(to_candid_TradeFilter_n55(this._uploadFile, this._downloadFile, arg0));
+            return from_candid_vec_n57(this._uploadFile, this._downloadFile, result);
         }
     }
     async getUserTier(): Promise<Tier> {
         if (this.processError) {
             try {
                 const result = await this.actor.getUserTier();
-                return from_candid_Tier_n36(this._uploadFile, this._downloadFile, result);
+                return from_candid_Tier_n50(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getUserTier();
-            return from_candid_Tier_n36(this._uploadFile, this._downloadFile, result);
+            return from_candid_Tier_n50(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async isAdmin(): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.isAdmin();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.isAdmin();
+            return result;
+        }
+    }
+    async listCoupons(): Promise<Array<CouponCode>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.listCoupons();
+                return from_candid_vec_n58(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.listCoupons();
+            return from_candid_vec_n58(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async redeemCoupon(arg0: string): Promise<{
+        __kind__: "ok";
+        ok: CouponRedemptionResult;
+    } | {
+        __kind__: "err";
+        err: string;
+    }> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.redeemCoupon(arg0);
+                return from_candid_variant_n59(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.redeemCoupon(arg0);
+            return from_candid_variant_n59(this._uploadFile, this._downloadFile, result);
         }
     }
     async saveChartAnnotation(arg0: TradeId, arg1: string): Promise<TradePublic | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.saveChartAnnotation(arg0, arg1);
-                return from_candid_opt_n38(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.saveChartAnnotation(arg0, arg1);
-            return from_candid_opt_n38(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
         }
     }
-    async updateTrade(arg0: TradeId, arg1: TradeInput): Promise<TradePublic | null> {
+    async setAdmin(arg0: Principal): Promise<{
+        __kind__: "ok";
+        ok: null;
+    } | {
+        __kind__: "err";
+        err: string;
+    }> {
         if (this.processError) {
             try {
-                const result = await this.actor.updateTrade(arg0, to_candid_TradeInput_n23(this._uploadFile, this._downloadFile, arg1));
-                return from_candid_opt_n38(this._uploadFile, this._downloadFile, result);
+                const result = await this.actor.setAdmin(arg0);
+                return from_candid_variant_n42(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.updateTrade(arg0, to_candid_TradeInput_n23(this._uploadFile, this._downloadFile, arg1));
-            return from_candid_opt_n38(this._uploadFile, this._downloadFile, result);
+            const result = await this.actor.setAdmin(arg0);
+            return from_candid_variant_n42(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async updateTrade(arg0: TradeId, arg1: TradeInput): Promise<TradePublic | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateTrade(arg0, to_candid_TradeInput_n33(this._uploadFile, this._downloadFile, arg1));
+                return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateTrade(arg0, to_candid_TradeInput_n33(this._uploadFile, this._downloadFile, arg1));
+            return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
         }
     }
     async upgradeToPaid(): Promise<UserPublic> {
         if (this.processError) {
             try {
                 const result = await this.actor.upgradeToPaid();
-                return from_candid_UserPublic_n34(this._uploadFile, this._downloadFile, result);
+                return from_candid_UserPublic_n48(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.upgradeToPaid();
-            return from_candid_UserPublic_n34(this._uploadFile, this._downloadFile, result);
+            return from_candid_UserPublic_n48(this._uploadFile, this._downloadFile, result);
         }
     }
 }
-function from_candid_Direction_n28(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Direction): Direction {
-    return from_candid_variant_n29(_uploadFile, _downloadFile, value);
+function from_candid_CouponCode_n27(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _CouponCode): CouponCode {
+    return from_candid_record_n28(_uploadFile, _downloadFile, value);
+}
+function from_candid_CouponPerkType_n31(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _CouponPerkType): CouponPerkType {
+    return from_candid_variant_n32(_uploadFile, _downloadFile, value);
+}
+function from_candid_CouponRedemptionResult_n60(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _CouponRedemptionResult): CouponRedemptionResult {
+    return from_candid_record_n61(_uploadFile, _downloadFile, value);
+}
+function from_candid_CouponStats_n44(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _CouponStats): CouponStats {
+    return from_candid_record_n45(_uploadFile, _downloadFile, value);
+}
+function from_candid_Direction_n38(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Direction): Direction {
+    return from_candid_variant_n39(_uploadFile, _downloadFile, value);
 }
 function from_candid_ImportJobPublic_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ImportJobPublic): ImportJobPublic {
     return from_candid_record_n11(_uploadFile, _downloadFile, value);
@@ -483,8 +690,8 @@ function from_candid_ImportJobPublic_n10(_uploadFile: (file: ExternalBlob) => Pr
 function from_candid_ImportStatus_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ImportStatus): ImportStatus {
     return from_candid_variant_n13(_uploadFile, _downloadFile, value);
 }
-function from_candid_MarketCondition_n30(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _MarketCondition): MarketCondition {
-    return from_candid_variant_n31(_uploadFile, _downloadFile, value);
+function from_candid_MarketCondition_n40(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _MarketCondition): MarketCondition {
+    return from_candid_variant_n41(_uploadFile, _downloadFile, value);
 }
 function from_candid_PerformanceMetrics_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _PerformanceMetrics): PerformanceMetrics {
     return from_candid_record_n16(_uploadFile, _downloadFile, value);
@@ -495,17 +702,17 @@ function from_candid_SessionStats_n18(_uploadFile: (file: ExternalBlob) => Promi
 function from_candid_SessionTime_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _SessionTime): SessionTime {
     return from_candid_variant_n21(_uploadFile, _downloadFile, value);
 }
-function from_candid_TierLimitStatus_n39(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _TierLimitStatus): TierLimitStatus {
-    return from_candid_record_n40(_uploadFile, _downloadFile, value);
+function from_candid_TierLimitStatus_n53(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _TierLimitStatus): TierLimitStatus {
+    return from_candid_record_n54(_uploadFile, _downloadFile, value);
 }
-function from_candid_Tier_n36(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Tier): Tier {
-    return from_candid_variant_n37(_uploadFile, _downloadFile, value);
+function from_candid_Tier_n50(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Tier): Tier {
+    return from_candid_variant_n51(_uploadFile, _downloadFile, value);
 }
-function from_candid_TradePublic_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _TradePublic): TradePublic {
-    return from_candid_record_n27(_uploadFile, _downloadFile, value);
+function from_candid_TradePublic_n36(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _TradePublic): TradePublic {
+    return from_candid_record_n37(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserPublic_n34(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserPublic): UserPublic {
-    return from_candid_record_n35(_uploadFile, _downloadFile, value);
+function from_candid_UserPublic_n48(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserPublic): UserPublic {
+    return from_candid_record_n49(_uploadFile, _downloadFile, value);
 }
 function from_candid_opt_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Timestamp]): Timestamp | null {
     return value.length === 0 ? null : value[0];
@@ -513,14 +720,20 @@ function from_candid_opt_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
 function from_candid_opt_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [string]): string | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n32(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_ImportJobPublic]): ImportJobPublic | null {
+function from_candid_opt_n29(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [bigint]): bigint | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n30(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [bigint]): bigint | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n46(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_ImportJobPublic]): ImportJobPublic | null {
     return value.length === 0 ? null : from_candid_ImportJobPublic_n10(_uploadFile, _downloadFile, value[0]);
 }
-function from_candid_opt_n33(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_PerformanceMetrics]): PerformanceMetrics | null {
+function from_candid_opt_n47(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_PerformanceMetrics]): PerformanceMetrics | null {
     return value.length === 0 ? null : from_candid_PerformanceMetrics_n15(_uploadFile, _downloadFile, value[0]);
 }
-function from_candid_opt_n38(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_TradePublic]): TradePublic | null {
-    return value.length === 0 ? null : from_candid_TradePublic_n26(_uploadFile, _downloadFile, value[0]);
+function from_candid_opt_n52(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_TradePublic]): TradePublic | null {
+    return value.length === 0 ? null : from_candid_TradePublic_n36(_uploadFile, _downloadFile, value[0]);
 }
 function from_candid_record_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: _ImportJobId;
@@ -612,7 +825,40 @@ function from_candid_record_n19(_uploadFile: (file: ExternalBlob) => Promise<Uin
         winRate: value.winRate
     };
 }
-function from_candid_record_n27(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n28(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    id: bigint;
+    expiresAt: [] | [bigint];
+    code: string;
+    createdAt: _Timestamp;
+    usedCount: bigint;
+    description: string;
+    isActive: boolean;
+    maxUses: [] | [bigint];
+    perkType: _CouponPerkType;
+}): {
+    id: bigint;
+    expiresAt?: bigint;
+    code: string;
+    createdAt: Timestamp;
+    usedCount: bigint;
+    description: string;
+    isActive: boolean;
+    maxUses?: bigint;
+    perkType: CouponPerkType;
+} {
+    return {
+        id: value.id,
+        expiresAt: record_opt_to_undefined(from_candid_opt_n29(_uploadFile, _downloadFile, value.expiresAt)),
+        code: value.code,
+        createdAt: value.createdAt,
+        usedCount: value.usedCount,
+        description: value.description,
+        isActive: value.isActive,
+        maxUses: record_opt_to_undefined(from_candid_opt_n30(_uploadFile, _downloadFile, value.maxUses)),
+        perkType: from_candid_CouponPerkType_n31(_uploadFile, _downloadFile, value.perkType)
+    };
+}
+function from_candid_record_n37(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: _TradeId;
     pnl: number;
     exitDate: _Timestamp;
@@ -655,14 +901,14 @@ function from_candid_record_n27(_uploadFile: (file: ExternalBlob) => Promise<Uin
         id: value.id,
         pnl: value.pnl,
         exitDate: value.exitDate,
-        direction: from_candid_Direction_n28(_uploadFile, _downloadFile, value.direction),
+        direction: from_candid_Direction_n38(_uploadFile, _downloadFile, value.direction),
         entryDate: value.entryDate,
         chartImageUrl: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.chartImageUrl)),
         sessionTime: from_candid_SessionTime_n20(_uploadFile, _downloadFile, value.sessionTime),
         userId: value.userId,
         createdAt: value.createdAt,
         pair: value.pair,
-        marketCondition: from_candid_MarketCondition_n30(_uploadFile, _downloadFile, value.marketCondition),
+        marketCondition: from_candid_MarketCondition_n40(_uploadFile, _downloadFile, value.marketCondition),
         riskReward: value.riskReward,
         strategyTag: value.strategyTag,
         updatedAt: value.updatedAt,
@@ -672,25 +918,46 @@ function from_candid_record_n27(_uploadFile: (file: ExternalBlob) => Promise<Uin
         exitPrice: value.exitPrice
     };
 }
-function from_candid_record_n35(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n45(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    coupon: _CouponCode;
+    totalRedemptions: bigint;
+}): {
+    coupon: CouponCode;
+    totalRedemptions: bigint;
+} {
+    return {
+        coupon: from_candid_CouponCode_n27(_uploadFile, _downloadFile, value.coupon),
+        totalRedemptions: value.totalRedemptions
+    };
+}
+function from_candid_record_n49(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     id: _UserId;
+    paidUntil: [] | [bigint];
     createdAt: _Timestamp;
     tier: _Tier;
     stripeCustomerId: [] | [string];
+    isAdmin: boolean;
+    unlockedFeatures: Array<string>;
 }): {
     id: UserId;
+    paidUntil?: bigint;
     createdAt: Timestamp;
     tier: Tier;
     stripeCustomerId?: string;
+    isAdmin: boolean;
+    unlockedFeatures: Array<string>;
 } {
     return {
         id: value.id,
+        paidUntil: record_opt_to_undefined(from_candid_opt_n29(_uploadFile, _downloadFile, value.paidUntil)),
         createdAt: value.createdAt,
-        tier: from_candid_Tier_n36(_uploadFile, _downloadFile, value.tier),
-        stripeCustomerId: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.stripeCustomerId))
+        tier: from_candid_Tier_n50(_uploadFile, _downloadFile, value.tier),
+        stripeCustomerId: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.stripeCustomerId)),
+        isAdmin: value.isAdmin,
+        unlockedFeatures: value.unlockedFeatures
     };
 }
-function from_candid_record_n40(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n54(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     dailyCount: bigint;
     tier: _Tier;
     totalCount: bigint;
@@ -709,12 +976,24 @@ function from_candid_record_n40(_uploadFile: (file: ExternalBlob) => Promise<Uin
 } {
     return {
         dailyCount: value.dailyCount,
-        tier: from_candid_Tier_n36(_uploadFile, _downloadFile, value.tier),
+        tier: from_candid_Tier_n50(_uploadFile, _downloadFile, value.tier),
         totalCount: value.totalCount,
         dailyLimitReached: value.dailyLimitReached,
         dailyLimit: value.dailyLimit,
         totalLimit: value.totalLimit,
         totalLimitReached: value.totalLimitReached
+    };
+}
+function from_candid_record_n61(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    perkApplied: string;
+    coupon: _CouponCode;
+}): {
+    perkApplied: string;
+    coupon: CouponCode;
+} {
+    return {
+        perkApplied: value.perkApplied,
+        coupon: from_candid_CouponCode_n27(_uploadFile, _downloadFile, value.coupon)
     };
 }
 function from_candid_variant_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
@@ -739,7 +1018,42 @@ function from_candid_variant_n21(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }): SessionTime {
     return "NY" in value ? SessionTime.NY : "LONDON" in value ? SessionTime.LONDON : "ASIAN" in value ? SessionTime.ASIAN : "OTHER" in value ? SessionTime.OTHER : value;
 }
-function from_candid_variant_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n32(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    custom: string;
+} | {
+    freeMonths: bigint;
+} | {
+    upgradeToPhaid: null;
+} | {
+    featureUnlock: Array<string>;
+}): {
+    __kind__: "custom";
+    custom: string;
+} | {
+    __kind__: "freeMonths";
+    freeMonths: bigint;
+} | {
+    __kind__: "upgradeToPhaid";
+    upgradeToPhaid: null;
+} | {
+    __kind__: "featureUnlock";
+    featureUnlock: Array<string>;
+} {
+    return "custom" in value ? {
+        __kind__: "custom",
+        custom: value.custom
+    } : "freeMonths" in value ? {
+        __kind__: "freeMonths",
+        freeMonths: value.freeMonths
+    } : "upgradeToPhaid" in value ? {
+        __kind__: "upgradeToPhaid",
+        upgradeToPhaid: value.upgradeToPhaid
+    } : "featureUnlock" in value ? {
+        __kind__: "featureUnlock",
+        featureUnlock: value.featureUnlock
+    } : value;
+}
+function from_candid_variant_n35(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     ok: _TradePublic;
 } | {
     limitReached: string;
@@ -752,20 +1066,20 @@ function from_candid_variant_n25(_uploadFile: (file: ExternalBlob) => Promise<Ui
 } {
     return "ok" in value ? {
         __kind__: "ok",
-        ok: from_candid_TradePublic_n26(_uploadFile, _downloadFile, value.ok)
+        ok: from_candid_TradePublic_n36(_uploadFile, _downloadFile, value.ok)
     } : "limitReached" in value ? {
         __kind__: "limitReached",
         limitReached: value.limitReached
     } : value;
 }
-function from_candid_variant_n29(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n39(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     LONG: null;
 } | {
     SHORT: null;
 }): Direction {
     return "LONG" in value ? Direction.LONG : "SHORT" in value ? Direction.SHORT : value;
 }
-function from_candid_variant_n31(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n41(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     VOLATILE: null;
 } | {
     RANGING: null;
@@ -778,18 +1092,84 @@ function from_candid_variant_n31(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }): MarketCondition {
     return "VOLATILE" in value ? MarketCondition.VOLATILE : "RANGING" in value ? MarketCondition.RANGING : "CHOPPY" in value ? MarketCondition.CHOPPY : "OTHER" in value ? MarketCondition.OTHER : "TRENDING" in value ? MarketCondition.TRENDING : value;
 }
-function from_candid_variant_n37(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n42(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    ok: null;
+} | {
+    err: string;
+}): {
+    __kind__: "ok";
+    ok: null;
+} | {
+    __kind__: "err";
+    err: string;
+} {
+    return "ok" in value ? {
+        __kind__: "ok",
+        ok: value.ok
+    } : "err" in value ? {
+        __kind__: "err",
+        err: value.err
+    } : value;
+}
+function from_candid_variant_n43(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    ok: _CouponStats;
+} | {
+    err: string;
+}): {
+    __kind__: "ok";
+    ok: CouponStats;
+} | {
+    __kind__: "err";
+    err: string;
+} {
+    return "ok" in value ? {
+        __kind__: "ok",
+        ok: from_candid_CouponStats_n44(_uploadFile, _downloadFile, value.ok)
+    } : "err" in value ? {
+        __kind__: "err",
+        err: value.err
+    } : value;
+}
+function from_candid_variant_n51(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     FREE: null;
 } | {
     PAID: null;
 }): Tier {
     return "FREE" in value ? Tier.FREE : "PAID" in value ? Tier.PAID : value;
 }
+function from_candid_variant_n59(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    ok: _CouponRedemptionResult;
+} | {
+    err: string;
+}): {
+    __kind__: "ok";
+    ok: CouponRedemptionResult;
+} | {
+    __kind__: "err";
+    err: string;
+} {
+    return "ok" in value ? {
+        __kind__: "ok",
+        ok: from_candid_CouponRedemptionResult_n60(_uploadFile, _downloadFile, value.ok)
+    } : "err" in value ? {
+        __kind__: "err",
+        err: value.err
+    } : value;
+}
 function from_candid_vec_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_SessionStats>): Array<SessionStats> {
     return value.map((x)=>from_candid_SessionStats_n18(_uploadFile, _downloadFile, x));
 }
-function from_candid_vec_n43(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_TradePublic>): Array<TradePublic> {
-    return value.map((x)=>from_candid_TradePublic_n26(_uploadFile, _downloadFile, x));
+function from_candid_vec_n57(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_TradePublic>): Array<TradePublic> {
+    return value.map((x)=>from_candid_TradePublic_n36(_uploadFile, _downloadFile, x));
+}
+function from_candid_vec_n58(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<_CouponCode>): Array<CouponCode> {
+    return value.map((x)=>from_candid_CouponCode_n27(_uploadFile, _downloadFile, x));
+}
+function to_candid_CouponPerkType_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: CouponPerkType): _CouponPerkType {
+    return to_candid_variant_n26(_uploadFile, _downloadFile, value);
+}
+function to_candid_CreateCouponInput_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: CreateCouponInput): _CreateCouponInput {
+    return to_candid_record_n24(_uploadFile, _downloadFile, value);
 }
 function to_candid_CsvTradeRow_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: CsvTradeRow): _CsvTradeRow {
     return to_candid_record_n3(_uploadFile, _downloadFile, value);
@@ -803,58 +1183,31 @@ function to_candid_MarketCondition_n8(_uploadFile: (file: ExternalBlob) => Promi
 function to_candid_SessionTime_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: SessionTime): _SessionTime {
     return to_candid_variant_n7(_uploadFile, _downloadFile, value);
 }
-function to_candid_TradeFilter_n41(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: TradeFilter): _TradeFilter {
-    return to_candid_record_n42(_uploadFile, _downloadFile, value);
+function to_candid_TradeFilter_n55(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: TradeFilter): _TradeFilter {
+    return to_candid_record_n56(_uploadFile, _downloadFile, value);
 }
-function to_candid_TradeInput_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: TradeInput): _TradeInput {
-    return to_candid_record_n24(_uploadFile, _downloadFile, value);
+function to_candid_TradeInput_n33(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: TradeInput): _TradeInput {
+    return to_candid_record_n34(_uploadFile, _downloadFile, value);
 }
 function to_candid_record_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    exitDate: Timestamp;
-    direction: Direction;
-    entryDate: Timestamp;
-    chartImageUrl?: string;
-    sessionTime: SessionTime;
-    takeProfit?: number;
-    pair: string;
-    marketCondition: MarketCondition;
-    strategyTag: string;
-    mistakeTag?: string;
-    stopLoss?: number;
-    notes: string;
-    entryPrice: number;
-    exitPrice: number;
+    expiresAt?: bigint;
+    code: string;
+    description: string;
+    maxUses?: bigint;
+    perkType: CouponPerkType;
 }): {
-    exitDate: _Timestamp;
-    direction: _Direction;
-    entryDate: _Timestamp;
-    chartImageUrl: [] | [string];
-    sessionTime: _SessionTime;
-    takeProfit: [] | [number];
-    pair: string;
-    marketCondition: _MarketCondition;
-    strategyTag: string;
-    mistakeTag: [] | [string];
-    stopLoss: [] | [number];
-    notes: string;
-    entryPrice: number;
-    exitPrice: number;
+    expiresAt: [] | [bigint];
+    code: string;
+    description: string;
+    maxUses: [] | [bigint];
+    perkType: _CouponPerkType;
 } {
     return {
-        exitDate: value.exitDate,
-        direction: to_candid_Direction_n4(_uploadFile, _downloadFile, value.direction),
-        entryDate: value.entryDate,
-        chartImageUrl: value.chartImageUrl ? candid_some(value.chartImageUrl) : candid_none(),
-        sessionTime: to_candid_SessionTime_n6(_uploadFile, _downloadFile, value.sessionTime),
-        takeProfit: value.takeProfit ? candid_some(value.takeProfit) : candid_none(),
-        pair: value.pair,
-        marketCondition: to_candid_MarketCondition_n8(_uploadFile, _downloadFile, value.marketCondition),
-        strategyTag: value.strategyTag,
-        mistakeTag: value.mistakeTag ? candid_some(value.mistakeTag) : candid_none(),
-        stopLoss: value.stopLoss ? candid_some(value.stopLoss) : candid_none(),
-        notes: value.notes,
-        entryPrice: value.entryPrice,
-        exitPrice: value.exitPrice
+        expiresAt: value.expiresAt ? candid_some(value.expiresAt) : candid_none(),
+        code: value.code,
+        description: value.description,
+        maxUses: value.maxUses ? candid_some(value.maxUses) : candid_none(),
+        perkType: to_candid_CouponPerkType_n25(_uploadFile, _downloadFile, value.perkType)
     };
 }
 function to_candid_record_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
@@ -905,7 +1258,55 @@ function to_candid_record_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
         exitPrice: value.exitPrice
     };
 }
-function to_candid_record_n42(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function to_candid_record_n34(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    exitDate: Timestamp;
+    direction: Direction;
+    entryDate: Timestamp;
+    chartImageUrl?: string;
+    sessionTime: SessionTime;
+    takeProfit?: number;
+    pair: string;
+    marketCondition: MarketCondition;
+    strategyTag: string;
+    mistakeTag?: string;
+    stopLoss?: number;
+    notes: string;
+    entryPrice: number;
+    exitPrice: number;
+}): {
+    exitDate: _Timestamp;
+    direction: _Direction;
+    entryDate: _Timestamp;
+    chartImageUrl: [] | [string];
+    sessionTime: _SessionTime;
+    takeProfit: [] | [number];
+    pair: string;
+    marketCondition: _MarketCondition;
+    strategyTag: string;
+    mistakeTag: [] | [string];
+    stopLoss: [] | [number];
+    notes: string;
+    entryPrice: number;
+    exitPrice: number;
+} {
+    return {
+        exitDate: value.exitDate,
+        direction: to_candid_Direction_n4(_uploadFile, _downloadFile, value.direction),
+        entryDate: value.entryDate,
+        chartImageUrl: value.chartImageUrl ? candid_some(value.chartImageUrl) : candid_none(),
+        sessionTime: to_candid_SessionTime_n6(_uploadFile, _downloadFile, value.sessionTime),
+        takeProfit: value.takeProfit ? candid_some(value.takeProfit) : candid_none(),
+        pair: value.pair,
+        marketCondition: to_candid_MarketCondition_n8(_uploadFile, _downloadFile, value.marketCondition),
+        strategyTag: value.strategyTag,
+        mistakeTag: value.mistakeTag ? candid_some(value.mistakeTag) : candid_none(),
+        stopLoss: value.stopLoss ? candid_some(value.stopLoss) : candid_none(),
+        notes: value.notes,
+        entryPrice: value.entryPrice,
+        exitPrice: value.exitPrice
+    };
+}
+function to_candid_record_n56(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     dateTo?: Timestamp;
     sessionTime?: SessionTime;
     pair?: string;
@@ -928,6 +1329,37 @@ function to_candid_record_n42(_uploadFile: (file: ExternalBlob) => Promise<Uint8
         mistakeTag: value.mistakeTag ? candid_some(value.mistakeTag) : candid_none(),
         dateFrom: value.dateFrom ? candid_some(value.dateFrom) : candid_none()
     };
+}
+function to_candid_variant_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    __kind__: "custom";
+    custom: string;
+} | {
+    __kind__: "freeMonths";
+    freeMonths: bigint;
+} | {
+    __kind__: "upgradeToPhaid";
+    upgradeToPhaid: null;
+} | {
+    __kind__: "featureUnlock";
+    featureUnlock: Array<string>;
+}): {
+    custom: string;
+} | {
+    freeMonths: bigint;
+} | {
+    upgradeToPhaid: null;
+} | {
+    featureUnlock: Array<string>;
+} {
+    return value.__kind__ === "custom" ? {
+        custom: value.custom
+    } : value.__kind__ === "freeMonths" ? {
+        freeMonths: value.freeMonths
+    } : value.__kind__ === "upgradeToPhaid" ? {
+        upgradeToPhaid: value.upgradeToPhaid
+    } : value.__kind__ === "featureUnlock" ? {
+        featureUnlock: value.featureUnlock
+    } : value;
 }
 function to_candid_variant_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Direction): {
     LONG: null;

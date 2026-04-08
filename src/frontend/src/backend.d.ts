@@ -7,12 +7,32 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
+export interface CouponRedemptionResult {
+    perkApplied: string;
+    coupon: CouponCode;
+}
+export type CouponPerkType = {
+    __kind__: "custom";
+    custom: string;
+} | {
+    __kind__: "freeMonths";
+    freeMonths: bigint;
+} | {
+    __kind__: "upgradeToPhaid";
+    upgradeToPhaid: null;
+} | {
+    __kind__: "featureUnlock";
+    featureUnlock: Array<string>;
+};
 export type Timestamp = bigint;
 export interface UserPublic {
     id: UserId;
+    paidUntil?: bigint;
     createdAt: Timestamp;
     tier: Tier;
     stripeCustomerId?: string;
+    isAdmin: boolean;
+    unlockedFeatures: Array<string>;
 }
 export interface TierLimitStatus {
     dailyCount: bigint;
@@ -97,8 +117,30 @@ export interface ImportJobPublic {
     errors: Array<ImportLineError>;
     importedCount: bigint;
 }
+export interface CouponStats {
+    coupon: CouponCode;
+    totalRedemptions: bigint;
+}
 export type UserId = Principal;
 export type ImportJobId = bigint;
+export interface CreateCouponInput {
+    expiresAt?: bigint;
+    code: string;
+    description: string;
+    maxUses?: bigint;
+    perkType: CouponPerkType;
+}
+export interface CouponCode {
+    id: bigint;
+    expiresAt?: bigint;
+    code: string;
+    createdAt: Timestamp;
+    usedCount: bigint;
+    description: string;
+    isActive: boolean;
+    maxUses?: bigint;
+    perkType: CouponPerkType;
+}
 export interface TradeInput {
     exitDate: Timestamp;
     direction: Direction;
@@ -167,6 +209,7 @@ export enum Tier {
 export interface backendInterface {
     bulkImportTrades(rows: Array<CsvTradeRow>): Promise<ImportJobPublic>;
     computeMetrics(): Promise<PerformanceMetrics>;
+    createCoupon(input: CreateCouponInput): Promise<CouponCode>;
     createTrade(input: TradeInput): Promise<{
         __kind__: "ok";
         ok: TradePublic;
@@ -174,7 +217,21 @@ export interface backendInterface {
         __kind__: "limitReached";
         limitReached: string;
     }>;
+    deactivateCoupon(couponId: bigint): Promise<{
+        __kind__: "ok";
+        ok: null;
+    } | {
+        __kind__: "err";
+        err: string;
+    }>;
     deleteTrade(tradeId: TradeId): Promise<boolean>;
+    getCouponStats(couponId: bigint): Promise<{
+        __kind__: "ok";
+        ok: CouponStats;
+    } | {
+        __kind__: "err";
+        err: string;
+    }>;
     getImportJob(jobId: ImportJobId): Promise<ImportJobPublic | null>;
     getMetrics(): Promise<PerformanceMetrics | null>;
     getOrCreateUser(): Promise<UserPublic>;
@@ -182,7 +239,23 @@ export interface backendInterface {
     getTradeLimitStatus(): Promise<TierLimitStatus>;
     getTrades(filter: TradeFilter): Promise<Array<TradePublic>>;
     getUserTier(): Promise<Tier>;
+    isAdmin(): Promise<boolean>;
+    listCoupons(): Promise<Array<CouponCode>>;
+    redeemCoupon(code: string): Promise<{
+        __kind__: "ok";
+        ok: CouponRedemptionResult;
+    } | {
+        __kind__: "err";
+        err: string;
+    }>;
     saveChartAnnotation(tradeId: TradeId, imageUrl: string): Promise<TradePublic | null>;
+    setAdmin(newAdmin: Principal): Promise<{
+        __kind__: "ok";
+        ok: null;
+    } | {
+        __kind__: "err";
+        err: string;
+    }>;
     updateTrade(tradeId: TradeId, input: TradeInput): Promise<TradePublic | null>;
     upgradeToPaid(): Promise<UserPublic>;
 }

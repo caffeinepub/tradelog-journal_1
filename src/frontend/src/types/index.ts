@@ -122,4 +122,45 @@ export interface User {
   tier: UserTier;
   createdAt: bigint;
   stripeCustomerId?: string;
+  paidUntil?: bigint;
+  unlockedFeatures?: string[];
+  isAdmin?: boolean;
+}
+
+// ─── Coupons ─────────────────────────────────────────────────────────────────
+
+export type CouponPerkType =
+  | { kind: "UPGRADE_TO_PAID" }
+  | { kind: "FREE_MONTHS"; months: number }
+  | { kind: "FEATURE_UNLOCK"; features: string[] }
+  | { kind: "CUSTOM"; description: string };
+
+export interface CouponCode {
+  id: number;
+  code: string;
+  description: string;
+  perkType: CouponPerkType;
+  maxUses?: number;
+  usedCount: number;
+  expiresAt?: bigint;
+  isActive: boolean;
+  createdAt: bigint;
+}
+
+export interface CouponStats {
+  coupon: CouponCode;
+  totalRedemptions: number;
+}
+
+export interface CreateCouponInput {
+  code: string;
+  description: string;
+  perkType: CouponPerkType;
+  maxUses?: number;
+  expiresAt?: bigint;
+}
+
+export interface CouponRedemptionResult {
+  coupon: CouponCode;
+  perkApplied: string;
 }

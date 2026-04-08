@@ -17,7 +17,7 @@ var __privateWrapper = (obj, member, setter, getter) => ({
     return __privateGet(obj, member, getter);
   }
 });
-var _disableTimeVerification, _agent, _inner, _expirationTime, _rawKey, _derKey, _a2, _currentInterval, _randomizationFactor, _multiplier, _maxInterval, _startTime, _maxElapsedTime, _maxIterations, _date, _count, _rootKeyPromise, _shouldFetchRootKey, _timeDiffMsecs, _hasSyncedTime, _syncTimePromise, _shouldSyncTime, _identity, _fetch, _fetchOptions, _callOptions, _credentials, _retryTimes, _backoffStrategy, _maxIngressExpiryInMinutes, _HttpAgent_instances, maxIngressExpiryInMs_get, _queryPipeline, _updatePipeline, _subnetKeys, _verifyQuerySignatures, requestAndRetryQuery_fn, requestAndRetry_fn, _verifyQueryResponse, asyncGuard_fn, rootKeyGuard_fn, syncTimeGuard_fn, _focused, _cleanup, _setup, _b2, _provider, _providerCalled, _c, _online, _cleanup2, _setup2, _d, _gcTimeout, _e, _initialState, _revertState, _cache, _client, _retryer, _defaultOptions, _abortSignalConsumed, _Query_instances, isInitialPausedFetch_fn, dispatch_fn, _f, _client2, _currentQuery, _currentQueryInitialState, _currentResult, _currentResultState, _currentResultOptions, _currentThenable, _selectError, _selectFn, _selectResult, _lastQueryWithDefinedData, _staleTimeoutId, _refetchIntervalId, _currentRefetchInterval, _trackedProps, _QueryObserver_instances, executeFetch_fn, updateStaleTimeout_fn, computeRefetchInterval_fn, updateRefetchInterval_fn, updateTimers_fn, clearStaleTimeout_fn, clearRefetchInterval_fn, updateQuery_fn, notify_fn, _g, _client3, _observers, _mutationCache, _retryer2, _Mutation_instances, dispatch_fn2, _h, _mutations, _scopes, _mutationId, _i, _queries, _j, _queryCache, _mutationCache2, _defaultOptions2, _queryDefaults, _mutationDefaults, _mountCount, _unsubscribeFocus, _unsubscribeOnline, _k, _rawKey2, _derKey2, _publicKey, _privateKey, _inner2, _delegation, _options;
+var _disableTimeVerification, _agent, _inner, _expirationTime, _rawKey, _derKey, _a2, _currentInterval, _randomizationFactor, _multiplier, _maxInterval, _startTime, _maxElapsedTime, _maxIterations, _date, _count, _rootKeyPromise, _shouldFetchRootKey, _timeDiffMsecs, _hasSyncedTime, _syncTimePromise, _shouldSyncTime, _identity, _fetch, _fetchOptions, _callOptions, _credentials, _retryTimes, _backoffStrategy, _maxIngressExpiryInMinutes, _HttpAgent_instances, maxIngressExpiryInMs_get, _queryPipeline, _updatePipeline, _subnetKeys, _verifyQuerySignatures, requestAndRetryQuery_fn, requestAndRetry_fn, _verifyQueryResponse, asyncGuard_fn, rootKeyGuard_fn, syncTimeGuard_fn, _focused, _cleanup, _setup, _b2, _provider, _providerCalled, _c, _online, _cleanup2, _setup2, _d, _gcTimeout, _e, _initialState, _revertState, _cache, _client, _retryer, _defaultOptions, _abortSignalConsumed, _Query_instances, isInitialPausedFetch_fn, dispatch_fn, _f, _client2, _currentQuery, _currentQueryInitialState, _currentResult, _currentResultState, _currentResultOptions, _currentThenable, _selectError, _selectFn, _selectResult, _lastQueryWithDefinedData, _staleTimeoutId, _refetchIntervalId, _currentRefetchInterval, _trackedProps, _QueryObserver_instances, executeFetch_fn, updateStaleTimeout_fn, computeRefetchInterval_fn, updateRefetchInterval_fn, updateTimers_fn, clearStaleTimeout_fn, clearRefetchInterval_fn, updateQuery_fn, notify_fn, _g, _client3, _observers, _mutationCache, _retryer2, _Mutation_instances, dispatch_fn2, _h, _mutations, _scopes, _mutationId, _i, _client4, _currentResult2, _currentMutation, _mutateOptions, _MutationObserver_instances, updateResult_fn, notify_fn2, _j, _queries, _k, _queryCache, _mutationCache2, _defaultOptions2, _queryDefaults, _mutationDefaults, _mountCount, _unsubscribeFocus, _unsubscribeOnline, _l, _rawKey2, _derKey2, _publicKey, _privateKey, _inner2, _delegation, _options;
 function _mergeNamespaces(n2, m2) {
   for (var i = 0; i < m2.length; i++) {
     const e3 = m2[i];
@@ -790,7 +790,7 @@ function split(lst, le2 = false) {
   }
   return [Ah, Al];
 }
-const shrSH = (h2, _l, s2) => h2 >>> s2;
+const shrSH = (h2, _l2, s2) => h2 >>> s2;
 const shrSL = (h2, l2, s2) => h2 << 32 - s2 | l2 >>> s2;
 const rotrSH = (h2, l2, s2) => h2 >>> s2 | l2 << 32 - s2;
 const rotrSL = (h2, l2, s2) => h2 << 32 - s2 | l2 >>> s2;
@@ -12094,7 +12094,7 @@ var Query = (_f = class extends Removable {
     }
   }
   async fetch(options, fetchOptions) {
-    var _a3, _b3, _c2, _d2, _e2, _f2, _g2, _h2, _i2, _j2, _k2, _l;
+    var _a3, _b3, _c2, _d2, _e2, _f2, _g2, _h2, _i2, _j2, _k2, _l2;
     if (this.state.fetchStatus !== "idle" && // If the promise in the retryer is already rejected, we have to definitely
     // re-start the fetch; there is a chance that the query is still in a
     // pending state when that happens
@@ -12226,7 +12226,7 @@ var Query = (_f = class extends Removable {
         error,
         this
       );
-      (_l = (_k2 = __privateGet(this, _cache).config).onSettled) == null ? void 0 : _l.call(
+      (_l2 = (_k2 = __privateGet(this, _cache).config).onSettled) == null ? void 0 : _l2.call(
         _k2,
         this.state.data,
         error,
@@ -12956,7 +12956,7 @@ var Mutation = (_h = class extends Removable {
     this.execute(this.state.variables);
   }
   async execute(variables) {
-    var _a3, _b3, _c2, _d2, _e2, _f2, _g2, _h2, _i2, _j2, _k2, _l, _m, _n, _o, _p, _q, _r;
+    var _a3, _b3, _c2, _d2, _e2, _f2, _g2, _h2, _i2, _j2, _k2, _l2, _m, _n, _o, _p, _q, _r;
     const onContinue = () => {
       __privateMethod(this, _Mutation_instances, dispatch_fn2).call(this, { type: "continue" });
     };
@@ -13049,7 +13049,7 @@ var Mutation = (_h = class extends Removable {
       return data;
     } catch (error) {
       try {
-        await ((_l = (_k2 = __privateGet(this, _mutationCache).config).onError) == null ? void 0 : _l.call(
+        await ((_l2 = (_k2 = __privateGet(this, _mutationCache).config).onError) == null ? void 0 : _l2.call(
           _k2,
           error,
           variables,
@@ -13298,7 +13298,147 @@ function scopeFor(mutation) {
   var _a3;
   return (_a3 = mutation.options.scope) == null ? void 0 : _a3.id;
 }
-var QueryCache = (_j = class extends Subscribable {
+var MutationObserver$1 = (_j = class extends Subscribable {
+  constructor(client2, options) {
+    super();
+    __privateAdd(this, _MutationObserver_instances);
+    __privateAdd(this, _client4);
+    __privateAdd(this, _currentResult2);
+    __privateAdd(this, _currentMutation);
+    __privateAdd(this, _mutateOptions);
+    __privateSet(this, _client4, client2);
+    this.setOptions(options);
+    this.bindMethods();
+    __privateMethod(this, _MutationObserver_instances, updateResult_fn).call(this);
+  }
+  bindMethods() {
+    this.mutate = this.mutate.bind(this);
+    this.reset = this.reset.bind(this);
+  }
+  setOptions(options) {
+    var _a3;
+    const prevOptions = this.options;
+    this.options = __privateGet(this, _client4).defaultMutationOptions(options);
+    if (!shallowEqualObjects(this.options, prevOptions)) {
+      __privateGet(this, _client4).getMutationCache().notify({
+        type: "observerOptionsUpdated",
+        mutation: __privateGet(this, _currentMutation),
+        observer: this
+      });
+    }
+    if ((prevOptions == null ? void 0 : prevOptions.mutationKey) && this.options.mutationKey && hashKey(prevOptions.mutationKey) !== hashKey(this.options.mutationKey)) {
+      this.reset();
+    } else if (((_a3 = __privateGet(this, _currentMutation)) == null ? void 0 : _a3.state.status) === "pending") {
+      __privateGet(this, _currentMutation).setOptions(this.options);
+    }
+  }
+  onUnsubscribe() {
+    var _a3;
+    if (!this.hasListeners()) {
+      (_a3 = __privateGet(this, _currentMutation)) == null ? void 0 : _a3.removeObserver(this);
+    }
+  }
+  onMutationUpdate(action) {
+    __privateMethod(this, _MutationObserver_instances, updateResult_fn).call(this);
+    __privateMethod(this, _MutationObserver_instances, notify_fn2).call(this, action);
+  }
+  getCurrentResult() {
+    return __privateGet(this, _currentResult2);
+  }
+  reset() {
+    var _a3;
+    (_a3 = __privateGet(this, _currentMutation)) == null ? void 0 : _a3.removeObserver(this);
+    __privateSet(this, _currentMutation, void 0);
+    __privateMethod(this, _MutationObserver_instances, updateResult_fn).call(this);
+    __privateMethod(this, _MutationObserver_instances, notify_fn2).call(this);
+  }
+  mutate(variables, options) {
+    var _a3;
+    __privateSet(this, _mutateOptions, options);
+    (_a3 = __privateGet(this, _currentMutation)) == null ? void 0 : _a3.removeObserver(this);
+    __privateSet(this, _currentMutation, __privateGet(this, _client4).getMutationCache().build(__privateGet(this, _client4), this.options));
+    __privateGet(this, _currentMutation).addObserver(this);
+    return __privateGet(this, _currentMutation).execute(variables);
+  }
+}, _client4 = new WeakMap(), _currentResult2 = new WeakMap(), _currentMutation = new WeakMap(), _mutateOptions = new WeakMap(), _MutationObserver_instances = new WeakSet(), updateResult_fn = function() {
+  var _a3;
+  const state = ((_a3 = __privateGet(this, _currentMutation)) == null ? void 0 : _a3.state) ?? getDefaultState();
+  __privateSet(this, _currentResult2, {
+    ...state,
+    isPending: state.status === "pending",
+    isSuccess: state.status === "success",
+    isError: state.status === "error",
+    isIdle: state.status === "idle",
+    mutate: this.mutate,
+    reset: this.reset
+  });
+}, notify_fn2 = function(action) {
+  notifyManager.batch(() => {
+    var _a3, _b3, _c2, _d2, _e2, _f2, _g2, _h2;
+    if (__privateGet(this, _mutateOptions) && this.hasListeners()) {
+      const variables = __privateGet(this, _currentResult2).variables;
+      const onMutateResult = __privateGet(this, _currentResult2).context;
+      const context = {
+        client: __privateGet(this, _client4),
+        meta: this.options.meta,
+        mutationKey: this.options.mutationKey
+      };
+      if ((action == null ? void 0 : action.type) === "success") {
+        try {
+          (_b3 = (_a3 = __privateGet(this, _mutateOptions)).onSuccess) == null ? void 0 : _b3.call(
+            _a3,
+            action.data,
+            variables,
+            onMutateResult,
+            context
+          );
+        } catch (e3) {
+          void Promise.reject(e3);
+        }
+        try {
+          (_d2 = (_c2 = __privateGet(this, _mutateOptions)).onSettled) == null ? void 0 : _d2.call(
+            _c2,
+            action.data,
+            null,
+            variables,
+            onMutateResult,
+            context
+          );
+        } catch (e3) {
+          void Promise.reject(e3);
+        }
+      } else if ((action == null ? void 0 : action.type) === "error") {
+        try {
+          (_f2 = (_e2 = __privateGet(this, _mutateOptions)).onError) == null ? void 0 : _f2.call(
+            _e2,
+            action.error,
+            variables,
+            onMutateResult,
+            context
+          );
+        } catch (e3) {
+          void Promise.reject(e3);
+        }
+        try {
+          (_h2 = (_g2 = __privateGet(this, _mutateOptions)).onSettled) == null ? void 0 : _h2.call(
+            _g2,
+            void 0,
+            action.error,
+            variables,
+            onMutateResult,
+            context
+          );
+        } catch (e3) {
+          void Promise.reject(e3);
+        }
+      }
+    }
+    this.listeners.forEach((listener) => {
+      listener(__privateGet(this, _currentResult2));
+    });
+  });
+}, _j);
+var QueryCache = (_k = class extends Subscribable {
   constructor(config2 = {}) {
     super();
     __privateAdd(this, _queries);
@@ -13385,8 +13525,8 @@ var QueryCache = (_j = class extends Subscribable {
       });
     });
   }
-}, _queries = new WeakMap(), _j);
-var QueryClient = (_k = class {
+}, _queries = new WeakMap(), _k);
+var QueryClient = (_l = class {
   constructor(config2 = {}) {
     __privateAdd(this, _queryCache);
     __privateAdd(this, _mutationCache2);
@@ -13673,7 +13813,7 @@ var QueryClient = (_k = class {
     __privateGet(this, _queryCache).clear();
     __privateGet(this, _mutationCache2).clear();
   }
-}, _queryCache = new WeakMap(), _mutationCache2 = new WeakMap(), _defaultOptions2 = new WeakMap(), _queryDefaults = new WeakMap(), _mutationDefaults = new WeakMap(), _mountCount = new WeakMap(), _unsubscribeFocus = new WeakMap(), _unsubscribeOnline = new WeakMap(), _k);
+}, _queryCache = new WeakMap(), _mutationCache2 = new WeakMap(), _defaultOptions2 = new WeakMap(), _queryDefaults = new WeakMap(), _mutationDefaults = new WeakMap(), _mountCount = new WeakMap(), _unsubscribeFocus = new WeakMap(), _unsubscribeOnline = new WeakMap(), _l);
 var react = { exports: {} };
 var react_production = {};
 /**
@@ -14272,6 +14412,36 @@ function useBaseQuery(options, Observer, queryClient2) {
 }
 function useQuery(options, queryClient2) {
   return useBaseQuery(options, QueryObserver);
+}
+function useMutation(options, queryClient2) {
+  const client2 = useQueryClient();
+  const [observer2] = reactExports.useState(
+    () => new MutationObserver$1(
+      client2,
+      options
+    )
+  );
+  reactExports.useEffect(() => {
+    observer2.setOptions(options);
+  }, [observer2, options]);
+  const result = reactExports.useSyncExternalStore(
+    reactExports.useCallback(
+      (onStoreChange) => observer2.subscribe(notifyManager.batchCalls(onStoreChange)),
+      [observer2]
+    ),
+    () => observer2.getCurrentResult(),
+    () => observer2.getCurrentResult()
+  );
+  const mutate = reactExports.useCallback(
+    (variables, mutateOptions) => {
+      observer2.mutate(variables, mutateOptions).catch(noop$8);
+    },
+    [observer2]
+  );
+  if (result.error && shouldThrowError(observer2.options.throwOnError, [result.error])) {
+    throw result.error;
+  }
+  return { ...result, mutate, mutateAsync: result.mutate };
 }
 function isObject$a(value) {
   return value !== null && typeof value === "object";
@@ -31838,7 +32008,7 @@ const Link = reactExports.forwardRef(
 function isCtrlEvent(e3) {
   return !!(e3.metaKey || e3.altKey || e3.ctrlKey || e3.shiftKey);
 }
-let Route$9 = class Route extends BaseRoute {
+let Route$b = class Route extends BaseRoute {
   /**
    * @deprecated Use the `createRoute` function instead.
    */
@@ -31890,7 +32060,7 @@ let Route$9 = class Route extends BaseRoute {
   }
 };
 function createRoute(options) {
-  return new Route$9(options);
+  return new Route$b(options);
 }
 class RootRoute extends BaseRootRoute {
   /**
@@ -32812,6 +32982,1245 @@ const Toaster = ({ ...props }) => {
     }
   );
 };
+const Timestamp = Int;
+const Direction$1 = Variant({ "LONG": Null, "SHORT": Null });
+const SessionTime$1 = Variant({
+  "NY": Null,
+  "LONDON": Null,
+  "ASIAN": Null,
+  "OTHER": Null
+});
+const MarketCondition$1 = Variant({
+  "VOLATILE": Null,
+  "RANGING": Null,
+  "CHOPPY": Null,
+  "OTHER": Null,
+  "TRENDING": Null
+});
+const CsvTradeRow = Record({
+  "pnl": Opt(Float64),
+  "exitDate": Timestamp,
+  "direction": Direction$1,
+  "entryDate": Timestamp,
+  "chartImageUrl": Opt(Text$1),
+  "sessionTime": Opt(SessionTime$1),
+  "pair": Text$1,
+  "marketCondition": Opt(MarketCondition$1),
+  "riskReward": Opt(Float64),
+  "strategyTag": Opt(Text$1),
+  "mistakeTag": Opt(Text$1),
+  "notes": Opt(Text$1),
+  "entryPrice": Float64,
+  "exitPrice": Float64
+});
+const ImportJobId = Nat;
+const ImportStatus = Variant({
+  "FAILED": Null,
+  "PENDING": Null,
+  "PROCESSING": Null,
+  "COMPLETE": Null
+});
+const UserId = Principal2;
+const ImportLineError = Record({
+  "lineNumber": Nat,
+  "reason": Text$1
+});
+const ImportJobPublic = Record({
+  "id": ImportJobId,
+  "status": ImportStatus,
+  "completedAt": Opt(Timestamp),
+  "userId": UserId,
+  "createdAt": Timestamp,
+  "errors": Vec(ImportLineError),
+  "importedCount": Nat
+});
+const SessionStats = Record({
+  "tradeCount": Nat,
+  "totalPnl": Float64,
+  "session": SessionTime$1,
+  "winRate": Float64
+});
+const PnlDataPoint = Record({
+  "pnl": Float64,
+  "tradeCount": Nat,
+  "periodLabel": Text$1
+});
+const StrategyStats = Record({
+  "tag": Text$1,
+  "tradeCount": Nat,
+  "totalPnl": Float64,
+  "winRate": Float64
+});
+const PairStats = Record({
+  "tradeCount": Nat,
+  "pair": Text$1,
+  "totalPnl": Float64,
+  "winRate": Float64
+});
+const PerformanceMetrics = Record({
+  "avgRiskReward": Float64,
+  "pnlBySession": Vec(SessionStats),
+  "computedAt": Timestamp,
+  "userId": UserId,
+  "bestPair": Opt(Text$1),
+  "weeklyPnl": Vec(PnlDataPoint),
+  "worstPair": Opt(Text$1),
+  "totalPnl": Float64,
+  "pnlByStrategy": Vec(StrategyStats),
+  "pnlByPair": Vec(PairStats),
+  "monthlyPnl": Vec(PnlDataPoint),
+  "winRate": Float64,
+  "maxDrawdown": Float64
+});
+const CouponPerkType = Variant({
+  "custom": Text$1,
+  "freeMonths": Nat,
+  "upgradeToPhaid": Null,
+  "featureUnlock": Vec(Text$1)
+});
+const CreateCouponInput = Record({
+  "expiresAt": Opt(Int),
+  "code": Text$1,
+  "description": Text$1,
+  "maxUses": Opt(Nat),
+  "perkType": CouponPerkType
+});
+const CouponCode = Record({
+  "id": Nat,
+  "expiresAt": Opt(Int),
+  "code": Text$1,
+  "createdAt": Timestamp,
+  "usedCount": Nat,
+  "description": Text$1,
+  "isActive": Bool,
+  "maxUses": Opt(Nat),
+  "perkType": CouponPerkType
+});
+const TradeInput = Record({
+  "exitDate": Timestamp,
+  "direction": Direction$1,
+  "entryDate": Timestamp,
+  "chartImageUrl": Opt(Text$1),
+  "sessionTime": SessionTime$1,
+  "takeProfit": Opt(Float64),
+  "pair": Text$1,
+  "marketCondition": MarketCondition$1,
+  "strategyTag": Text$1,
+  "mistakeTag": Opt(Text$1),
+  "stopLoss": Opt(Float64),
+  "notes": Text$1,
+  "entryPrice": Float64,
+  "exitPrice": Float64
+});
+const TradeId = Nat;
+const TradePublic = Record({
+  "id": TradeId,
+  "pnl": Float64,
+  "exitDate": Timestamp,
+  "direction": Direction$1,
+  "entryDate": Timestamp,
+  "chartImageUrl": Opt(Text$1),
+  "sessionTime": SessionTime$1,
+  "userId": UserId,
+  "createdAt": Timestamp,
+  "pair": Text$1,
+  "marketCondition": MarketCondition$1,
+  "riskReward": Float64,
+  "strategyTag": Text$1,
+  "updatedAt": Timestamp,
+  "mistakeTag": Opt(Text$1),
+  "notes": Text$1,
+  "entryPrice": Float64,
+  "exitPrice": Float64
+});
+const CouponStats = Record({
+  "coupon": CouponCode,
+  "totalRedemptions": Nat
+});
+const Tier$1 = Variant({ "FREE": Null, "PAID": Null });
+const UserPublic = Record({
+  "id": UserId,
+  "paidUntil": Opt(Int),
+  "createdAt": Timestamp,
+  "tier": Tier$1,
+  "stripeCustomerId": Opt(Text$1),
+  "isAdmin": Bool,
+  "unlockedFeatures": Vec(Text$1)
+});
+const TierLimitStatus = Record({
+  "dailyCount": Nat,
+  "tier": Tier$1,
+  "totalCount": Nat,
+  "dailyLimitReached": Bool,
+  "dailyLimit": Nat,
+  "totalLimit": Nat,
+  "totalLimitReached": Bool
+});
+const TradeFilter = Record({
+  "dateTo": Opt(Timestamp),
+  "sessionTime": Opt(SessionTime$1),
+  "pair": Opt(Text$1),
+  "strategyTag": Opt(Text$1),
+  "mistakeTag": Opt(Text$1),
+  "dateFrom": Opt(Timestamp)
+});
+const CouponRedemptionResult = Record({
+  "perkApplied": Text$1,
+  "coupon": CouponCode
+});
+Service({
+  "bulkImportTrades": Func([Vec(CsvTradeRow)], [ImportJobPublic], []),
+  "computeMetrics": Func([], [PerformanceMetrics], []),
+  "createCoupon": Func([CreateCouponInput], [CouponCode], []),
+  "createTrade": Func(
+    [TradeInput],
+    [Variant({ "ok": TradePublic, "limitReached": Text$1 })],
+    []
+  ),
+  "deactivateCoupon": Func(
+    [Nat],
+    [Variant({ "ok": Null, "err": Text$1 })],
+    []
+  ),
+  "deleteTrade": Func([TradeId], [Bool], []),
+  "getCouponStats": Func(
+    [Nat],
+    [Variant({ "ok": CouponStats, "err": Text$1 })],
+    []
+  ),
+  "getImportJob": Func(
+    [ImportJobId],
+    [Opt(ImportJobPublic)],
+    ["query"]
+  ),
+  "getMetrics": Func([], [Opt(PerformanceMetrics)], ["query"]),
+  "getOrCreateUser": Func([], [UserPublic], []),
+  "getTrade": Func([TradeId], [Opt(TradePublic)], ["query"]),
+  "getTradeLimitStatus": Func([], [TierLimitStatus], ["query"]),
+  "getTrades": Func([TradeFilter], [Vec(TradePublic)], ["query"]),
+  "getUserTier": Func([], [Tier$1], ["query"]),
+  "isAdmin": Func([], [Bool], ["query"]),
+  "listCoupons": Func([], [Vec(CouponCode)], []),
+  "redeemCoupon": Func(
+    [Text$1],
+    [Variant({ "ok": CouponRedemptionResult, "err": Text$1 })],
+    []
+  ),
+  "saveChartAnnotation": Func(
+    [TradeId, Text$1],
+    [Opt(TradePublic)],
+    []
+  ),
+  "setAdmin": Func(
+    [Principal2],
+    [Variant({ "ok": Null, "err": Text$1 })],
+    []
+  ),
+  "updateTrade": Func([TradeId, TradeInput], [Opt(TradePublic)], []),
+  "upgradeToPaid": Func([], [UserPublic], [])
+});
+const idlFactory = ({ IDL: IDL2 }) => {
+  const Timestamp2 = IDL2.Int;
+  const Direction2 = IDL2.Variant({ "LONG": IDL2.Null, "SHORT": IDL2.Null });
+  const SessionTime2 = IDL2.Variant({
+    "NY": IDL2.Null,
+    "LONDON": IDL2.Null,
+    "ASIAN": IDL2.Null,
+    "OTHER": IDL2.Null
+  });
+  const MarketCondition2 = IDL2.Variant({
+    "VOLATILE": IDL2.Null,
+    "RANGING": IDL2.Null,
+    "CHOPPY": IDL2.Null,
+    "OTHER": IDL2.Null,
+    "TRENDING": IDL2.Null
+  });
+  const CsvTradeRow2 = IDL2.Record({
+    "pnl": IDL2.Opt(IDL2.Float64),
+    "exitDate": Timestamp2,
+    "direction": Direction2,
+    "entryDate": Timestamp2,
+    "chartImageUrl": IDL2.Opt(IDL2.Text),
+    "sessionTime": IDL2.Opt(SessionTime2),
+    "pair": IDL2.Text,
+    "marketCondition": IDL2.Opt(MarketCondition2),
+    "riskReward": IDL2.Opt(IDL2.Float64),
+    "strategyTag": IDL2.Opt(IDL2.Text),
+    "mistakeTag": IDL2.Opt(IDL2.Text),
+    "notes": IDL2.Opt(IDL2.Text),
+    "entryPrice": IDL2.Float64,
+    "exitPrice": IDL2.Float64
+  });
+  const ImportJobId2 = IDL2.Nat;
+  const ImportStatus2 = IDL2.Variant({
+    "FAILED": IDL2.Null,
+    "PENDING": IDL2.Null,
+    "PROCESSING": IDL2.Null,
+    "COMPLETE": IDL2.Null
+  });
+  const UserId2 = IDL2.Principal;
+  const ImportLineError2 = IDL2.Record({
+    "lineNumber": IDL2.Nat,
+    "reason": IDL2.Text
+  });
+  const ImportJobPublic2 = IDL2.Record({
+    "id": ImportJobId2,
+    "status": ImportStatus2,
+    "completedAt": IDL2.Opt(Timestamp2),
+    "userId": UserId2,
+    "createdAt": Timestamp2,
+    "errors": IDL2.Vec(ImportLineError2),
+    "importedCount": IDL2.Nat
+  });
+  const SessionStats2 = IDL2.Record({
+    "tradeCount": IDL2.Nat,
+    "totalPnl": IDL2.Float64,
+    "session": SessionTime2,
+    "winRate": IDL2.Float64
+  });
+  const PnlDataPoint2 = IDL2.Record({
+    "pnl": IDL2.Float64,
+    "tradeCount": IDL2.Nat,
+    "periodLabel": IDL2.Text
+  });
+  const StrategyStats2 = IDL2.Record({
+    "tag": IDL2.Text,
+    "tradeCount": IDL2.Nat,
+    "totalPnl": IDL2.Float64,
+    "winRate": IDL2.Float64
+  });
+  const PairStats2 = IDL2.Record({
+    "tradeCount": IDL2.Nat,
+    "pair": IDL2.Text,
+    "totalPnl": IDL2.Float64,
+    "winRate": IDL2.Float64
+  });
+  const PerformanceMetrics2 = IDL2.Record({
+    "avgRiskReward": IDL2.Float64,
+    "pnlBySession": IDL2.Vec(SessionStats2),
+    "computedAt": Timestamp2,
+    "userId": UserId2,
+    "bestPair": IDL2.Opt(IDL2.Text),
+    "weeklyPnl": IDL2.Vec(PnlDataPoint2),
+    "worstPair": IDL2.Opt(IDL2.Text),
+    "totalPnl": IDL2.Float64,
+    "pnlByStrategy": IDL2.Vec(StrategyStats2),
+    "pnlByPair": IDL2.Vec(PairStats2),
+    "monthlyPnl": IDL2.Vec(PnlDataPoint2),
+    "winRate": IDL2.Float64,
+    "maxDrawdown": IDL2.Float64
+  });
+  const CouponPerkType2 = IDL2.Variant({
+    "custom": IDL2.Text,
+    "freeMonths": IDL2.Nat,
+    "upgradeToPhaid": IDL2.Null,
+    "featureUnlock": IDL2.Vec(IDL2.Text)
+  });
+  const CreateCouponInput2 = IDL2.Record({
+    "expiresAt": IDL2.Opt(IDL2.Int),
+    "code": IDL2.Text,
+    "description": IDL2.Text,
+    "maxUses": IDL2.Opt(IDL2.Nat),
+    "perkType": CouponPerkType2
+  });
+  const CouponCode2 = IDL2.Record({
+    "id": IDL2.Nat,
+    "expiresAt": IDL2.Opt(IDL2.Int),
+    "code": IDL2.Text,
+    "createdAt": Timestamp2,
+    "usedCount": IDL2.Nat,
+    "description": IDL2.Text,
+    "isActive": IDL2.Bool,
+    "maxUses": IDL2.Opt(IDL2.Nat),
+    "perkType": CouponPerkType2
+  });
+  const TradeInput2 = IDL2.Record({
+    "exitDate": Timestamp2,
+    "direction": Direction2,
+    "entryDate": Timestamp2,
+    "chartImageUrl": IDL2.Opt(IDL2.Text),
+    "sessionTime": SessionTime2,
+    "takeProfit": IDL2.Opt(IDL2.Float64),
+    "pair": IDL2.Text,
+    "marketCondition": MarketCondition2,
+    "strategyTag": IDL2.Text,
+    "mistakeTag": IDL2.Opt(IDL2.Text),
+    "stopLoss": IDL2.Opt(IDL2.Float64),
+    "notes": IDL2.Text,
+    "entryPrice": IDL2.Float64,
+    "exitPrice": IDL2.Float64
+  });
+  const TradeId2 = IDL2.Nat;
+  const TradePublic2 = IDL2.Record({
+    "id": TradeId2,
+    "pnl": IDL2.Float64,
+    "exitDate": Timestamp2,
+    "direction": Direction2,
+    "entryDate": Timestamp2,
+    "chartImageUrl": IDL2.Opt(IDL2.Text),
+    "sessionTime": SessionTime2,
+    "userId": UserId2,
+    "createdAt": Timestamp2,
+    "pair": IDL2.Text,
+    "marketCondition": MarketCondition2,
+    "riskReward": IDL2.Float64,
+    "strategyTag": IDL2.Text,
+    "updatedAt": Timestamp2,
+    "mistakeTag": IDL2.Opt(IDL2.Text),
+    "notes": IDL2.Text,
+    "entryPrice": IDL2.Float64,
+    "exitPrice": IDL2.Float64
+  });
+  const CouponStats2 = IDL2.Record({
+    "coupon": CouponCode2,
+    "totalRedemptions": IDL2.Nat
+  });
+  const Tier2 = IDL2.Variant({ "FREE": IDL2.Null, "PAID": IDL2.Null });
+  const UserPublic2 = IDL2.Record({
+    "id": UserId2,
+    "paidUntil": IDL2.Opt(IDL2.Int),
+    "createdAt": Timestamp2,
+    "tier": Tier2,
+    "stripeCustomerId": IDL2.Opt(IDL2.Text),
+    "isAdmin": IDL2.Bool,
+    "unlockedFeatures": IDL2.Vec(IDL2.Text)
+  });
+  const TierLimitStatus2 = IDL2.Record({
+    "dailyCount": IDL2.Nat,
+    "tier": Tier2,
+    "totalCount": IDL2.Nat,
+    "dailyLimitReached": IDL2.Bool,
+    "dailyLimit": IDL2.Nat,
+    "totalLimit": IDL2.Nat,
+    "totalLimitReached": IDL2.Bool
+  });
+  const TradeFilter2 = IDL2.Record({
+    "dateTo": IDL2.Opt(Timestamp2),
+    "sessionTime": IDL2.Opt(SessionTime2),
+    "pair": IDL2.Opt(IDL2.Text),
+    "strategyTag": IDL2.Opt(IDL2.Text),
+    "mistakeTag": IDL2.Opt(IDL2.Text),
+    "dateFrom": IDL2.Opt(Timestamp2)
+  });
+  const CouponRedemptionResult2 = IDL2.Record({
+    "perkApplied": IDL2.Text,
+    "coupon": CouponCode2
+  });
+  return IDL2.Service({
+    "bulkImportTrades": IDL2.Func(
+      [IDL2.Vec(CsvTradeRow2)],
+      [ImportJobPublic2],
+      []
+    ),
+    "computeMetrics": IDL2.Func([], [PerformanceMetrics2], []),
+    "createCoupon": IDL2.Func([CreateCouponInput2], [CouponCode2], []),
+    "createTrade": IDL2.Func(
+      [TradeInput2],
+      [IDL2.Variant({ "ok": TradePublic2, "limitReached": IDL2.Text })],
+      []
+    ),
+    "deactivateCoupon": IDL2.Func(
+      [IDL2.Nat],
+      [IDL2.Variant({ "ok": IDL2.Null, "err": IDL2.Text })],
+      []
+    ),
+    "deleteTrade": IDL2.Func([TradeId2], [IDL2.Bool], []),
+    "getCouponStats": IDL2.Func(
+      [IDL2.Nat],
+      [IDL2.Variant({ "ok": CouponStats2, "err": IDL2.Text })],
+      []
+    ),
+    "getImportJob": IDL2.Func(
+      [ImportJobId2],
+      [IDL2.Opt(ImportJobPublic2)],
+      ["query"]
+    ),
+    "getMetrics": IDL2.Func([], [IDL2.Opt(PerformanceMetrics2)], ["query"]),
+    "getOrCreateUser": IDL2.Func([], [UserPublic2], []),
+    "getTrade": IDL2.Func([TradeId2], [IDL2.Opt(TradePublic2)], ["query"]),
+    "getTradeLimitStatus": IDL2.Func([], [TierLimitStatus2], ["query"]),
+    "getTrades": IDL2.Func([TradeFilter2], [IDL2.Vec(TradePublic2)], ["query"]),
+    "getUserTier": IDL2.Func([], [Tier2], ["query"]),
+    "isAdmin": IDL2.Func([], [IDL2.Bool], ["query"]),
+    "listCoupons": IDL2.Func([], [IDL2.Vec(CouponCode2)], []),
+    "redeemCoupon": IDL2.Func(
+      [IDL2.Text],
+      [IDL2.Variant({ "ok": CouponRedemptionResult2, "err": IDL2.Text })],
+      []
+    ),
+    "saveChartAnnotation": IDL2.Func(
+      [TradeId2, IDL2.Text],
+      [IDL2.Opt(TradePublic2)],
+      []
+    ),
+    "setAdmin": IDL2.Func(
+      [IDL2.Principal],
+      [IDL2.Variant({ "ok": IDL2.Null, "err": IDL2.Text })],
+      []
+    ),
+    "updateTrade": IDL2.Func([TradeId2, TradeInput2], [IDL2.Opt(TradePublic2)], []),
+    "upgradeToPaid": IDL2.Func([], [UserPublic2], [])
+  });
+};
+function candid_some(value) {
+  return [
+    value
+  ];
+}
+function candid_none() {
+  return [];
+}
+function record_opt_to_undefined(arg) {
+  return arg == null ? void 0 : arg;
+}
+var Tier = /* @__PURE__ */ ((Tier2) => {
+  Tier2["FREE"] = "FREE";
+  Tier2["PAID"] = "PAID";
+  return Tier2;
+})(Tier || {});
+class Backend {
+  constructor(actor, _uploadFile, _downloadFile, processError2) {
+    this.actor = actor;
+    this._uploadFile = _uploadFile;
+    this._downloadFile = _downloadFile;
+    this.processError = processError2;
+  }
+  async bulkImportTrades(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.bulkImportTrades(to_candid_vec_n1(this._uploadFile, this._downloadFile, arg0));
+        return from_candid_ImportJobPublic_n10(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.bulkImportTrades(to_candid_vec_n1(this._uploadFile, this._downloadFile, arg0));
+      return from_candid_ImportJobPublic_n10(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async computeMetrics() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.computeMetrics();
+        return from_candid_PerformanceMetrics_n15(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.computeMetrics();
+      return from_candid_PerformanceMetrics_n15(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async createCoupon(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.createCoupon(to_candid_CreateCouponInput_n23(this._uploadFile, this._downloadFile, arg0));
+        return from_candid_CouponCode_n27(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.createCoupon(to_candid_CreateCouponInput_n23(this._uploadFile, this._downloadFile, arg0));
+      return from_candid_CouponCode_n27(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async createTrade(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.createTrade(to_candid_TradeInput_n33(this._uploadFile, this._downloadFile, arg0));
+        return from_candid_variant_n35(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.createTrade(to_candid_TradeInput_n33(this._uploadFile, this._downloadFile, arg0));
+      return from_candid_variant_n35(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async deactivateCoupon(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.deactivateCoupon(arg0);
+        return from_candid_variant_n42(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.deactivateCoupon(arg0);
+      return from_candid_variant_n42(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async deleteTrade(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.deleteTrade(arg0);
+        return result;
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.deleteTrade(arg0);
+      return result;
+    }
+  }
+  async getCouponStats(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getCouponStats(arg0);
+        return from_candid_variant_n43(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getCouponStats(arg0);
+      return from_candid_variant_n43(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getImportJob(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getImportJob(arg0);
+        return from_candid_opt_n46(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getImportJob(arg0);
+      return from_candid_opt_n46(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getMetrics() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getMetrics();
+        return from_candid_opt_n47(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getMetrics();
+      return from_candid_opt_n47(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getOrCreateUser() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getOrCreateUser();
+        return from_candid_UserPublic_n48(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getOrCreateUser();
+      return from_candid_UserPublic_n48(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getTrade(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getTrade(arg0);
+        return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getTrade(arg0);
+      return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getTradeLimitStatus() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getTradeLimitStatus();
+        return from_candid_TierLimitStatus_n53(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getTradeLimitStatus();
+      return from_candid_TierLimitStatus_n53(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getTrades(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getTrades(to_candid_TradeFilter_n55(this._uploadFile, this._downloadFile, arg0));
+        return from_candid_vec_n57(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getTrades(to_candid_TradeFilter_n55(this._uploadFile, this._downloadFile, arg0));
+      return from_candid_vec_n57(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getUserTier() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getUserTier();
+        return from_candid_Tier_n50(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getUserTier();
+      return from_candid_Tier_n50(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async isAdmin() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.isAdmin();
+        return result;
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.isAdmin();
+      return result;
+    }
+  }
+  async listCoupons() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.listCoupons();
+        return from_candid_vec_n58(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.listCoupons();
+      return from_candid_vec_n58(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async redeemCoupon(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.redeemCoupon(arg0);
+        return from_candid_variant_n59(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.redeemCoupon(arg0);
+      return from_candid_variant_n59(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async saveChartAnnotation(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.saveChartAnnotation(arg0, arg1);
+        return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.saveChartAnnotation(arg0, arg1);
+      return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async setAdmin(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.setAdmin(arg0);
+        return from_candid_variant_n42(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.setAdmin(arg0);
+      return from_candid_variant_n42(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async updateTrade(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.updateTrade(arg0, to_candid_TradeInput_n33(this._uploadFile, this._downloadFile, arg1));
+        return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.updateTrade(arg0, to_candid_TradeInput_n33(this._uploadFile, this._downloadFile, arg1));
+      return from_candid_opt_n52(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async upgradeToPaid() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.upgradeToPaid();
+        return from_candid_UserPublic_n48(this._uploadFile, this._downloadFile, result);
+      } catch (e3) {
+        this.processError(e3);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.upgradeToPaid();
+      return from_candid_UserPublic_n48(this._uploadFile, this._downloadFile, result);
+    }
+  }
+}
+function from_candid_CouponCode_n27(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n28(_uploadFile, _downloadFile, value);
+}
+function from_candid_CouponPerkType_n31(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n32(_uploadFile, _downloadFile, value);
+}
+function from_candid_CouponRedemptionResult_n60(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n61(_uploadFile, _downloadFile, value);
+}
+function from_candid_CouponStats_n44(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n45(_uploadFile, _downloadFile, value);
+}
+function from_candid_Direction_n38(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n39(_uploadFile, _downloadFile, value);
+}
+function from_candid_ImportJobPublic_n10(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n11(_uploadFile, _downloadFile, value);
+}
+function from_candid_ImportStatus_n12(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n13(_uploadFile, _downloadFile, value);
+}
+function from_candid_MarketCondition_n40(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n41(_uploadFile, _downloadFile, value);
+}
+function from_candid_PerformanceMetrics_n15(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n16(_uploadFile, _downloadFile, value);
+}
+function from_candid_SessionStats_n18(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n19(_uploadFile, _downloadFile, value);
+}
+function from_candid_SessionTime_n20(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n21(_uploadFile, _downloadFile, value);
+}
+function from_candid_TierLimitStatus_n53(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n54(_uploadFile, _downloadFile, value);
+}
+function from_candid_Tier_n50(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n51(_uploadFile, _downloadFile, value);
+}
+function from_candid_TradePublic_n36(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n37(_uploadFile, _downloadFile, value);
+}
+function from_candid_UserPublic_n48(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n49(_uploadFile, _downloadFile, value);
+}
+function from_candid_opt_n14(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n22(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n29(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n30(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n46(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : from_candid_ImportJobPublic_n10(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n47(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : from_candid_PerformanceMetrics_n15(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n52(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : from_candid_TradePublic_n36(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_record_n11(_uploadFile, _downloadFile, value) {
+  return {
+    id: value.id,
+    status: from_candid_ImportStatus_n12(_uploadFile, _downloadFile, value.status),
+    completedAt: record_opt_to_undefined(from_candid_opt_n14(_uploadFile, _downloadFile, value.completedAt)),
+    userId: value.userId,
+    createdAt: value.createdAt,
+    errors: value.errors,
+    importedCount: value.importedCount
+  };
+}
+function from_candid_record_n16(_uploadFile, _downloadFile, value) {
+  return {
+    avgRiskReward: value.avgRiskReward,
+    pnlBySession: from_candid_vec_n17(_uploadFile, _downloadFile, value.pnlBySession),
+    computedAt: value.computedAt,
+    userId: value.userId,
+    bestPair: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.bestPair)),
+    weeklyPnl: value.weeklyPnl,
+    worstPair: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.worstPair)),
+    totalPnl: value.totalPnl,
+    pnlByStrategy: value.pnlByStrategy,
+    pnlByPair: value.pnlByPair,
+    monthlyPnl: value.monthlyPnl,
+    winRate: value.winRate,
+    maxDrawdown: value.maxDrawdown
+  };
+}
+function from_candid_record_n19(_uploadFile, _downloadFile, value) {
+  return {
+    tradeCount: value.tradeCount,
+    totalPnl: value.totalPnl,
+    session: from_candid_SessionTime_n20(_uploadFile, _downloadFile, value.session),
+    winRate: value.winRate
+  };
+}
+function from_candid_record_n28(_uploadFile, _downloadFile, value) {
+  return {
+    id: value.id,
+    expiresAt: record_opt_to_undefined(from_candid_opt_n29(_uploadFile, _downloadFile, value.expiresAt)),
+    code: value.code,
+    createdAt: value.createdAt,
+    usedCount: value.usedCount,
+    description: value.description,
+    isActive: value.isActive,
+    maxUses: record_opt_to_undefined(from_candid_opt_n30(_uploadFile, _downloadFile, value.maxUses)),
+    perkType: from_candid_CouponPerkType_n31(_uploadFile, _downloadFile, value.perkType)
+  };
+}
+function from_candid_record_n37(_uploadFile, _downloadFile, value) {
+  return {
+    id: value.id,
+    pnl: value.pnl,
+    exitDate: value.exitDate,
+    direction: from_candid_Direction_n38(_uploadFile, _downloadFile, value.direction),
+    entryDate: value.entryDate,
+    chartImageUrl: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.chartImageUrl)),
+    sessionTime: from_candid_SessionTime_n20(_uploadFile, _downloadFile, value.sessionTime),
+    userId: value.userId,
+    createdAt: value.createdAt,
+    pair: value.pair,
+    marketCondition: from_candid_MarketCondition_n40(_uploadFile, _downloadFile, value.marketCondition),
+    riskReward: value.riskReward,
+    strategyTag: value.strategyTag,
+    updatedAt: value.updatedAt,
+    mistakeTag: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.mistakeTag)),
+    notes: value.notes,
+    entryPrice: value.entryPrice,
+    exitPrice: value.exitPrice
+  };
+}
+function from_candid_record_n45(_uploadFile, _downloadFile, value) {
+  return {
+    coupon: from_candid_CouponCode_n27(_uploadFile, _downloadFile, value.coupon),
+    totalRedemptions: value.totalRedemptions
+  };
+}
+function from_candid_record_n49(_uploadFile, _downloadFile, value) {
+  return {
+    id: value.id,
+    paidUntil: record_opt_to_undefined(from_candid_opt_n29(_uploadFile, _downloadFile, value.paidUntil)),
+    createdAt: value.createdAt,
+    tier: from_candid_Tier_n50(_uploadFile, _downloadFile, value.tier),
+    stripeCustomerId: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.stripeCustomerId)),
+    isAdmin: value.isAdmin,
+    unlockedFeatures: value.unlockedFeatures
+  };
+}
+function from_candid_record_n54(_uploadFile, _downloadFile, value) {
+  return {
+    dailyCount: value.dailyCount,
+    tier: from_candid_Tier_n50(_uploadFile, _downloadFile, value.tier),
+    totalCount: value.totalCount,
+    dailyLimitReached: value.dailyLimitReached,
+    dailyLimit: value.dailyLimit,
+    totalLimit: value.totalLimit,
+    totalLimitReached: value.totalLimitReached
+  };
+}
+function from_candid_record_n61(_uploadFile, _downloadFile, value) {
+  return {
+    perkApplied: value.perkApplied,
+    coupon: from_candid_CouponCode_n27(_uploadFile, _downloadFile, value.coupon)
+  };
+}
+function from_candid_variant_n13(_uploadFile, _downloadFile, value) {
+  return "FAILED" in value ? "FAILED" : "PENDING" in value ? "PENDING" : "PROCESSING" in value ? "PROCESSING" : "COMPLETE" in value ? "COMPLETE" : value;
+}
+function from_candid_variant_n21(_uploadFile, _downloadFile, value) {
+  return "NY" in value ? "NY" : "LONDON" in value ? "LONDON" : "ASIAN" in value ? "ASIAN" : "OTHER" in value ? "OTHER" : value;
+}
+function from_candid_variant_n32(_uploadFile, _downloadFile, value) {
+  return "custom" in value ? {
+    __kind__: "custom",
+    custom: value.custom
+  } : "freeMonths" in value ? {
+    __kind__: "freeMonths",
+    freeMonths: value.freeMonths
+  } : "upgradeToPhaid" in value ? {
+    __kind__: "upgradeToPhaid",
+    upgradeToPhaid: value.upgradeToPhaid
+  } : "featureUnlock" in value ? {
+    __kind__: "featureUnlock",
+    featureUnlock: value.featureUnlock
+  } : value;
+}
+function from_candid_variant_n35(_uploadFile, _downloadFile, value) {
+  return "ok" in value ? {
+    __kind__: "ok",
+    ok: from_candid_TradePublic_n36(_uploadFile, _downloadFile, value.ok)
+  } : "limitReached" in value ? {
+    __kind__: "limitReached",
+    limitReached: value.limitReached
+  } : value;
+}
+function from_candid_variant_n39(_uploadFile, _downloadFile, value) {
+  return "LONG" in value ? "LONG" : "SHORT" in value ? "SHORT" : value;
+}
+function from_candid_variant_n41(_uploadFile, _downloadFile, value) {
+  return "VOLATILE" in value ? "VOLATILE" : "RANGING" in value ? "RANGING" : "CHOPPY" in value ? "CHOPPY" : "OTHER" in value ? "OTHER" : "TRENDING" in value ? "TRENDING" : value;
+}
+function from_candid_variant_n42(_uploadFile, _downloadFile, value) {
+  return "ok" in value ? {
+    __kind__: "ok",
+    ok: value.ok
+  } : "err" in value ? {
+    __kind__: "err",
+    err: value.err
+  } : value;
+}
+function from_candid_variant_n43(_uploadFile, _downloadFile, value) {
+  return "ok" in value ? {
+    __kind__: "ok",
+    ok: from_candid_CouponStats_n44(_uploadFile, _downloadFile, value.ok)
+  } : "err" in value ? {
+    __kind__: "err",
+    err: value.err
+  } : value;
+}
+function from_candid_variant_n51(_uploadFile, _downloadFile, value) {
+  return "FREE" in value ? "FREE" : "PAID" in value ? "PAID" : value;
+}
+function from_candid_variant_n59(_uploadFile, _downloadFile, value) {
+  return "ok" in value ? {
+    __kind__: "ok",
+    ok: from_candid_CouponRedemptionResult_n60(_uploadFile, _downloadFile, value.ok)
+  } : "err" in value ? {
+    __kind__: "err",
+    err: value.err
+  } : value;
+}
+function from_candid_vec_n17(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => from_candid_SessionStats_n18(_uploadFile, _downloadFile, x3));
+}
+function from_candid_vec_n57(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => from_candid_TradePublic_n36(_uploadFile, _downloadFile, x3));
+}
+function from_candid_vec_n58(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => from_candid_CouponCode_n27(_uploadFile, _downloadFile, x3));
+}
+function to_candid_CouponPerkType_n25(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n26(_uploadFile, _downloadFile, value);
+}
+function to_candid_CreateCouponInput_n23(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n24(_uploadFile, _downloadFile, value);
+}
+function to_candid_CsvTradeRow_n2(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n3(_uploadFile, _downloadFile, value);
+}
+function to_candid_Direction_n4(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n5(_uploadFile, _downloadFile, value);
+}
+function to_candid_MarketCondition_n8(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n9(_uploadFile, _downloadFile, value);
+}
+function to_candid_SessionTime_n6(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n7(_uploadFile, _downloadFile, value);
+}
+function to_candid_TradeFilter_n55(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n56(_uploadFile, _downloadFile, value);
+}
+function to_candid_TradeInput_n33(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n34(_uploadFile, _downloadFile, value);
+}
+function to_candid_record_n24(_uploadFile, _downloadFile, value) {
+  return {
+    expiresAt: value.expiresAt ? candid_some(value.expiresAt) : candid_none(),
+    code: value.code,
+    description: value.description,
+    maxUses: value.maxUses ? candid_some(value.maxUses) : candid_none(),
+    perkType: to_candid_CouponPerkType_n25(_uploadFile, _downloadFile, value.perkType)
+  };
+}
+function to_candid_record_n3(_uploadFile, _downloadFile, value) {
+  return {
+    pnl: value.pnl ? candid_some(value.pnl) : candid_none(),
+    exitDate: value.exitDate,
+    direction: to_candid_Direction_n4(_uploadFile, _downloadFile, value.direction),
+    entryDate: value.entryDate,
+    chartImageUrl: value.chartImageUrl ? candid_some(value.chartImageUrl) : candid_none(),
+    sessionTime: value.sessionTime ? candid_some(to_candid_SessionTime_n6(_uploadFile, _downloadFile, value.sessionTime)) : candid_none(),
+    pair: value.pair,
+    marketCondition: value.marketCondition ? candid_some(to_candid_MarketCondition_n8(_uploadFile, _downloadFile, value.marketCondition)) : candid_none(),
+    riskReward: value.riskReward ? candid_some(value.riskReward) : candid_none(),
+    strategyTag: value.strategyTag ? candid_some(value.strategyTag) : candid_none(),
+    mistakeTag: value.mistakeTag ? candid_some(value.mistakeTag) : candid_none(),
+    notes: value.notes ? candid_some(value.notes) : candid_none(),
+    entryPrice: value.entryPrice,
+    exitPrice: value.exitPrice
+  };
+}
+function to_candid_record_n34(_uploadFile, _downloadFile, value) {
+  return {
+    exitDate: value.exitDate,
+    direction: to_candid_Direction_n4(_uploadFile, _downloadFile, value.direction),
+    entryDate: value.entryDate,
+    chartImageUrl: value.chartImageUrl ? candid_some(value.chartImageUrl) : candid_none(),
+    sessionTime: to_candid_SessionTime_n6(_uploadFile, _downloadFile, value.sessionTime),
+    takeProfit: value.takeProfit ? candid_some(value.takeProfit) : candid_none(),
+    pair: value.pair,
+    marketCondition: to_candid_MarketCondition_n8(_uploadFile, _downloadFile, value.marketCondition),
+    strategyTag: value.strategyTag,
+    mistakeTag: value.mistakeTag ? candid_some(value.mistakeTag) : candid_none(),
+    stopLoss: value.stopLoss ? candid_some(value.stopLoss) : candid_none(),
+    notes: value.notes,
+    entryPrice: value.entryPrice,
+    exitPrice: value.exitPrice
+  };
+}
+function to_candid_record_n56(_uploadFile, _downloadFile, value) {
+  return {
+    dateTo: value.dateTo ? candid_some(value.dateTo) : candid_none(),
+    sessionTime: value.sessionTime ? candid_some(to_candid_SessionTime_n6(_uploadFile, _downloadFile, value.sessionTime)) : candid_none(),
+    pair: value.pair ? candid_some(value.pair) : candid_none(),
+    strategyTag: value.strategyTag ? candid_some(value.strategyTag) : candid_none(),
+    mistakeTag: value.mistakeTag ? candid_some(value.mistakeTag) : candid_none(),
+    dateFrom: value.dateFrom ? candid_some(value.dateFrom) : candid_none()
+  };
+}
+function to_candid_variant_n26(_uploadFile, _downloadFile, value) {
+  return value.__kind__ === "custom" ? {
+    custom: value.custom
+  } : value.__kind__ === "freeMonths" ? {
+    freeMonths: value.freeMonths
+  } : value.__kind__ === "upgradeToPhaid" ? {
+    upgradeToPhaid: value.upgradeToPhaid
+  } : value.__kind__ === "featureUnlock" ? {
+    featureUnlock: value.featureUnlock
+  } : value;
+}
+function to_candid_variant_n5(_uploadFile, _downloadFile, value) {
+  return value == "LONG" ? {
+    LONG: null
+  } : value == "SHORT" ? {
+    SHORT: null
+  } : value;
+}
+function to_candid_variant_n7(_uploadFile, _downloadFile, value) {
+  return value == "NY" ? {
+    NY: null
+  } : value == "LONDON" ? {
+    LONDON: null
+  } : value == "ASIAN" ? {
+    ASIAN: null
+  } : value == "OTHER" ? {
+    OTHER: null
+  } : value;
+}
+function to_candid_variant_n9(_uploadFile, _downloadFile, value) {
+  return value == "VOLATILE" ? {
+    VOLATILE: null
+  } : value == "RANGING" ? {
+    RANGING: null
+  } : value == "CHOPPY" ? {
+    CHOPPY: null
+  } : value == "OTHER" ? {
+    OTHER: null
+  } : value == "TRENDING" ? {
+    TRENDING: null
+  } : value;
+}
+function to_candid_vec_n1(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => to_candid_CsvTradeRow_n2(_uploadFile, _downloadFile, x3));
+}
+function createActor(canisterId, _uploadFile, _downloadFile, options = {}) {
+  const agent = options.agent || HttpAgent.createSync({
+    ...options.agentOptions
+  });
+  if (options.agent && options.agentOptions) {
+    console.warn("Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent.");
+  }
+  const actor = Actor.createActor(idlFactory, {
+    agent,
+    canisterId,
+    ...options.actorOptions
+  });
+  return new Backend(actor, _uploadFile, _downloadFile, options.processError);
+}
+function useIsAdmin() {
+  const { actor, isFetching } = useActor(createActor);
+  const query = useQuery({
+    queryKey: ["isAdmin"],
+    queryFn: async () => {
+      if (!actor) return false;
+      try {
+        return await actor.isAdmin();
+      } catch {
+        return false;
+      }
+    },
+    enabled: !!actor && !isFetching,
+    staleTime: 3e5
+  });
+  return {
+    isAdmin: query.data ?? false,
+    isLoading: query.isLoading
+  };
+}
+function useUserTier() {
+  const { actor, isFetching } = useActor(createActor);
+  const query = useQuery({
+    queryKey: ["userTier"],
+    queryFn: async () => {
+      var _a3;
+      if (!actor) return { tier: "FREE" };
+      try {
+        const user = await ((_a3 = actor.getOrCreateUser) == null ? void 0 : _a3.call(actor).catch(() => null));
+        const paidUntil = (user == null ? void 0 : user.paidUntil) ? BigInt(user.paidUntil) : void 0;
+        const rawTier = await actor.getUserTier();
+        let tier = rawTier === Tier.PAID ? "PAID" : "FREE";
+        if (paidUntil !== void 0) {
+          const nowMs = BigInt(Date.now()) * 1000000n;
+          if (paidUntil > nowMs) {
+            tier = "PAID";
+          } else if (rawTier !== Tier.PAID) {
+            tier = "FREE";
+          }
+        }
+        return { tier, paidUntil };
+      } catch {
+        return { tier: "FREE" };
+      }
+    },
+    enabled: !!actor && !isFetching,
+    staleTime: 6e4
+  });
+  const data = query.data ?? { tier: "FREE" };
+  return {
+    tier: data.tier,
+    isPaid: data.tier === "PAID",
+    isFree: data.tier === "FREE",
+    paidUntil: data.paidUntil,
+    isLoading: query.isLoading
+  };
+}
 function r(e3) {
   var t2, f2, n2 = "";
   if ("string" == typeof e3 || "number" == typeof e3) n2 += e3;
@@ -35392,7 +36801,7 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$P = [
+const __iconNode$W = [
   [
     "path",
     {
@@ -35401,60 +36810,60 @@ const __iconNode$P = [
     }
   ]
 ];
-const Activity = createLucideIcon("activity", __iconNode$P);
+const Activity = createLucideIcon("activity", __iconNode$W);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$O = [
+const __iconNode$V = [
   ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
   ["path", { d: "M19 12H5", key: "x3x0zl" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$O);
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$V);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$N = [
+const __iconNode$U = [
   ["path", { d: "M5 12h14", key: "1ays0h" }],
   ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
 ];
-const ArrowRight = createLucideIcon("arrow-right", __iconNode$N);
+const ArrowRight = createLucideIcon("arrow-right", __iconNode$U);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$M = [
+const __iconNode$T = [
   ["path", { d: "m21 16-4 4-4-4", key: "f6ql7i" }],
   ["path", { d: "M17 20V4", key: "1ejh1v" }],
   ["path", { d: "m3 8 4-4 4 4", key: "11wl7u" }],
   ["path", { d: "M7 4v16", key: "1glfcx" }]
 ];
-const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$M);
+const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$T);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$L = [
+const __iconNode$S = [
   ["path", { d: "M7 7h10v10", key: "1tivn9" }],
   ["path", { d: "M7 17 17 7", key: "1vkiza" }]
 ];
-const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$L);
+const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$S);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$K = [
+const __iconNode$R = [
   [
     "path",
     {
@@ -35464,20 +36873,85 @@ const __iconNode$K = [
   ],
   ["circle", { cx: "12", cy: "8", r: "6", key: "1vp47v" }]
 ];
-const Award = createLucideIcon("award", __iconNode$K);
+const Award = createLucideIcon("award", __iconNode$R);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$J = [
+const __iconNode$Q = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
   ["path", { d: "M3 10h18", key: "8toen8" }]
 ];
-const Calendar = createLucideIcon("calendar", __iconNode$J);
+const Calendar = createLucideIcon("calendar", __iconNode$Q);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$P = [
+  ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
+  ["path", { d: "M18 17V9", key: "2bz60n" }],
+  ["path", { d: "M13 17V5", key: "1frdt8" }],
+  ["path", { d: "M8 17v-3", key: "17ska0" }]
+];
+const ChartColumn = createLucideIcon("chart-column", __iconNode$P);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$O = [
+  ["line", { x1: "18", x2: "18", y1: "20", y2: "10", key: "1xfpm4" }],
+  ["line", { x1: "12", x2: "12", y1: "20", y2: "4", key: "be30l9" }],
+  ["line", { x1: "6", x2: "6", y1: "20", y2: "14", key: "1r4le6" }]
+];
+const ChartNoAxesColumn = createLucideIcon("chart-no-axes-column", __iconNode$O);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$N = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$N);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$M = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$M);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$L = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$L);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$K = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$K);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$J = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$J);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35485,12 +36959,11 @@ const Calendar = createLucideIcon("calendar", __iconNode$J);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$I = [
-  ["path", { d: "M3 3v16a2 2 0 0 0 2 2h16", key: "c24i48" }],
-  ["path", { d: "M18 17V9", key: "2bz60n" }],
-  ["path", { d: "M13 17V5", key: "1frdt8" }],
-  ["path", { d: "M8 17v-3", key: "17ska0" }]
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
+  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
 ];
-const ChartColumn = createLucideIcon("chart-column", __iconNode$I);
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$I);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35498,93 +36971,52 @@ const ChartColumn = createLucideIcon("chart-column", __iconNode$I);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$H = [
-  ["line", { x1: "18", x2: "18", y1: "20", y2: "10", key: "1xfpm4" }],
-  ["line", { x1: "12", x2: "12", y1: "20", y2: "4", key: "be30l9" }],
-  ["line", { x1: "6", x2: "6", y1: "20", y2: "14", key: "1r4le6" }]
-];
-const ChartNoAxesColumn = createLucideIcon("chart-no-axes-column", __iconNode$H);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$G = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$G);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$F = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$F);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$E = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$E);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$D = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$D);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$C = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$C);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$B = [
   ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
   ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
 ];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$B);
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$H);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$A = [
+const __iconNode$G = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+];
+const CircleCheck = createLucideIcon("circle-check", __iconNode$G);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$F = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M8 12h8", key: "1wcyev" }],
   ["path", { d: "M12 8v8", key: "napkw2" }]
 ];
-const CirclePlus = createLucideIcon("circle-plus", __iconNode$A);
+const CirclePlus = createLucideIcon("circle-plus", __iconNode$F);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$z = [
+const __iconNode$E = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "m15 9-6 6", key: "1uzhvr" }],
   ["path", { d: "m9 9 6 6", key: "z0biqf" }]
 ];
-const CircleX = createLucideIcon("circle-x", __iconNode$z);
+const CircleX = createLucideIcon("circle-x", __iconNode$E);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$y = [
+const __iconNode$D = [
   ["rect", { width: "8", height: "4", x: "8", y: "2", rx: "1", ry: "1", key: "tgr4d6" }],
   [
     "path",
@@ -35598,7 +37030,72 @@ const __iconNode$y = [
   ["path", { d: "M8 11h.01", key: "1dfujw" }],
   ["path", { d: "M8 16h.01", key: "18s6g9" }]
 ];
-const ClipboardList = createLucideIcon("clipboard-list", __iconNode$y);
+const ClipboardList = createLucideIcon("clipboard-list", __iconNode$D);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$C = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
+];
+const Clock = createLucideIcon("clock", __iconNode$C);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$B = [
+  [
+    "path",
+    {
+      d: "M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z",
+      key: "1vdc57"
+    }
+  ],
+  ["path", { d: "M5 21h14", key: "11awu3" }]
+];
+const Crown = createLucideIcon("crown", __iconNode$B);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$A = [
+  ["line", { x1: "12", x2: "12", y1: "2", y2: "22", key: "7eqyqh" }],
+  ["path", { d: "M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6", key: "1b0p4s" }]
+];
+const DollarSign = createLucideIcon("dollar-sign", __iconNode$A);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$z = [
+  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
+  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
+  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
+];
+const ExternalLink = createLucideIcon("external-link", __iconNode$z);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$y = [
+  ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
+  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
+  ["path", { d: "M10 9H8", key: "b1mrlr" }],
+  ["path", { d: "M16 13H8", key: "t4e002" }],
+  ["path", { d: "M16 17H8", key: "z1uh3a" }]
+];
+const FileText = createLucideIcon("file-text", __iconNode$y);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35606,10 +37103,12 @@ const ClipboardList = createLucideIcon("clipboard-list", __iconNode$y);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$x = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
+  ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
+  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
+  ["path", { d: "M12 12v6", key: "3ahymv" }],
+  ["path", { d: "m15 15-3-3-3 3", key: "15xj92" }]
 ];
-const Clock = createLucideIcon("clock", __iconNode$x);
+const FileUp = createLucideIcon("file-up", __iconNode$x);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35620,13 +37119,12 @@ const __iconNode$w = [
   [
     "path",
     {
-      d: "M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z",
-      key: "1vdc57"
+      d: "M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z",
+      key: "sc7q7i"
     }
-  ],
-  ["path", { d: "M5 21h14", key: "11awu3" }]
+  ]
 ];
-const Crown = createLucideIcon("crown", __iconNode$w);
+const Funnel = createLucideIcon("funnel", __iconNode$w);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35634,10 +37132,13 @@ const Crown = createLucideIcon("crown", __iconNode$w);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$v = [
-  ["line", { x1: "12", x2: "12", y1: "2", y2: "22", key: "7eqyqh" }],
-  ["path", { d: "M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6", key: "1b0p4s" }]
+  ["path", { d: "M16 5h6", key: "1vod17" }],
+  ["path", { d: "M19 2v6", key: "4bpg5p" }],
+  ["path", { d: "M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5", key: "1ue2ih" }],
+  ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }],
+  ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }]
 ];
-const DollarSign = createLucideIcon("dollar-sign", __iconNode$v);
+const ImagePlus = createLucideIcon("image-plus", __iconNode$v);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35645,11 +37146,11 @@ const DollarSign = createLucideIcon("dollar-sign", __iconNode$v);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$u = [
-  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
-  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
-  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
+  ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", ry: "2", key: "1m3agn" }],
+  ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }],
+  ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }]
 ];
-const ExternalLink = createLucideIcon("external-link", __iconNode$u);
+const Image$1 = createLucideIcon("image", __iconNode$u);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35657,13 +37158,12 @@ const ExternalLink = createLucideIcon("external-link", __iconNode$u);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$t = [
-  ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
-  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
-  ["path", { d: "M10 9H8", key: "b1mrlr" }],
-  ["path", { d: "M16 13H8", key: "t4e002" }],
-  ["path", { d: "M16 17H8", key: "z1uh3a" }]
+  ["rect", { width: "7", height: "9", x: "3", y: "3", rx: "1", key: "10lvy0" }],
+  ["rect", { width: "7", height: "5", x: "14", y: "3", rx: "1", key: "16une8" }],
+  ["rect", { width: "7", height: "9", x: "14", y: "12", rx: "1", key: "1hutg5" }],
+  ["rect", { width: "7", height: "5", x: "3", y: "16", rx: "1", key: "ldoo1y" }]
 ];
-const FileText = createLucideIcon("file-text", __iconNode$t);
+const LayoutDashboard = createLucideIcon("layout-dashboard", __iconNode$t);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35671,12 +37171,10 @@ const FileText = createLucideIcon("file-text", __iconNode$t);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$s = [
-  ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
-  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
-  ["path", { d: "M12 12v6", key: "3ahymv" }],
-  ["path", { d: "m15 15-3-3-3 3", key: "15xj92" }]
+  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
+  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
 ];
-const FileUp = createLucideIcon("file-up", __iconNode$s);
+const Lock = createLucideIcon("lock", __iconNode$s);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35684,29 +37182,19 @@ const FileUp = createLucideIcon("file-up", __iconNode$s);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$r = [
-  [
-    "path",
-    {
-      d: "M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z",
-      key: "sc7q7i"
-    }
-  ]
+  ["path", { d: "M4 12h16", key: "1lakjw" }],
+  ["path", { d: "M4 18h16", key: "19g7jn" }],
+  ["path", { d: "M4 6h16", key: "1o0s65" }]
 ];
-const Funnel = createLucideIcon("funnel", __iconNode$r);
+const Menu = createLucideIcon("menu", __iconNode$r);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$q = [
-  ["path", { d: "M16 5h6", key: "1vod17" }],
-  ["path", { d: "M19 2v6", key: "4bpg5p" }],
-  ["path", { d: "M21 11.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7.5", key: "1ue2ih" }],
-  ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }],
-  ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }]
-];
-const ImagePlus = createLucideIcon("image-plus", __iconNode$q);
+const __iconNode$q = [["path", { d: "M5 12h14", key: "1ays0h" }]];
+const Minus = createLucideIcon("minus", __iconNode$q);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35714,62 +37202,6 @@ const ImagePlus = createLucideIcon("image-plus", __iconNode$q);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$p = [
-  ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", ry: "2", key: "1m3agn" }],
-  ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }],
-  ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }]
-];
-const Image$1 = createLucideIcon("image", __iconNode$p);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$o = [
-  ["rect", { width: "7", height: "9", x: "3", y: "3", rx: "1", key: "10lvy0" }],
-  ["rect", { width: "7", height: "5", x: "14", y: "3", rx: "1", key: "16une8" }],
-  ["rect", { width: "7", height: "9", x: "14", y: "12", rx: "1", key: "1hutg5" }],
-  ["rect", { width: "7", height: "5", x: "3", y: "16", rx: "1", key: "ldoo1y" }]
-];
-const LayoutDashboard = createLucideIcon("layout-dashboard", __iconNode$o);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$n = [
-  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
-  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
-];
-const Lock = createLucideIcon("lock", __iconNode$n);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$m = [
-  ["path", { d: "M4 12h16", key: "1lakjw" }],
-  ["path", { d: "M4 18h16", key: "19g7jn" }],
-  ["path", { d: "M4 6h16", key: "1o0s65" }]
-];
-const Menu = createLucideIcon("menu", __iconNode$m);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$l = [["path", { d: "M5 12h14", key: "1ays0h" }]];
-const Minus = createLucideIcon("minus", __iconNode$l);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$k = [
   ["path", { d: "M12.586 12.586 19 19", key: "ea5xo7" }],
   [
     "path",
@@ -35779,14 +37211,14 @@ const __iconNode$k = [
     }
   ]
 ];
-const MousePointer = createLucideIcon("mouse-pointer", __iconNode$k);
+const MousePointer = createLucideIcon("mouse-pointer", __iconNode$p);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$j = [
+const __iconNode$o = [
   [
     "path",
     {
@@ -35796,48 +37228,48 @@ const __iconNode$j = [
   ],
   ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
 ];
-const Pencil = createLucideIcon("pencil", __iconNode$j);
+const Pencil = createLucideIcon("pencil", __iconNode$o);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$i = [
+const __iconNode$n = [
   ["line", { x1: "19", x2: "5", y1: "5", y2: "19", key: "1x9vlm" }],
   ["circle", { cx: "6.5", cy: "6.5", r: "2.5", key: "4mh3h7" }],
   ["circle", { cx: "17.5", cy: "17.5", r: "2.5", key: "1mdrzq" }]
 ];
-const Percent = createLucideIcon("percent", __iconNode$i);
+const Percent = createLucideIcon("percent", __iconNode$n);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$h = [
+const __iconNode$m = [
   ["path", { d: "M5 12h14", key: "1ays0h" }],
   ["path", { d: "M12 5v14", key: "s699le" }]
 ];
-const Plus = createLucideIcon("plus", __iconNode$h);
+const Plus = createLucideIcon("plus", __iconNode$m);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$g = [
+const __iconNode$l = [
   ["path", { d: "m15 14 5-5-5-5", key: "12vg1m" }],
   ["path", { d: "M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13", key: "6uklza" }]
 ];
-const Redo2 = createLucideIcon("redo-2", __iconNode$g);
+const Redo2 = createLucideIcon("redo-2", __iconNode$l);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$f = [
+const __iconNode$k = [
   [
     "path",
     {
@@ -35848,25 +37280,60 @@ const __iconNode$f = [
   ["path", { d: "M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7", key: "1ydtos" }],
   ["path", { d: "M7 3v4a1 1 0 0 0 1 1h7", key: "t51u73" }]
 ];
-const Save = createLucideIcon("save", __iconNode$f);
+const Save = createLucideIcon("save", __iconNode$k);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$e = [
+const __iconNode$j = [
   ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
   ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
 ];
-const Search = createLucideIcon("search", __iconNode$e);
+const Search = createLucideIcon("search", __iconNode$j);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$d = [
+const __iconNode$i = [
+  [
+    "path",
+    {
+      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+      key: "oel41y"
+    }
+  ],
+  ["path", { d: "M12 8v4", key: "1got3b" }],
+  ["path", { d: "M12 16h.01", key: "1drbdi" }]
+];
+const ShieldAlert = createLucideIcon("shield-alert", __iconNode$i);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$h = [
+  [
+    "path",
+    {
+      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+      key: "oel41y"
+    }
+  ],
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+];
+const ShieldCheck = createLucideIcon("shield-check", __iconNode$h);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$g = [
   [
     "path",
     {
@@ -35875,14 +37342,14 @@ const __iconNode$d = [
     }
   ]
 ];
-const Shield = createLucideIcon("shield", __iconNode$d);
+const Shield = createLucideIcon("shield", __iconNode$g);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$c = [
+const __iconNode$f = [
   [
     "path",
     {
@@ -35895,14 +37362,14 @@ const __iconNode$c = [
   ["path", { d: "M4 17v2", key: "vumght" }],
   ["path", { d: "M5 18H3", key: "zchphs" }]
 ];
-const Sparkles = createLucideIcon("sparkles", __iconNode$c);
+const Sparkles = createLucideIcon("sparkles", __iconNode$f);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$b = [
+const __iconNode$e = [
   ["path", { d: "M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7", key: "1m0v6g" }],
   [
     "path",
@@ -35912,7 +37379,46 @@ const __iconNode$b = [
     }
   ]
 ];
-const SquarePen = createLucideIcon("square-pen", __iconNode$b);
+const SquarePen = createLucideIcon("square-pen", __iconNode$e);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$d = [
+  ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }]
+];
+const Square = createLucideIcon("square", __iconNode$d);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$c = [
+  [
+    "path",
+    {
+      d: "M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z",
+      key: "vktsd0"
+    }
+  ],
+  ["circle", { cx: "7.5", cy: "7.5", r: ".5", fill: "currentColor", key: "kqv944" }]
+];
+const Tag = createLucideIcon("tag", __iconNode$c);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$b = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["circle", { cx: "12", cy: "12", r: "6", key: "1vlfrh" }],
+  ["circle", { cx: "12", cy: "12", r: "2", key: "1c9p78" }]
+];
+const Target = createLucideIcon("target", __iconNode$b);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35920,9 +37426,18 @@ const SquarePen = createLucideIcon("square-pen", __iconNode$b);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$a = [
-  ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }]
+  [
+    "path",
+    {
+      d: "M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z",
+      key: "qn84l0"
+    }
+  ],
+  ["path", { d: "M13 5v2", key: "dyzc3o" }],
+  ["path", { d: "M13 17v2", key: "1ont0d" }],
+  ["path", { d: "M13 11v2", key: "1wjjxi" }]
 ];
-const Square = createLucideIcon("square", __iconNode$a);
+const Ticket = createLucideIcon("ticket", __iconNode$a);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35930,11 +37445,13 @@ const Square = createLucideIcon("square", __iconNode$a);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$9 = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["circle", { cx: "12", cy: "12", r: "6", key: "1vlfrh" }],
-  ["circle", { cx: "12", cy: "12", r: "2", key: "1c9p78" }]
+  ["path", { d: "M3 6h18", key: "d0wm0j" }],
+  ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
+  ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
+  ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
+  ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
 ];
-const Target = createLucideIcon("target", __iconNode$9);
+const Trash2 = createLucideIcon("trash-2", __iconNode$9);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35942,13 +37459,10 @@ const Target = createLucideIcon("target", __iconNode$9);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$8 = [
-  ["path", { d: "M3 6h18", key: "d0wm0j" }],
-  ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
-  ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
-  ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
-  ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
+  ["path", { d: "M16 17h6v-6", key: "t6n2it" }],
+  ["path", { d: "m22 17-8.5-8.5-5 5L2 7", key: "x473p" }]
 ];
-const Trash2 = createLucideIcon("trash-2", __iconNode$8);
+const TrendingDown = createLucideIcon("trending-down", __iconNode$8);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35956,10 +37470,10 @@ const Trash2 = createLucideIcon("trash-2", __iconNode$8);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$7 = [
-  ["path", { d: "M16 17h6v-6", key: "t6n2it" }],
-  ["path", { d: "m22 17-8.5-8.5-5 5L2 7", key: "x473p" }]
+  ["path", { d: "M16 7h6v6", key: "box55l" }],
+  ["path", { d: "m22 7-8.5 8.5-5-5L2 17", key: "1t1m79" }]
 ];
-const TrendingDown = createLucideIcon("trending-down", __iconNode$7);
+const TrendingUp = createLucideIcon("trending-up", __iconNode$7);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35967,17 +37481,6 @@ const TrendingDown = createLucideIcon("trending-down", __iconNode$7);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$6 = [
-  ["path", { d: "M16 7h6v6", key: "box55l" }],
-  ["path", { d: "m22 7-8.5 8.5-5-5L2 17", key: "1t1m79" }]
-];
-const TrendingUp = createLucideIcon("trending-up", __iconNode$6);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$5 = [
   [
     "path",
     {
@@ -35988,7 +37491,19 @@ const __iconNode$5 = [
   ["path", { d: "M12 9v4", key: "juzpu7" }],
   ["path", { d: "M12 17h.01", key: "p32p05" }]
 ];
-const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$5);
+const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$6);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$5 = [
+  ["path", { d: "M12 4v16", key: "1654pz" }],
+  ["path", { d: "M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2", key: "e0r10z" }],
+  ["path", { d: "M9 20h6", key: "s66wpe" }]
+];
+const Type2 = createLucideIcon("type", __iconNode$5);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -35996,11 +37511,10 @@ const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$5);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$4 = [
-  ["path", { d: "M12 4v16", key: "1654pz" }],
-  ["path", { d: "M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2", key: "e0r10z" }],
-  ["path", { d: "M9 20h6", key: "s66wpe" }]
+  ["path", { d: "M9 14 4 9l5-5", key: "102s5s" }],
+  ["path", { d: "M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11", key: "f3b9sd" }]
 ];
-const Type2 = createLucideIcon("type", __iconNode$4);
+const Undo2 = createLucideIcon("undo-2", __iconNode$4);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36008,10 +37522,11 @@ const Type2 = createLucideIcon("type", __iconNode$4);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$3 = [
-  ["path", { d: "M9 14 4 9l5-5", key: "102s5s" }],
-  ["path", { d: "M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11", key: "f3b9sd" }]
+  ["path", { d: "M12 3v12", key: "1x0j5s" }],
+  ["path", { d: "m17 8-5-5-5 5", key: "7q97r8" }],
+  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }]
 ];
-const Undo2 = createLucideIcon("undo-2", __iconNode$3);
+const Upload = createLucideIcon("upload", __iconNode$3);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36019,11 +37534,12 @@ const Undo2 = createLucideIcon("undo-2", __iconNode$3);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$2 = [
-  ["path", { d: "M12 3v12", key: "1x0j5s" }],
-  ["path", { d: "m17 8-5-5-5 5", key: "7q97r8" }],
-  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }]
+  ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
+  ["path", { d: "M16 3.128a4 4 0 0 1 0 7.744", key: "16gr8j" }],
+  ["path", { d: "M22 21v-2a4 4 0 0 0-3-3.87", key: "kshegd" }],
+  ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }]
 ];
-const Upload = createLucideIcon("upload", __iconNode$2);
+const Users = createLucideIcon("users", __iconNode$2);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -36051,7 +37567,7 @@ const __iconNode = [
   ]
 ];
 const Zap = createLucideIcon("zap", __iconNode);
-const navItems$1 = [
+const coreNavItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/trades", label: "Trade History", icon: ClipboardList },
   { to: "/trades/new", label: "Log Trade", icon: CirclePlus },
@@ -36062,11 +37578,30 @@ const navItems$1 = [
 function MobileNav() {
   const [open, setOpen] = reactExports.useState(false);
   const routerState = useRouterState();
+  const { isAdmin } = useIsAdmin();
+  const { isPaid } = useUserTier();
+  const navItems = [
+    ...coreNavItems,
+    ...!isPaid ? [{ to: "/redeem", label: "Redeem Code", icon: Tag }] : [],
+    ...isAdmin ? [{ to: "/admin", label: "Admin", icon: ShieldCheck }] : []
+  ];
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "md:hidden flex items-center justify-between px-4 h-14 bg-sidebar border-b border-sidebar-border sticky top-0 z-30", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center w-7 h-7 rounded-lg bg-[#00ff41]/15 border border-[#00ff41]/40", children: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "h-3.5 w-3.5 text-[#00ff41]" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-display font-bold text-base text-foreground", children: "TradeLog" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-display font-bold text-base text-foreground", children: "TradeLog" }),
+        isAdmin && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "span",
+          {
+            className: "text-[9px] px-1.5 py-0.5 rounded font-bold tracking-widest",
+            style: {
+              background: "rgba(255,149,0,0.15)",
+              color: "#ff9500",
+              border: "1px solid rgba(255,149,0,0.4)"
+            },
+            children: "ADMIN"
+          }
+        )
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "button",
@@ -36104,8 +37639,12 @@ function MobileNav() {
             }
           )
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 px-3 py-4 space-y-0.5", children: navItems$1.map(({ to, label, icon: Icon2 }) => {
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 px-3 py-4 space-y-0.5", children: navItems.map(({ to, label, icon: Icon2 }) => {
           const isActive = to === "/" ? routerState.location.pathname === "/" : routerState.location.pathname.startsWith(to);
+          const isAdminLink = to === "/admin";
+          const activeColor = isAdminLink ? "#ff9500" : "#00ff41";
+          const activeBg = isAdminLink ? "rgba(255,149,0,0.1)" : "rgba(0,255,65,0.1)";
+          const activeBorder = isAdminLink ? "rgba(255,149,0,0.25)" : "rgba(0,255,65,0.25)";
           return /* @__PURE__ */ jsxRuntimeExports.jsxs(
             Link,
             {
@@ -36113,8 +37652,13 @@ function MobileNav() {
               onClick: () => setOpen(false),
               className: cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-smooth",
-                isActive ? "bg-[#00ff41]/10 text-[#00ff41] border border-[#00ff41]/25" : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-[#00ff41]"
+                isActive ? "border" : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-[#00ff41]"
               ),
+              style: isActive ? {
+                background: activeBg,
+                color: activeColor,
+                borderColor: activeBorder
+              } : void 0,
               "data-ocid": `mobile-nav-link-${label.toLowerCase().replace(/\s+/g, "-")}`,
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -36122,11 +37666,18 @@ function MobileNav() {
                   {
                     className: cn(
                       "h-4 w-4 shrink-0",
-                      isActive ? "text-[#00ff41]" : "text-muted-foreground"
+                      isActive ? isAdminLink ? "text-[#ff9500]" : "text-[#00ff41]" : "text-muted-foreground"
                     )
                   }
                 ),
-                label
+                label,
+                isAdminLink && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Crown,
+                  {
+                    className: "ml-auto h-3.5 w-3.5",
+                    style: { color: "#ff9500" }
+                  }
+                )
               ]
             },
             to
@@ -36409,857 +37960,6 @@ function useAuth() {
     logout: clear
   };
 }
-const Timestamp = Int;
-const Direction$1 = Variant({ "LONG": Null, "SHORT": Null });
-const SessionTime$1 = Variant({
-  "NY": Null,
-  "LONDON": Null,
-  "ASIAN": Null,
-  "OTHER": Null
-});
-const MarketCondition$1 = Variant({
-  "VOLATILE": Null,
-  "RANGING": Null,
-  "CHOPPY": Null,
-  "OTHER": Null,
-  "TRENDING": Null
-});
-const CsvTradeRow = Record({
-  "pnl": Opt(Float64),
-  "exitDate": Timestamp,
-  "direction": Direction$1,
-  "entryDate": Timestamp,
-  "chartImageUrl": Opt(Text$1),
-  "sessionTime": Opt(SessionTime$1),
-  "pair": Text$1,
-  "marketCondition": Opt(MarketCondition$1),
-  "riskReward": Opt(Float64),
-  "strategyTag": Opt(Text$1),
-  "mistakeTag": Opt(Text$1),
-  "notes": Opt(Text$1),
-  "entryPrice": Float64,
-  "exitPrice": Float64
-});
-const ImportJobId = Nat;
-const ImportStatus = Variant({
-  "FAILED": Null,
-  "PENDING": Null,
-  "PROCESSING": Null,
-  "COMPLETE": Null
-});
-const UserId = Principal2;
-const ImportLineError = Record({
-  "lineNumber": Nat,
-  "reason": Text$1
-});
-const ImportJobPublic = Record({
-  "id": ImportJobId,
-  "status": ImportStatus,
-  "completedAt": Opt(Timestamp),
-  "userId": UserId,
-  "createdAt": Timestamp,
-  "errors": Vec(ImportLineError),
-  "importedCount": Nat
-});
-const SessionStats = Record({
-  "tradeCount": Nat,
-  "totalPnl": Float64,
-  "session": SessionTime$1,
-  "winRate": Float64
-});
-const PnlDataPoint = Record({
-  "pnl": Float64,
-  "tradeCount": Nat,
-  "periodLabel": Text$1
-});
-const StrategyStats = Record({
-  "tag": Text$1,
-  "tradeCount": Nat,
-  "totalPnl": Float64,
-  "winRate": Float64
-});
-const PairStats = Record({
-  "tradeCount": Nat,
-  "pair": Text$1,
-  "totalPnl": Float64,
-  "winRate": Float64
-});
-const PerformanceMetrics = Record({
-  "avgRiskReward": Float64,
-  "pnlBySession": Vec(SessionStats),
-  "computedAt": Timestamp,
-  "userId": UserId,
-  "bestPair": Opt(Text$1),
-  "weeklyPnl": Vec(PnlDataPoint),
-  "worstPair": Opt(Text$1),
-  "totalPnl": Float64,
-  "pnlByStrategy": Vec(StrategyStats),
-  "pnlByPair": Vec(PairStats),
-  "monthlyPnl": Vec(PnlDataPoint),
-  "winRate": Float64,
-  "maxDrawdown": Float64
-});
-const TradeInput = Record({
-  "exitDate": Timestamp,
-  "direction": Direction$1,
-  "entryDate": Timestamp,
-  "chartImageUrl": Opt(Text$1),
-  "sessionTime": SessionTime$1,
-  "takeProfit": Opt(Float64),
-  "pair": Text$1,
-  "marketCondition": MarketCondition$1,
-  "strategyTag": Text$1,
-  "mistakeTag": Opt(Text$1),
-  "stopLoss": Opt(Float64),
-  "notes": Text$1,
-  "entryPrice": Float64,
-  "exitPrice": Float64
-});
-const TradeId = Nat;
-const TradePublic = Record({
-  "id": TradeId,
-  "pnl": Float64,
-  "exitDate": Timestamp,
-  "direction": Direction$1,
-  "entryDate": Timestamp,
-  "chartImageUrl": Opt(Text$1),
-  "sessionTime": SessionTime$1,
-  "userId": UserId,
-  "createdAt": Timestamp,
-  "pair": Text$1,
-  "marketCondition": MarketCondition$1,
-  "riskReward": Float64,
-  "strategyTag": Text$1,
-  "updatedAt": Timestamp,
-  "mistakeTag": Opt(Text$1),
-  "notes": Text$1,
-  "entryPrice": Float64,
-  "exitPrice": Float64
-});
-const Tier$1 = Variant({ "FREE": Null, "PAID": Null });
-const UserPublic = Record({
-  "id": UserId,
-  "createdAt": Timestamp,
-  "tier": Tier$1,
-  "stripeCustomerId": Opt(Text$1)
-});
-const TierLimitStatus = Record({
-  "dailyCount": Nat,
-  "tier": Tier$1,
-  "totalCount": Nat,
-  "dailyLimitReached": Bool,
-  "dailyLimit": Nat,
-  "totalLimit": Nat,
-  "totalLimitReached": Bool
-});
-const TradeFilter = Record({
-  "dateTo": Opt(Timestamp),
-  "sessionTime": Opt(SessionTime$1),
-  "pair": Opt(Text$1),
-  "strategyTag": Opt(Text$1),
-  "mistakeTag": Opt(Text$1),
-  "dateFrom": Opt(Timestamp)
-});
-Service({
-  "bulkImportTrades": Func([Vec(CsvTradeRow)], [ImportJobPublic], []),
-  "computeMetrics": Func([], [PerformanceMetrics], []),
-  "createTrade": Func(
-    [TradeInput],
-    [Variant({ "ok": TradePublic, "limitReached": Text$1 })],
-    []
-  ),
-  "deleteTrade": Func([TradeId], [Bool], []),
-  "getImportJob": Func(
-    [ImportJobId],
-    [Opt(ImportJobPublic)],
-    ["query"]
-  ),
-  "getMetrics": Func([], [Opt(PerformanceMetrics)], ["query"]),
-  "getOrCreateUser": Func([], [UserPublic], []),
-  "getTrade": Func([TradeId], [Opt(TradePublic)], ["query"]),
-  "getTradeLimitStatus": Func([], [TierLimitStatus], ["query"]),
-  "getTrades": Func([TradeFilter], [Vec(TradePublic)], ["query"]),
-  "getUserTier": Func([], [Tier$1], ["query"]),
-  "saveChartAnnotation": Func(
-    [TradeId, Text$1],
-    [Opt(TradePublic)],
-    []
-  ),
-  "updateTrade": Func([TradeId, TradeInput], [Opt(TradePublic)], []),
-  "upgradeToPaid": Func([], [UserPublic], [])
-});
-const idlFactory = ({ IDL: IDL2 }) => {
-  const Timestamp2 = IDL2.Int;
-  const Direction2 = IDL2.Variant({ "LONG": IDL2.Null, "SHORT": IDL2.Null });
-  const SessionTime2 = IDL2.Variant({
-    "NY": IDL2.Null,
-    "LONDON": IDL2.Null,
-    "ASIAN": IDL2.Null,
-    "OTHER": IDL2.Null
-  });
-  const MarketCondition2 = IDL2.Variant({
-    "VOLATILE": IDL2.Null,
-    "RANGING": IDL2.Null,
-    "CHOPPY": IDL2.Null,
-    "OTHER": IDL2.Null,
-    "TRENDING": IDL2.Null
-  });
-  const CsvTradeRow2 = IDL2.Record({
-    "pnl": IDL2.Opt(IDL2.Float64),
-    "exitDate": Timestamp2,
-    "direction": Direction2,
-    "entryDate": Timestamp2,
-    "chartImageUrl": IDL2.Opt(IDL2.Text),
-    "sessionTime": IDL2.Opt(SessionTime2),
-    "pair": IDL2.Text,
-    "marketCondition": IDL2.Opt(MarketCondition2),
-    "riskReward": IDL2.Opt(IDL2.Float64),
-    "strategyTag": IDL2.Opt(IDL2.Text),
-    "mistakeTag": IDL2.Opt(IDL2.Text),
-    "notes": IDL2.Opt(IDL2.Text),
-    "entryPrice": IDL2.Float64,
-    "exitPrice": IDL2.Float64
-  });
-  const ImportJobId2 = IDL2.Nat;
-  const ImportStatus2 = IDL2.Variant({
-    "FAILED": IDL2.Null,
-    "PENDING": IDL2.Null,
-    "PROCESSING": IDL2.Null,
-    "COMPLETE": IDL2.Null
-  });
-  const UserId2 = IDL2.Principal;
-  const ImportLineError2 = IDL2.Record({
-    "lineNumber": IDL2.Nat,
-    "reason": IDL2.Text
-  });
-  const ImportJobPublic2 = IDL2.Record({
-    "id": ImportJobId2,
-    "status": ImportStatus2,
-    "completedAt": IDL2.Opt(Timestamp2),
-    "userId": UserId2,
-    "createdAt": Timestamp2,
-    "errors": IDL2.Vec(ImportLineError2),
-    "importedCount": IDL2.Nat
-  });
-  const SessionStats2 = IDL2.Record({
-    "tradeCount": IDL2.Nat,
-    "totalPnl": IDL2.Float64,
-    "session": SessionTime2,
-    "winRate": IDL2.Float64
-  });
-  const PnlDataPoint2 = IDL2.Record({
-    "pnl": IDL2.Float64,
-    "tradeCount": IDL2.Nat,
-    "periodLabel": IDL2.Text
-  });
-  const StrategyStats2 = IDL2.Record({
-    "tag": IDL2.Text,
-    "tradeCount": IDL2.Nat,
-    "totalPnl": IDL2.Float64,
-    "winRate": IDL2.Float64
-  });
-  const PairStats2 = IDL2.Record({
-    "tradeCount": IDL2.Nat,
-    "pair": IDL2.Text,
-    "totalPnl": IDL2.Float64,
-    "winRate": IDL2.Float64
-  });
-  const PerformanceMetrics2 = IDL2.Record({
-    "avgRiskReward": IDL2.Float64,
-    "pnlBySession": IDL2.Vec(SessionStats2),
-    "computedAt": Timestamp2,
-    "userId": UserId2,
-    "bestPair": IDL2.Opt(IDL2.Text),
-    "weeklyPnl": IDL2.Vec(PnlDataPoint2),
-    "worstPair": IDL2.Opt(IDL2.Text),
-    "totalPnl": IDL2.Float64,
-    "pnlByStrategy": IDL2.Vec(StrategyStats2),
-    "pnlByPair": IDL2.Vec(PairStats2),
-    "monthlyPnl": IDL2.Vec(PnlDataPoint2),
-    "winRate": IDL2.Float64,
-    "maxDrawdown": IDL2.Float64
-  });
-  const TradeInput2 = IDL2.Record({
-    "exitDate": Timestamp2,
-    "direction": Direction2,
-    "entryDate": Timestamp2,
-    "chartImageUrl": IDL2.Opt(IDL2.Text),
-    "sessionTime": SessionTime2,
-    "takeProfit": IDL2.Opt(IDL2.Float64),
-    "pair": IDL2.Text,
-    "marketCondition": MarketCondition2,
-    "strategyTag": IDL2.Text,
-    "mistakeTag": IDL2.Opt(IDL2.Text),
-    "stopLoss": IDL2.Opt(IDL2.Float64),
-    "notes": IDL2.Text,
-    "entryPrice": IDL2.Float64,
-    "exitPrice": IDL2.Float64
-  });
-  const TradeId2 = IDL2.Nat;
-  const TradePublic2 = IDL2.Record({
-    "id": TradeId2,
-    "pnl": IDL2.Float64,
-    "exitDate": Timestamp2,
-    "direction": Direction2,
-    "entryDate": Timestamp2,
-    "chartImageUrl": IDL2.Opt(IDL2.Text),
-    "sessionTime": SessionTime2,
-    "userId": UserId2,
-    "createdAt": Timestamp2,
-    "pair": IDL2.Text,
-    "marketCondition": MarketCondition2,
-    "riskReward": IDL2.Float64,
-    "strategyTag": IDL2.Text,
-    "updatedAt": Timestamp2,
-    "mistakeTag": IDL2.Opt(IDL2.Text),
-    "notes": IDL2.Text,
-    "entryPrice": IDL2.Float64,
-    "exitPrice": IDL2.Float64
-  });
-  const Tier2 = IDL2.Variant({ "FREE": IDL2.Null, "PAID": IDL2.Null });
-  const UserPublic2 = IDL2.Record({
-    "id": UserId2,
-    "createdAt": Timestamp2,
-    "tier": Tier2,
-    "stripeCustomerId": IDL2.Opt(IDL2.Text)
-  });
-  const TierLimitStatus2 = IDL2.Record({
-    "dailyCount": IDL2.Nat,
-    "tier": Tier2,
-    "totalCount": IDL2.Nat,
-    "dailyLimitReached": IDL2.Bool,
-    "dailyLimit": IDL2.Nat,
-    "totalLimit": IDL2.Nat,
-    "totalLimitReached": IDL2.Bool
-  });
-  const TradeFilter2 = IDL2.Record({
-    "dateTo": IDL2.Opt(Timestamp2),
-    "sessionTime": IDL2.Opt(SessionTime2),
-    "pair": IDL2.Opt(IDL2.Text),
-    "strategyTag": IDL2.Opt(IDL2.Text),
-    "mistakeTag": IDL2.Opt(IDL2.Text),
-    "dateFrom": IDL2.Opt(Timestamp2)
-  });
-  return IDL2.Service({
-    "bulkImportTrades": IDL2.Func(
-      [IDL2.Vec(CsvTradeRow2)],
-      [ImportJobPublic2],
-      []
-    ),
-    "computeMetrics": IDL2.Func([], [PerformanceMetrics2], []),
-    "createTrade": IDL2.Func(
-      [TradeInput2],
-      [IDL2.Variant({ "ok": TradePublic2, "limitReached": IDL2.Text })],
-      []
-    ),
-    "deleteTrade": IDL2.Func([TradeId2], [IDL2.Bool], []),
-    "getImportJob": IDL2.Func(
-      [ImportJobId2],
-      [IDL2.Opt(ImportJobPublic2)],
-      ["query"]
-    ),
-    "getMetrics": IDL2.Func([], [IDL2.Opt(PerformanceMetrics2)], ["query"]),
-    "getOrCreateUser": IDL2.Func([], [UserPublic2], []),
-    "getTrade": IDL2.Func([TradeId2], [IDL2.Opt(TradePublic2)], ["query"]),
-    "getTradeLimitStatus": IDL2.Func([], [TierLimitStatus2], ["query"]),
-    "getTrades": IDL2.Func([TradeFilter2], [IDL2.Vec(TradePublic2)], ["query"]),
-    "getUserTier": IDL2.Func([], [Tier2], ["query"]),
-    "saveChartAnnotation": IDL2.Func(
-      [TradeId2, IDL2.Text],
-      [IDL2.Opt(TradePublic2)],
-      []
-    ),
-    "updateTrade": IDL2.Func([TradeId2, TradeInput2], [IDL2.Opt(TradePublic2)], []),
-    "upgradeToPaid": IDL2.Func([], [UserPublic2], [])
-  });
-};
-function candid_some(value) {
-  return [
-    value
-  ];
-}
-function candid_none() {
-  return [];
-}
-function record_opt_to_undefined(arg) {
-  return arg == null ? void 0 : arg;
-}
-var Tier = /* @__PURE__ */ ((Tier2) => {
-  Tier2["FREE"] = "FREE";
-  Tier2["PAID"] = "PAID";
-  return Tier2;
-})(Tier || {});
-class Backend {
-  constructor(actor, _uploadFile, _downloadFile, processError2) {
-    this.actor = actor;
-    this._uploadFile = _uploadFile;
-    this._downloadFile = _downloadFile;
-    this.processError = processError2;
-  }
-  async bulkImportTrades(arg0) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.bulkImportTrades(to_candid_vec_n1(this._uploadFile, this._downloadFile, arg0));
-        return from_candid_ImportJobPublic_n10(this._uploadFile, this._downloadFile, result);
-      } catch (e3) {
-        this.processError(e3);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.bulkImportTrades(to_candid_vec_n1(this._uploadFile, this._downloadFile, arg0));
-      return from_candid_ImportJobPublic_n10(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async computeMetrics() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.computeMetrics();
-        return from_candid_PerformanceMetrics_n15(this._uploadFile, this._downloadFile, result);
-      } catch (e3) {
-        this.processError(e3);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.computeMetrics();
-      return from_candid_PerformanceMetrics_n15(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async createTrade(arg0) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.createTrade(to_candid_TradeInput_n23(this._uploadFile, this._downloadFile, arg0));
-        return from_candid_variant_n25(this._uploadFile, this._downloadFile, result);
-      } catch (e3) {
-        this.processError(e3);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.createTrade(to_candid_TradeInput_n23(this._uploadFile, this._downloadFile, arg0));
-      return from_candid_variant_n25(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async deleteTrade(arg0) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.deleteTrade(arg0);
-        return result;
-      } catch (e3) {
-        this.processError(e3);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.deleteTrade(arg0);
-      return result;
-    }
-  }
-  async getImportJob(arg0) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.getImportJob(arg0);
-        return from_candid_opt_n32(this._uploadFile, this._downloadFile, result);
-      } catch (e3) {
-        this.processError(e3);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.getImportJob(arg0);
-      return from_candid_opt_n32(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async getMetrics() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.getMetrics();
-        return from_candid_opt_n33(this._uploadFile, this._downloadFile, result);
-      } catch (e3) {
-        this.processError(e3);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.getMetrics();
-      return from_candid_opt_n33(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async getOrCreateUser() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.getOrCreateUser();
-        return from_candid_UserPublic_n34(this._uploadFile, this._downloadFile, result);
-      } catch (e3) {
-        this.processError(e3);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.getOrCreateUser();
-      return from_candid_UserPublic_n34(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async getTrade(arg0) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.getTrade(arg0);
-        return from_candid_opt_n38(this._uploadFile, this._downloadFile, result);
-      } catch (e3) {
-        this.processError(e3);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.getTrade(arg0);
-      return from_candid_opt_n38(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async getTradeLimitStatus() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.getTradeLimitStatus();
-        return from_candid_TierLimitStatus_n39(this._uploadFile, this._downloadFile, result);
-      } catch (e3) {
-        this.processError(e3);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.getTradeLimitStatus();
-      return from_candid_TierLimitStatus_n39(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async getTrades(arg0) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.getTrades(to_candid_TradeFilter_n41(this._uploadFile, this._downloadFile, arg0));
-        return from_candid_vec_n43(this._uploadFile, this._downloadFile, result);
-      } catch (e3) {
-        this.processError(e3);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.getTrades(to_candid_TradeFilter_n41(this._uploadFile, this._downloadFile, arg0));
-      return from_candid_vec_n43(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async getUserTier() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.getUserTier();
-        return from_candid_Tier_n36(this._uploadFile, this._downloadFile, result);
-      } catch (e3) {
-        this.processError(e3);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.getUserTier();
-      return from_candid_Tier_n36(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async saveChartAnnotation(arg0, arg1) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.saveChartAnnotation(arg0, arg1);
-        return from_candid_opt_n38(this._uploadFile, this._downloadFile, result);
-      } catch (e3) {
-        this.processError(e3);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.saveChartAnnotation(arg0, arg1);
-      return from_candid_opt_n38(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async updateTrade(arg0, arg1) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.updateTrade(arg0, to_candid_TradeInput_n23(this._uploadFile, this._downloadFile, arg1));
-        return from_candid_opt_n38(this._uploadFile, this._downloadFile, result);
-      } catch (e3) {
-        this.processError(e3);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.updateTrade(arg0, to_candid_TradeInput_n23(this._uploadFile, this._downloadFile, arg1));
-      return from_candid_opt_n38(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async upgradeToPaid() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.upgradeToPaid();
-        return from_candid_UserPublic_n34(this._uploadFile, this._downloadFile, result);
-      } catch (e3) {
-        this.processError(e3);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.upgradeToPaid();
-      return from_candid_UserPublic_n34(this._uploadFile, this._downloadFile, result);
-    }
-  }
-}
-function from_candid_Direction_n28(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n29(_uploadFile, _downloadFile, value);
-}
-function from_candid_ImportJobPublic_n10(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n11(_uploadFile, _downloadFile, value);
-}
-function from_candid_ImportStatus_n12(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n13(_uploadFile, _downloadFile, value);
-}
-function from_candid_MarketCondition_n30(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n31(_uploadFile, _downloadFile, value);
-}
-function from_candid_PerformanceMetrics_n15(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n16(_uploadFile, _downloadFile, value);
-}
-function from_candid_SessionStats_n18(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n19(_uploadFile, _downloadFile, value);
-}
-function from_candid_SessionTime_n20(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n21(_uploadFile, _downloadFile, value);
-}
-function from_candid_TierLimitStatus_n39(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n40(_uploadFile, _downloadFile, value);
-}
-function from_candid_Tier_n36(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n37(_uploadFile, _downloadFile, value);
-}
-function from_candid_TradePublic_n26(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n27(_uploadFile, _downloadFile, value);
-}
-function from_candid_UserPublic_n34(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n35(_uploadFile, _downloadFile, value);
-}
-function from_candid_opt_n14(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : value[0];
-}
-function from_candid_opt_n22(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : value[0];
-}
-function from_candid_opt_n32(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : from_candid_ImportJobPublic_n10(_uploadFile, _downloadFile, value[0]);
-}
-function from_candid_opt_n33(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : from_candid_PerformanceMetrics_n15(_uploadFile, _downloadFile, value[0]);
-}
-function from_candid_opt_n38(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : from_candid_TradePublic_n26(_uploadFile, _downloadFile, value[0]);
-}
-function from_candid_record_n11(_uploadFile, _downloadFile, value) {
-  return {
-    id: value.id,
-    status: from_candid_ImportStatus_n12(_uploadFile, _downloadFile, value.status),
-    completedAt: record_opt_to_undefined(from_candid_opt_n14(_uploadFile, _downloadFile, value.completedAt)),
-    userId: value.userId,
-    createdAt: value.createdAt,
-    errors: value.errors,
-    importedCount: value.importedCount
-  };
-}
-function from_candid_record_n16(_uploadFile, _downloadFile, value) {
-  return {
-    avgRiskReward: value.avgRiskReward,
-    pnlBySession: from_candid_vec_n17(_uploadFile, _downloadFile, value.pnlBySession),
-    computedAt: value.computedAt,
-    userId: value.userId,
-    bestPair: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.bestPair)),
-    weeklyPnl: value.weeklyPnl,
-    worstPair: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.worstPair)),
-    totalPnl: value.totalPnl,
-    pnlByStrategy: value.pnlByStrategy,
-    pnlByPair: value.pnlByPair,
-    monthlyPnl: value.monthlyPnl,
-    winRate: value.winRate,
-    maxDrawdown: value.maxDrawdown
-  };
-}
-function from_candid_record_n19(_uploadFile, _downloadFile, value) {
-  return {
-    tradeCount: value.tradeCount,
-    totalPnl: value.totalPnl,
-    session: from_candid_SessionTime_n20(_uploadFile, _downloadFile, value.session),
-    winRate: value.winRate
-  };
-}
-function from_candid_record_n27(_uploadFile, _downloadFile, value) {
-  return {
-    id: value.id,
-    pnl: value.pnl,
-    exitDate: value.exitDate,
-    direction: from_candid_Direction_n28(_uploadFile, _downloadFile, value.direction),
-    entryDate: value.entryDate,
-    chartImageUrl: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.chartImageUrl)),
-    sessionTime: from_candid_SessionTime_n20(_uploadFile, _downloadFile, value.sessionTime),
-    userId: value.userId,
-    createdAt: value.createdAt,
-    pair: value.pair,
-    marketCondition: from_candid_MarketCondition_n30(_uploadFile, _downloadFile, value.marketCondition),
-    riskReward: value.riskReward,
-    strategyTag: value.strategyTag,
-    updatedAt: value.updatedAt,
-    mistakeTag: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.mistakeTag)),
-    notes: value.notes,
-    entryPrice: value.entryPrice,
-    exitPrice: value.exitPrice
-  };
-}
-function from_candid_record_n35(_uploadFile, _downloadFile, value) {
-  return {
-    id: value.id,
-    createdAt: value.createdAt,
-    tier: from_candid_Tier_n36(_uploadFile, _downloadFile, value.tier),
-    stripeCustomerId: record_opt_to_undefined(from_candid_opt_n22(_uploadFile, _downloadFile, value.stripeCustomerId))
-  };
-}
-function from_candid_record_n40(_uploadFile, _downloadFile, value) {
-  return {
-    dailyCount: value.dailyCount,
-    tier: from_candid_Tier_n36(_uploadFile, _downloadFile, value.tier),
-    totalCount: value.totalCount,
-    dailyLimitReached: value.dailyLimitReached,
-    dailyLimit: value.dailyLimit,
-    totalLimit: value.totalLimit,
-    totalLimitReached: value.totalLimitReached
-  };
-}
-function from_candid_variant_n13(_uploadFile, _downloadFile, value) {
-  return "FAILED" in value ? "FAILED" : "PENDING" in value ? "PENDING" : "PROCESSING" in value ? "PROCESSING" : "COMPLETE" in value ? "COMPLETE" : value;
-}
-function from_candid_variant_n21(_uploadFile, _downloadFile, value) {
-  return "NY" in value ? "NY" : "LONDON" in value ? "LONDON" : "ASIAN" in value ? "ASIAN" : "OTHER" in value ? "OTHER" : value;
-}
-function from_candid_variant_n25(_uploadFile, _downloadFile, value) {
-  return "ok" in value ? {
-    __kind__: "ok",
-    ok: from_candid_TradePublic_n26(_uploadFile, _downloadFile, value.ok)
-  } : "limitReached" in value ? {
-    __kind__: "limitReached",
-    limitReached: value.limitReached
-  } : value;
-}
-function from_candid_variant_n29(_uploadFile, _downloadFile, value) {
-  return "LONG" in value ? "LONG" : "SHORT" in value ? "SHORT" : value;
-}
-function from_candid_variant_n31(_uploadFile, _downloadFile, value) {
-  return "VOLATILE" in value ? "VOLATILE" : "RANGING" in value ? "RANGING" : "CHOPPY" in value ? "CHOPPY" : "OTHER" in value ? "OTHER" : "TRENDING" in value ? "TRENDING" : value;
-}
-function from_candid_variant_n37(_uploadFile, _downloadFile, value) {
-  return "FREE" in value ? "FREE" : "PAID" in value ? "PAID" : value;
-}
-function from_candid_vec_n17(_uploadFile, _downloadFile, value) {
-  return value.map((x3) => from_candid_SessionStats_n18(_uploadFile, _downloadFile, x3));
-}
-function from_candid_vec_n43(_uploadFile, _downloadFile, value) {
-  return value.map((x3) => from_candid_TradePublic_n26(_uploadFile, _downloadFile, x3));
-}
-function to_candid_CsvTradeRow_n2(_uploadFile, _downloadFile, value) {
-  return to_candid_record_n3(_uploadFile, _downloadFile, value);
-}
-function to_candid_Direction_n4(_uploadFile, _downloadFile, value) {
-  return to_candid_variant_n5(_uploadFile, _downloadFile, value);
-}
-function to_candid_MarketCondition_n8(_uploadFile, _downloadFile, value) {
-  return to_candid_variant_n9(_uploadFile, _downloadFile, value);
-}
-function to_candid_SessionTime_n6(_uploadFile, _downloadFile, value) {
-  return to_candid_variant_n7(_uploadFile, _downloadFile, value);
-}
-function to_candid_TradeFilter_n41(_uploadFile, _downloadFile, value) {
-  return to_candid_record_n42(_uploadFile, _downloadFile, value);
-}
-function to_candid_TradeInput_n23(_uploadFile, _downloadFile, value) {
-  return to_candid_record_n24(_uploadFile, _downloadFile, value);
-}
-function to_candid_record_n24(_uploadFile, _downloadFile, value) {
-  return {
-    exitDate: value.exitDate,
-    direction: to_candid_Direction_n4(_uploadFile, _downloadFile, value.direction),
-    entryDate: value.entryDate,
-    chartImageUrl: value.chartImageUrl ? candid_some(value.chartImageUrl) : candid_none(),
-    sessionTime: to_candid_SessionTime_n6(_uploadFile, _downloadFile, value.sessionTime),
-    takeProfit: value.takeProfit ? candid_some(value.takeProfit) : candid_none(),
-    pair: value.pair,
-    marketCondition: to_candid_MarketCondition_n8(_uploadFile, _downloadFile, value.marketCondition),
-    strategyTag: value.strategyTag,
-    mistakeTag: value.mistakeTag ? candid_some(value.mistakeTag) : candid_none(),
-    stopLoss: value.stopLoss ? candid_some(value.stopLoss) : candid_none(),
-    notes: value.notes,
-    entryPrice: value.entryPrice,
-    exitPrice: value.exitPrice
-  };
-}
-function to_candid_record_n3(_uploadFile, _downloadFile, value) {
-  return {
-    pnl: value.pnl ? candid_some(value.pnl) : candid_none(),
-    exitDate: value.exitDate,
-    direction: to_candid_Direction_n4(_uploadFile, _downloadFile, value.direction),
-    entryDate: value.entryDate,
-    chartImageUrl: value.chartImageUrl ? candid_some(value.chartImageUrl) : candid_none(),
-    sessionTime: value.sessionTime ? candid_some(to_candid_SessionTime_n6(_uploadFile, _downloadFile, value.sessionTime)) : candid_none(),
-    pair: value.pair,
-    marketCondition: value.marketCondition ? candid_some(to_candid_MarketCondition_n8(_uploadFile, _downloadFile, value.marketCondition)) : candid_none(),
-    riskReward: value.riskReward ? candid_some(value.riskReward) : candid_none(),
-    strategyTag: value.strategyTag ? candid_some(value.strategyTag) : candid_none(),
-    mistakeTag: value.mistakeTag ? candid_some(value.mistakeTag) : candid_none(),
-    notes: value.notes ? candid_some(value.notes) : candid_none(),
-    entryPrice: value.entryPrice,
-    exitPrice: value.exitPrice
-  };
-}
-function to_candid_record_n42(_uploadFile, _downloadFile, value) {
-  return {
-    dateTo: value.dateTo ? candid_some(value.dateTo) : candid_none(),
-    sessionTime: value.sessionTime ? candid_some(to_candid_SessionTime_n6(_uploadFile, _downloadFile, value.sessionTime)) : candid_none(),
-    pair: value.pair ? candid_some(value.pair) : candid_none(),
-    strategyTag: value.strategyTag ? candid_some(value.strategyTag) : candid_none(),
-    mistakeTag: value.mistakeTag ? candid_some(value.mistakeTag) : candid_none(),
-    dateFrom: value.dateFrom ? candid_some(value.dateFrom) : candid_none()
-  };
-}
-function to_candid_variant_n5(_uploadFile, _downloadFile, value) {
-  return value == "LONG" ? {
-    LONG: null
-  } : value == "SHORT" ? {
-    SHORT: null
-  } : value;
-}
-function to_candid_variant_n7(_uploadFile, _downloadFile, value) {
-  return value == "NY" ? {
-    NY: null
-  } : value == "LONDON" ? {
-    LONDON: null
-  } : value == "ASIAN" ? {
-    ASIAN: null
-  } : value == "OTHER" ? {
-    OTHER: null
-  } : value;
-}
-function to_candid_variant_n9(_uploadFile, _downloadFile, value) {
-  return value == "VOLATILE" ? {
-    VOLATILE: null
-  } : value == "RANGING" ? {
-    RANGING: null
-  } : value == "CHOPPY" ? {
-    CHOPPY: null
-  } : value == "OTHER" ? {
-    OTHER: null
-  } : value == "TRENDING" ? {
-    TRENDING: null
-  } : value;
-}
-function to_candid_vec_n1(_uploadFile, _downloadFile, value) {
-  return value.map((x3) => to_candid_CsvTradeRow_n2(_uploadFile, _downloadFile, x3));
-}
-function createActor(canisterId, _uploadFile, _downloadFile, options = {}) {
-  const agent = options.agent || HttpAgent.createSync({
-    ...options.agentOptions
-  });
-  if (options.agent && options.agentOptions) {
-    console.warn("Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent.");
-  }
-  const actor = Actor.createActor(idlFactory, {
-    agent,
-    canisterId,
-    ...options.actorOptions
-  });
-  return new Backend(actor, _uploadFile, _downloadFile, options.processError);
-}
 const FREE_DAILY_LIMIT = 5;
 const FREE_TOTAL_LIMIT = 25;
 const DEFAULT_LIMITS = {
@@ -37302,30 +38002,7 @@ function useTradeLimits() {
   );
   return { ...data, totalPct, isLoading: query.isLoading };
 }
-function useUserTier() {
-  const { actor, isFetching } = useActor(createActor);
-  const query = useQuery({
-    queryKey: ["userTier"],
-    queryFn: async () => {
-      if (!actor) return "FREE";
-      try {
-        const tier = await actor.getUserTier();
-        return tier === Tier.PAID ? "PAID" : "FREE";
-      } catch {
-        return "FREE";
-      }
-    },
-    enabled: !!actor && !isFetching,
-    staleTime: 6e4
-  });
-  return {
-    tier: query.data ?? "FREE",
-    isPaid: query.data === "PAID",
-    isFree: (query.data ?? "FREE") === "FREE",
-    isLoading: query.isLoading
-  };
-}
-const navItems = [
+const baseNavItems = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/trades", label: "Trade History", icon: ClipboardList },
   { to: "/trades/new", label: "Log Trade", icon: CirclePlus },
@@ -37338,6 +38015,12 @@ function Sidebar() {
   const { isPaid } = useUserTier();
   const { totalCount, totalLimit, totalPct } = useTradeLimits();
   const { shortPrincipal, logout } = useAuth();
+  const { isAdmin } = useIsAdmin();
+  const navItems = [
+    ...baseNavItems,
+    ...!isPaid ? [{ to: "/redeem", label: "Redeem Code", icon: Tag }] : [],
+    ...isAdmin ? [{ to: "/admin", label: "Admin", icon: ShieldCheck }] : []
+  ];
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "aside",
     {
@@ -37346,18 +38029,42 @@ function Sidebar() {
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5 px-5 h-16 border-b border-sidebar-border shrink-0", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center w-8 h-8 rounded-lg bg-[#00ff41]/15 border border-[#00ff41]/40", children: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "h-4 w-4 text-[#00ff41]" }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-display font-bold text-lg text-foreground tracking-tight", children: "TradeLog" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-display font-bold text-lg text-foreground tracking-tight", children: "TradeLog" }),
+          isAdmin && /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Badge,
+            {
+              className: "ml-auto text-[9px] py-0 font-bold tracking-widest",
+              style: {
+                background: "rgba(255,149,0,0.15)",
+                color: "#ff9500",
+                border: "1px solid rgba(255,149,0,0.4)"
+              },
+              "data-ocid": "sidebar-admin-badge",
+              children: "ADMIN"
+            }
+          )
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { className: "flex-1 px-3 py-4 space-y-0.5 overflow-y-auto", children: navItems.map(({ to, label, icon: Icon2 }) => {
           const isActive = to === "/" ? routerState.location.pathname === "/" : routerState.location.pathname.startsWith(to);
+          const isAdminLink = to === "/admin";
+          const isRedeemLink = to === "/redeem";
+          const activeColor = isAdminLink ? "#ff9500" : isRedeemLink ? "#00ffff" : "#00ff41";
+          const activeBg = isAdminLink ? "rgba(255,149,0,0.1)" : isRedeemLink ? "rgba(0,255,255,0.1)" : "rgba(0,255,65,0.1)";
+          const activeBorder = isAdminLink ? "rgba(255,149,0,0.25)" : isRedeemLink ? "rgba(0,255,255,0.25)" : "rgba(0,255,65,0.25)";
           return /* @__PURE__ */ jsxRuntimeExports.jsxs(
             Link,
             {
               to,
               className: cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-smooth group",
-                isActive ? "bg-[#00ff41]/10 text-[#00ff41] border border-[#00ff41]/25 shadow-[0_0_12px_rgba(0,255,65,0.15)]" : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-[#00ff41]"
+                isActive ? "border shadow-sm" : "text-sidebar-foreground hover:bg-sidebar-accent"
               ),
+              style: isActive ? {
+                background: activeBg,
+                color: activeColor,
+                borderColor: activeBorder,
+                boxShadow: `0 0 12px ${activeColor}26`
+              } : void 0,
               "data-ocid": `sidebar-link-${label.toLowerCase().replace(/\s+/g, "-")}`,
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -37365,12 +38072,19 @@ function Sidebar() {
                   {
                     className: cn(
                       "h-4 w-4 shrink-0 transition-smooth",
-                      isActive ? "text-[#00ff41]" : "text-muted-foreground group-hover:text-[#00ff41]"
+                      isActive ? isAdminLink ? "text-[#ff9500]" : isRedeemLink ? "text-[#00ffff]" : "text-[#00ff41]" : "text-muted-foreground"
                     )
                   }
                 ),
                 label,
-                to === "/pricing" && !isPaid && /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "ml-auto text-[10px] py-0 bg-[#b900ff]/15 text-[#b900ff] border-[#b900ff]/30 hover:bg-[#b900ff]/15", children: "PRO" })
+                to === "/pricing" && !isPaid && /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "ml-auto text-[10px] py-0 bg-[#b900ff]/15 text-[#b900ff] border-[#b900ff]/30 hover:bg-[#b900ff]/15", children: "PRO" }),
+                isAdminLink && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Crown,
+                  {
+                    className: "ml-auto h-3.5 w-3.5",
+                    style: { color: "#ff9500" }
+                  }
+                )
               ]
             },
             to
@@ -37450,9 +38164,36 @@ function Layout({ children }) {
 function RootComponent() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Layout, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {}) });
 }
-const Route$8 = createRootRoute({
+const Route$a = createRootRoute({
   component: RootComponent
 });
+const glowColors = {
+  green: "hover:shadow-[0_0_24px_rgba(0,255,65,0.25)] hover:border-[#00ff41]/40",
+  purple: "hover:shadow-[0_0_24px_rgba(185,0,255,0.25)] hover:border-[#b900ff]/40",
+  cyan: "hover:shadow-[0_0_24px_rgba(0,255,255,0.25)] hover:border-[#00ffff]/40",
+  none: ""
+};
+function GlassCard({
+  className,
+  glow = "none",
+  hover: hover2 = false,
+  children,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      className: cn(
+        "glass-card p-5 transition-smooth",
+        hover2 && "cursor-pointer",
+        hover2 && glow !== "none" && glowColors[glow],
+        className
+      ),
+      ...props,
+      children
+    }
+  );
+}
 const variantStyles = {
   green: "bg-[#00ff41]/10 text-[#00ff41] border border-[#00ff41]/40 hover:bg-[#00ff41]/20 hover:shadow-[0_0_20px_rgba(0,255,65,0.4)] hover:border-[#00ff41]/70",
   purple: "bg-[#b900ff]/10 text-[#b900ff] border border-[#b900ff]/40 hover:bg-[#b900ff]/20 hover:shadow-[0_0_20px_rgba(185,0,255,0.4)] hover:border-[#b900ff]/70",
@@ -37490,62 +38231,99 @@ function NeonButton({
     }
   );
 }
-function BlurredTeaser({
-  teaserText,
-  ctaText = "Unlock Pro",
-  onUpgrade,
-  className,
-  children
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: cn("relative rounded-lg overflow-hidden", className), children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "div",
-      {
-        className: "blur-sm pointer-events-none select-none opacity-60",
-        "aria-hidden": "true",
-        children
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "absolute inset-0 flex flex-col items-center justify-center gap-3 bg-card/70 backdrop-blur-sm rounded-lg border border-[#b900ff]/30 p-6 text-center", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center w-10 h-10 rounded-full bg-[#b900ff]/15 border border-[#b900ff]/40", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "h-4 w-4 text-[#b900ff]" }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-medium text-foreground max-w-xs leading-snug", children: teaserText }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        NeonButton,
-        {
-          variant: "purple",
-          size: "sm",
-          onClick: onUpgrade,
-          "data-ocid": "blurred-teaser-upgrade-cta",
-          children: ctaText
-        }
-      )
-    ] })
-  ] });
+function Input({ className, type, ...props }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "input",
+    {
+      type,
+      "data-slot": "input",
+      className: cn(
+        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+        className
+      ),
+      ...props
+    }
+  );
 }
-const glowColors = {
-  green: "hover:shadow-[0_0_24px_rgba(0,255,65,0.25)] hover:border-[#00ff41]/40",
-  purple: "hover:shadow-[0_0_24px_rgba(185,0,255,0.25)] hover:border-[#b900ff]/40",
-  cyan: "hover:shadow-[0_0_24px_rgba(0,255,255,0.25)] hover:border-[#00ffff]/40",
-  none: ""
-};
-function GlassCard({
+var NODES$1 = [
+  "a",
+  "button",
+  "div",
+  "form",
+  "h2",
+  "h3",
+  "img",
+  "input",
+  "label",
+  "li",
+  "nav",
+  "ol",
+  "p",
+  "select",
+  "span",
+  "svg",
+  "ul"
+];
+var Primitive$1 = NODES$1.reduce((primitive, node) => {
+  const Slot2 = /* @__PURE__ */ createSlot$1(`Primitive.${node}`);
+  const Node2 = reactExports.forwardRef((props, forwardedRef) => {
+    const { asChild, ...primitiveProps } = props;
+    const Comp = asChild ? Slot2 : node;
+    if (typeof window !== "undefined") {
+      window[Symbol.for("radix-ui")] = true;
+    }
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Comp, { ...primitiveProps, ref: forwardedRef });
+  });
+  Node2.displayName = `Primitive.${node}`;
+  return { ...primitive, [node]: Node2 };
+}, {});
+var NAME$2 = "Label";
+var Label$2 = reactExports.forwardRef((props, forwardedRef) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Primitive$1.label,
+    {
+      ...props,
+      ref: forwardedRef,
+      onMouseDown: (event) => {
+        var _a3;
+        const target = event.target;
+        if (target.closest("button, input, select, textarea")) return;
+        (_a3 = props.onMouseDown) == null ? void 0 : _a3.call(props, event);
+        if (!event.defaultPrevented && event.detail > 1) event.preventDefault();
+      }
+    }
+  );
+});
+Label$2.displayName = NAME$2;
+var Root$2 = Label$2;
+function Label$1({
   className,
-  glow = "none",
-  hover: hover2 = false,
-  children,
   ...props
 }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "div",
+    Root$2,
     {
+      "data-slot": "label",
       className: cn(
-        "glass-card p-5 transition-smooth",
-        hover2 && "cursor-pointer",
-        hover2 && glow !== "none" && glowColors[glow],
+        "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
         className
       ),
-      ...props,
-      children
+      ...props
+    }
+  );
+}
+function Textarea({ className, ...props }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "textarea",
+    {
+      "data-slot": "textarea",
+      className: cn(
+        "border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        className
+      ),
+      ...props
     }
   );
 }
@@ -45618,6 +46396,729 @@ const featureBundle = {
   ...layout
 };
 const motion = /* @__PURE__ */ createMotionProxy(featureBundle, createDomVisualElement);
+const Route$9 = createRoute({
+  getParentRoute: () => Route$a,
+  path: "/admin",
+  component: AdminPage
+});
+function PerkBadge({ perk }) {
+  var _a3;
+  const configs = {
+    UPGRADE_TO_PAID: {
+      label: "Upgrade to Paid",
+      color: "#00ff41",
+      bg: "rgba(0,255,65,0.12)",
+      border: "rgba(0,255,65,0.35)"
+    },
+    FREE_MONTHS: {
+      label: "Free Months",
+      color: "#b900ff",
+      bg: "rgba(185,0,255,0.12)",
+      border: "rgba(185,0,255,0.35)"
+    },
+    FEATURE_UNLOCK: {
+      label: "Feature Unlock",
+      color: "#00ffff",
+      bg: "rgba(0,255,255,0.12)",
+      border: "rgba(0,255,255,0.35)"
+    },
+    CUSTOM: {
+      label: "Custom",
+      color: "#ff9500",
+      bg: "rgba(255,149,0,0.12)",
+      border: "rgba(255,149,0,0.35)"
+    }
+  };
+  const cfg = configs[perk.kind] ?? configs.CUSTOM;
+  const detail = perk.kind === "FREE_MONTHS" ? ` (${perk.months}mo)` : perk.kind === "FEATURE_UNLOCK" ? ` (${(_a3 = perk.features) == null ? void 0 : _a3.join(", ")})` : perk.kind === "CUSTOM" ? ` — ${perk.description}` : "";
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "span",
+    {
+      className: "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold",
+      style: {
+        background: cfg.bg,
+        color: cfg.color,
+        border: `1px solid ${cfg.border}`
+      },
+      children: [
+        cfg.label,
+        detail
+      ]
+    }
+  );
+}
+function useCoupons() {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery({
+    queryKey: ["adminCoupons"],
+    queryFn: async () => {
+      if (!actor) return [];
+      try {
+        const raw = await actor.listCoupons();
+        return raw.map((c2) => mapCoupon(c2));
+      } catch {
+        return [];
+      }
+    },
+    enabled: !!actor && !isFetching,
+    staleTime: 3e4
+  });
+}
+function mapCoupon(c2) {
+  var _a3, _b3, _c2;
+  let perkType = { kind: "CUSTOM", description: "" };
+  if ("upgradeToPhaid" in (c2.perkType ?? {})) {
+    perkType = { kind: "UPGRADE_TO_PAID" };
+  } else if ("freeMonths" in (c2.perkType ?? {})) {
+    perkType = {
+      kind: "FREE_MONTHS",
+      months: Number(((_a3 = c2.perkType) == null ? void 0 : _a3.freeMonths) ?? 1)
+    };
+  } else if ("featureUnlock" in (c2.perkType ?? {})) {
+    perkType = {
+      kind: "FEATURE_UNLOCK",
+      features: Array.isArray((_b3 = c2.perkType) == null ? void 0 : _b3.featureUnlock) ? c2.perkType.featureUnlock : []
+    };
+  } else if ("custom" in (c2.perkType ?? {})) {
+    perkType = {
+      kind: "CUSTOM",
+      description: String(((_c2 = c2.perkType) == null ? void 0 : _c2.custom) ?? "")
+    };
+  }
+  return {
+    id: Number(c2.id ?? 0),
+    code: String(c2.code ?? ""),
+    description: String(c2.description ?? ""),
+    perkType,
+    maxUses: c2.maxUses != null ? Number(c2.maxUses) : void 0,
+    usedCount: Number(c2.usedCount ?? 0),
+    expiresAt: c2.expiresAt != null ? BigInt(c2.expiresAt) : void 0,
+    isActive: Boolean(c2.isActive),
+    createdAt: BigInt(c2.createdAt ?? 0)
+  };
+}
+function useDeactivateCoupon() {
+  const { actor } = useActor(createActor);
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id2) => {
+      if (!actor) throw new Error("Not connected");
+      await actor.deactivateCoupon(BigInt(id2));
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["adminCoupons"] });
+      ue.success("Coupon deactivated");
+    },
+    onError: () => ue.error("Failed to deactivate coupon")
+  });
+}
+function useCreateCoupon() {
+  const { actor } = useActor(createActor);
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input) => {
+      if (!actor) throw new Error("Not connected");
+      let backendPerk;
+      if (input.perkType.kind === "UPGRADE_TO_PAID") {
+        backendPerk = { upgradeToPhaid: null };
+      } else if (input.perkType.kind === "FREE_MONTHS") {
+        backendPerk = { freeMonths: BigInt(input.perkType.months) };
+      } else if (input.perkType.kind === "FEATURE_UNLOCK") {
+        backendPerk = { featureUnlock: input.perkType.features };
+      } else {
+        backendPerk = { custom: input.perkType.description };
+      }
+      const raw = await actor.createCoupon({
+        code: input.code,
+        description: input.description,
+        perkType: backendPerk,
+        maxUses: input.maxUses != null ? [BigInt(input.maxUses)] : [],
+        expiresAt: input.expiresAt != null ? [input.expiresAt] : []
+      });
+      return mapCoupon(raw);
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["adminCoupons"] });
+      ue.success("Coupon created!");
+    },
+    onError: (e3) => ue.error(e3.message ?? "Failed to create coupon")
+  });
+}
+function CreateCouponForm({ onClose }) {
+  const createCoupon = useCreateCoupon();
+  const [code, setCode] = reactExports.useState("");
+  const [description, setDescription] = reactExports.useState("");
+  const [perkKind, setPerkKind] = reactExports.useState("UPGRADE_TO_PAID");
+  const [freeMonths, setFreeMonths] = reactExports.useState(1);
+  const [features2, setFeatures] = reactExports.useState("");
+  const [customText, setCustomText] = reactExports.useState("");
+  const [maxUses, setMaxUses] = reactExports.useState("");
+  const [expiryDate, setExpiryDate] = reactExports.useState("");
+  const perkOptions = [
+    { value: "UPGRADE_TO_PAID", label: "Upgrade to Paid", color: "#00ff41" },
+    { value: "FREE_MONTHS", label: "Free Months", color: "#b900ff" },
+    { value: "FEATURE_UNLOCK", label: "Feature Unlock", color: "#00ffff" },
+    { value: "CUSTOM", label: "Custom", color: "#ff9500" }
+  ];
+  const buildPerkType = () => {
+    if (perkKind === "FREE_MONTHS")
+      return { kind: "FREE_MONTHS", months: freeMonths };
+    if (perkKind === "FEATURE_UNLOCK")
+      return {
+        kind: "FEATURE_UNLOCK",
+        features: features2.split(",").map((f2) => f2.trim()).filter(Boolean)
+      };
+    if (perkKind === "CUSTOM")
+      return { kind: "CUSTOM", description: customText };
+    return { kind: "UPGRADE_TO_PAID" };
+  };
+  const handleSubmit = async (e3) => {
+    e3.preventDefault();
+    if (!code.trim()) return ue.error("Code is required");
+    const input = {
+      code: code.trim().toUpperCase(),
+      description: description.trim(),
+      perkType: buildPerkType(),
+      maxUses: maxUses ? Number(maxUses) : void 0,
+      expiresAt: expiryDate ? BigInt(new Date(expiryDate).getTime()) * 1000000n : void 0
+    };
+    await createCoupon.mutateAsync(input);
+    onClose();
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    motion.div,
+    {
+      initial: { opacity: 0, y: -10 },
+      animate: { opacity: 1, y: 0 },
+      exit: { opacity: 0, y: -10 },
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        GlassCard,
+        {
+          className: "border border-[#00ffff]/30",
+          style: { boxShadow: "0 0 30px rgba(0,255,255,0.08)" },
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-5", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-display font-bold text-lg text-foreground flex items-center gap-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Ticket, { className: "h-5 w-5 text-[#00ffff]" }),
+                "Create New Coupon"
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: onClose,
+                  className: "text-muted-foreground hover:text-foreground transition-colors",
+                  "aria-label": "Close form",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleX, { className: "h-5 w-5" })
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSubmit, className: "space-y-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Label$1,
+                    {
+                      htmlFor: "coupon-code",
+                      className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide",
+                      children: "Code *"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Input,
+                    {
+                      id: "coupon-code",
+                      value: code,
+                      onChange: (e3) => setCode(e3.target.value.toUpperCase()),
+                      placeholder: "PROMO2025",
+                      className: "font-mono uppercase",
+                      "data-ocid": "admin-coupon-code-input",
+                      required: true
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Label$1,
+                    {
+                      htmlFor: "coupon-description",
+                      className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide",
+                      children: "Description"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Input,
+                    {
+                      id: "coupon-description",
+                      value: description,
+                      onChange: (e3) => setDescription(e3.target.value),
+                      placeholder: "Launch promo — 3 free months",
+                      "data-ocid": "admin-coupon-description-input"
+                    }
+                  )
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide", children: "Perk Type *" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: perkOptions.map((opt) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: () => setPerkKind(opt.value),
+                    className: "px-3 py-1.5 rounded-lg text-xs font-semibold transition-smooth border",
+                    style: {
+                      background: perkKind === opt.value ? `${opt.color}18` : "transparent",
+                      color: perkKind === opt.value ? opt.color : "var(--muted-foreground)",
+                      borderColor: perkKind === opt.value ? opt.color : "rgba(255,255,255,0.12)",
+                      boxShadow: perkKind === opt.value ? `0 0 12px ${opt.color}30` : "none"
+                    },
+                    "data-ocid": `admin-perk-type-${opt.value.toLowerCase()}`,
+                    children: opt.label
+                  },
+                  opt.value
+                )) })
+              ] }),
+              perkKind === "FREE_MONTHS" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Label$1,
+                  {
+                    htmlFor: "free-months",
+                    className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide",
+                    children: "Number of Months"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Input,
+                  {
+                    id: "free-months",
+                    type: "number",
+                    min: 1,
+                    max: 24,
+                    value: freeMonths,
+                    onChange: (e3) => setFreeMonths(Number(e3.target.value)),
+                    className: "w-32",
+                    "data-ocid": "admin-free-months-input"
+                  }
+                )
+              ] }),
+              perkKind === "FEATURE_UNLOCK" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Label$1,
+                  {
+                    htmlFor: "features",
+                    className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide",
+                    children: "Features (comma-separated)"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Input,
+                  {
+                    id: "features",
+                    value: features2,
+                    onChange: (e3) => setFeatures(e3.target.value),
+                    placeholder: "analytics,csv_import,annotations",
+                    "data-ocid": "admin-features-input"
+                  }
+                )
+              ] }),
+              perkKind === "CUSTOM" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Label$1,
+                  {
+                    htmlFor: "custom-text",
+                    className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide",
+                    children: "Custom Perk Description"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Textarea,
+                  {
+                    id: "custom-text",
+                    value: customText,
+                    onChange: (e3) => setCustomText(e3.target.value),
+                    placeholder: "Describe the custom perk...",
+                    rows: 2,
+                    "data-ocid": "admin-custom-perk-input"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 gap-4", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Label$1,
+                    {
+                      htmlFor: "max-uses",
+                      className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide",
+                      children: "Max Uses (optional)"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Input,
+                    {
+                      id: "max-uses",
+                      type: "number",
+                      min: 1,
+                      value: maxUses,
+                      onChange: (e3) => setMaxUses(e3.target.value),
+                      placeholder: "Unlimited",
+                      "data-ocid": "admin-max-uses-input"
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Label$1,
+                    {
+                      htmlFor: "expiry-date",
+                      className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide",
+                      children: "Expiry Date (optional)"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Input,
+                    {
+                      id: "expiry-date",
+                      type: "date",
+                      value: expiryDate,
+                      onChange: (e3) => setExpiryDate(e3.target.value),
+                      min: (/* @__PURE__ */ new Date()).toISOString().split("T")[0],
+                      "data-ocid": "admin-expiry-date-input"
+                    }
+                  )
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-end gap-3 pt-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  NeonButton,
+                  {
+                    variant: "outline",
+                    size: "sm",
+                    type: "button",
+                    onClick: onClose,
+                    children: "Cancel"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  NeonButton,
+                  {
+                    variant: "cyan",
+                    size: "sm",
+                    type: "submit",
+                    disabled: createCoupon.isPending,
+                    "data-ocid": "admin-create-coupon-submit",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(CirclePlus, { className: "h-4 w-4" }),
+                      createCoupon.isPending ? "Creating..." : "Create Coupon"
+                    ]
+                  }
+                )
+              ] })
+            ] })
+          ]
+        }
+      )
+    }
+  );
+}
+function CouponRow({ coupon }) {
+  const deactivate = useDeactivateCoupon();
+  const usesText = coupon.maxUses != null ? `${coupon.usedCount}/${coupon.maxUses}` : `${coupon.usedCount}/∞`;
+  const expiry = coupon.expiresAt ? new Date(Number(coupon.expiresAt) / 1e6).toLocaleDateString(
+    "en-US",
+    { month: "short", day: "numeric", year: "numeric" }
+  ) : "Never";
+  const isExpired = coupon.expiresAt ? Number(coupon.expiresAt) / 1e6 < Date.now() : false;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "tr",
+    {
+      className: "border-b border-border/40 last:border-0 hover:bg-muted/10 transition-colors",
+      "data-ocid": `admin-coupon-row-${coupon.code}`,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 font-mono font-bold text-foreground text-sm", children: coupon.code }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(PerkBadge, { perk: coupon.perkType }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "td",
+          {
+            className: "px-4 py-3 text-sm text-muted-foreground max-w-[180px] truncate",
+            title: coupon.description,
+            children: coupon.description || "—"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-sm font-mono text-center", children: usesText }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-xs text-muted-foreground", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: isExpired ? "#f87171" : void 0 }, children: expiry }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-center", children: coupon.isActive && !isExpired ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "span",
+          {
+            className: "inline-flex items-center gap-1 text-xs font-semibold",
+            style: { color: "#00ff41" },
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "h-3.5 w-3.5" }),
+              "Active"
+            ]
+          }
+        ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground/60", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CircleX, { className: "h-3.5 w-3.5" }),
+          isExpired ? "Expired" : "Inactive"
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-right", children: coupon.isActive && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            type: "button",
+            onClick: () => deactivate.mutate(coupon.id),
+            disabled: deactivate.isPending,
+            className: "text-xs text-red-400/70 hover:text-red-400 transition-colors font-semibold",
+            "data-ocid": `admin-deactivate-coupon-${coupon.code}`,
+            children: "Deactivate"
+          }
+        ) })
+      ]
+    }
+  );
+}
+function AdminPage() {
+  const { isAdmin, isLoading } = useIsAdmin();
+  const { data: coupons, isLoading: couponsLoading } = useCoupons();
+  const [showForm, setShowForm] = reactExports.useState(false);
+  if (isLoading) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "flex items-center justify-center min-h-[60vh]",
+        "data-ocid": "admin-loading",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center space-y-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-8 h-8 rounded-full border-2 border-[#00ff41]/40 border-t-[#00ff41] animate-spin mx-auto" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "Verifying admin access…" })
+        ] })
+      }
+    );
+  }
+  if (!isAdmin) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "flex items-center justify-center min-h-[60vh]",
+        "data-ocid": "admin-403",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          motion.div,
+          {
+            initial: { opacity: 0, scale: 0.95 },
+            animate: { opacity: 1, scale: 1 },
+            className: "text-center space-y-5 max-w-sm",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "div",
+                {
+                  className: "w-16 h-16 rounded-2xl flex items-center justify-center mx-auto",
+                  style: {
+                    background: "rgba(248,113,113,0.12)",
+                    border: "1px solid rgba(248,113,113,0.35)"
+                  },
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldAlert, { className: "h-8 w-8 text-red-400" })
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold text-foreground mb-2", children: "Access Denied" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm leading-relaxed", children: "This area is restricted to the app admin only. If you believe this is an error, please contact support." })
+              ] })
+            ]
+          }
+        )
+      }
+    );
+  }
+  const activeCoupons = (coupons ?? []).filter((c2) => c2.isActive);
+  const totalRedemptions = (coupons ?? []).reduce(
+    (sum, c2) => sum + c2.usedCount,
+    0
+  );
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-6xl mx-auto space-y-8 fade-in", "data-ocid": "admin-page", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      motion.div,
+      {
+        initial: { opacity: 0, y: -10 },
+        animate: { opacity: 1, y: 0 },
+        className: "flex items-start justify-between gap-4",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Crown, { className: "h-6 w-6", style: { color: "#ff9500" } }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-2xl md:text-3xl font-bold text-foreground", children: "Admin Panel" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Badge,
+              {
+                className: "text-xs font-bold tracking-widest",
+                style: {
+                  background: "rgba(255,149,0,0.15)",
+                  color: "#ff9500",
+                  border: "1px solid rgba(255,149,0,0.4)",
+                  boxShadow: "0 0 14px rgba(255,149,0,0.2)"
+                },
+                "data-ocid": "admin-badge",
+                children: "ADMIN"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm", children: "Manage coupons, monitor usage, and control app settings." })
+        ] })
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 md:grid-cols-3 gap-4", children: [
+      {
+        label: "Total Coupons",
+        value: String((coupons == null ? void 0 : coupons.length) ?? 0),
+        icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Ticket, { className: "h-4 w-4" }),
+        color: "#00ffff"
+      },
+      {
+        label: "Active Coupons",
+        value: String(activeCoupons.length),
+        icon: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "h-4 w-4" }),
+        color: "#00ff41"
+      },
+      {
+        label: "Total Redemptions",
+        value: String(totalRedemptions),
+        icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "h-4 w-4" }),
+        color: "#b900ff"
+      }
+    ].map((stat, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      motion.div,
+      {
+        initial: { opacity: 0, y: 14 },
+        animate: { opacity: 1, y: 0 },
+        transition: { delay: i * 0.08 },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                className: "w-8 h-8 rounded-lg flex items-center justify-center",
+                style: {
+                  background: `${stat.color}1a`,
+                  border: `1px solid ${stat.color}40`
+                },
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: stat.color }, children: stat.icon })
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground font-medium", children: stat.label })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "p",
+            {
+              className: "font-display text-3xl font-bold",
+              style: { color: stat.color },
+              children: stat.value
+            }
+          )
+        ] })
+      },
+      stat.label
+    )) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      motion.div,
+      {
+        initial: { opacity: 0, y: 16 },
+        animate: { opacity: 1, y: 0 },
+        transition: { delay: 0.2 },
+        className: "space-y-4",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "font-display text-lg font-bold text-foreground flex items-center gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Ticket, { className: "h-5 w-5 text-[#00ffff]" }),
+              "Coupon Codes"
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              NeonButton,
+              {
+                variant: "cyan",
+                size: "sm",
+                onClick: () => setShowForm((v2) => !v2),
+                "data-ocid": "admin-create-coupon-btn",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(CirclePlus, { className: "h-4 w-4" }),
+                  showForm ? "Cancel" : "New Coupon"
+                ]
+              }
+            )
+          ] }),
+          showForm && /* @__PURE__ */ jsxRuntimeExports.jsx(CreateCouponForm, { onClose: () => setShowForm(false) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(GlassCard, { className: "p-0 overflow-hidden", children: couponsLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center py-12", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-6 h-6 rounded-full border-2 border-[#00ffff]/40 border-t-[#00ffff] animate-spin" }) }) : !(coupons == null ? void 0 : coupons.length) ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "div",
+            {
+              className: "flex flex-col items-center justify-center py-14 gap-3 text-center",
+              "data-ocid": "admin-coupons-empty",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Ticket, { className: "h-8 w-8 text-muted-foreground/30" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "No coupons yet. Create your first one above." })
+              ]
+            }
+          ) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { className: "border-b border-border", children: [
+              "Code",
+              "Perk",
+              "Description",
+              "Uses",
+              "Expires",
+              "Status",
+              ""
+            ].map((h2) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "th",
+              {
+                className: `py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide ${h2 === "Uses" || h2 === "Status" ? "text-center px-4" : "text-left px-4"}`,
+                children: h2
+              },
+              h2
+            )) }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: coupons.map((coupon) => /* @__PURE__ */ jsxRuntimeExports.jsx(CouponRow, { coupon }, coupon.id)) })
+          ] }) }) })
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      motion.div,
+      {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        transition: { delay: 0.35 },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { className: "flex items-start gap-3 py-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { className: "h-4 w-4 text-[#00ffff] shrink-0 mt-0.5" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground leading-relaxed", children: "Admin access is granted to the canister principal set at deploy time. Coupon codes are case-insensitive on redemption. Deactivated coupons cannot be reactivated — create a new one if needed." })
+        ] })
+      }
+    )
+  ] });
+}
+function BlurredTeaser({
+  teaserText,
+  ctaText = "Unlock Pro",
+  onUpgrade,
+  className,
+  children
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: cn("relative rounded-lg overflow-hidden", className), children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "blur-sm pointer-events-none select-none opacity-60",
+        "aria-hidden": "true",
+        children
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "absolute inset-0 flex flex-col items-center justify-center gap-3 bg-card/70 backdrop-blur-sm rounded-lg border border-[#b900ff]/30 p-6 text-center", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center w-10 h-10 rounded-full bg-[#b900ff]/15 border border-[#b900ff]/40", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "h-4 w-4 text-[#b900ff]" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-medium text-foreground max-w-xs leading-snug", children: teaserText }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        NeonButton,
+        {
+          variant: "purple",
+          size: "sm",
+          onClick: onUpgrade,
+          "data-ocid": "blurred-teaser-upgrade-cta",
+          children: ctaText
+        }
+      )
+    ] })
+  ] });
+}
 const METRIC_CONFIGS = [
   {
     label: "Win Rate",
@@ -57442,7 +58943,7 @@ var getAttrsOfCartesianLabel = function getAttrsOfCartesianLabel2(props) {
 var isPolar = function isPolar2(viewBox) {
   return "cx" in viewBox && isNumber(viewBox.cx);
 };
-function Label$2(_ref4) {
+function Label(_ref4) {
   var _ref4$offset = _ref4.offset, offset2 = _ref4$offset === void 0 ? 5 : _ref4$offset, restProps = _objectWithoutProperties$c(_ref4, _excluded$c);
   var props = _objectSpread$q({
     offset: offset2
@@ -57475,7 +58976,7 @@ function Label$2(_ref4) {
     breakAll: textBreakAll
   }), label);
 }
-Label$2.displayName = "Label";
+Label.displayName = "Label";
 var parseViewBox = function parseViewBox2(props) {
   var cx2 = props.cx, cy = props.cy, angle = props.angle, startAngle = props.startAngle, endAngle = props.endAngle, r2 = props.r, radius = props.radius, innerRadius = props.innerRadius, outerRadius = props.outerRadius, x3 = props.x, y2 = props.y, top = props.top, left = props.left, width = props.width, height = props.height, clockWise = props.clockWise, labelViewBox = props.labelViewBox;
   if (labelViewBox) {
@@ -57528,40 +59029,40 @@ var parseLabel = function parseLabel2(label, viewBox) {
     return null;
   }
   if (label === true) {
-    return /* @__PURE__ */ React2.createElement(Label$2, {
+    return /* @__PURE__ */ React2.createElement(Label, {
       key: "label-implicit",
       viewBox
     });
   }
   if (isNumOrStr(label)) {
-    return /* @__PURE__ */ React2.createElement(Label$2, {
+    return /* @__PURE__ */ React2.createElement(Label, {
       key: "label-implicit",
       viewBox,
       value: label
     });
   }
   if (/* @__PURE__ */ reactExports.isValidElement(label)) {
-    if (label.type === Label$2) {
+    if (label.type === Label) {
       return /* @__PURE__ */ reactExports.cloneElement(label, {
         key: "label-implicit",
         viewBox
       });
     }
-    return /* @__PURE__ */ React2.createElement(Label$2, {
+    return /* @__PURE__ */ React2.createElement(Label, {
       key: "label-implicit",
       content: label,
       viewBox
     });
   }
   if (isFunction$4(label)) {
-    return /* @__PURE__ */ React2.createElement(Label$2, {
+    return /* @__PURE__ */ React2.createElement(Label, {
       key: "label-implicit",
       content: label,
       viewBox
     });
   }
   if (isObject$8(label)) {
-    return /* @__PURE__ */ React2.createElement(Label$2, _extends$m({
+    return /* @__PURE__ */ React2.createElement(Label, _extends$m({
       viewBox
     }, label, {
       key: "label-implicit"
@@ -57576,7 +59077,7 @@ var renderCallByParent$1 = function renderCallByParent(parentProps, viewBox) {
   }
   var children = parentProps.children;
   var parentViewBox = parseViewBox(parentProps);
-  var explicitChildren = findAllByType(children, Label$2).map(function(child, index2) {
+  var explicitChildren = findAllByType(children, Label).map(function(child, index2) {
     return /* @__PURE__ */ reactExports.cloneElement(child, {
       viewBox: viewBox || parentViewBox,
       // eslint-disable-next-line react/no-array-index-key
@@ -57589,8 +59090,8 @@ var renderCallByParent$1 = function renderCallByParent(parentProps, viewBox) {
   var implicitLabel = parseLabel(parentProps.label, viewBox || parentViewBox);
   return [implicitLabel].concat(_toConsumableArray$7(explicitChildren));
 };
-Label$2.parseViewBox = parseViewBox;
-Label$2.renderCallByParent = renderCallByParent$1;
+Label.parseViewBox = parseViewBox;
+Label.renderCallByParent = renderCallByParent$1;
 function last(array2) {
   var length = array2 == null ? 0 : array2.length;
   return length ? array2[length - 1] : void 0;
@@ -57731,11 +59232,11 @@ function LabelList(_ref) {
     var idProps = isNil$1(id2) ? {} : {
       id: "".concat(id2, "-").concat(index2)
     };
-    return /* @__PURE__ */ React2.createElement(Label$2, _extends$l({}, filterProps(entry, true), others, idProps, {
+    return /* @__PURE__ */ React2.createElement(Label, _extends$l({}, filterProps(entry, true), others, idProps, {
       parentViewBox: entry.parentViewBox,
       value,
       textBreakAll,
-      viewBox: Label$2.parseViewBox(isNil$1(clockWise) ? entry : _objectSpread$p(_objectSpread$p({}, entry), {}, {
+      viewBox: Label.parseViewBox(isNil$1(clockWise) ? entry : _objectSpread$p(_objectSpread$p({}, entry), {}, {
         clockWise
       })),
       key: "label-".concat(index2),
@@ -60695,7 +62196,7 @@ var PolarRadiusAxis = /* @__PURE__ */ function(_PureComponent) {
       }
       return /* @__PURE__ */ React2.createElement(Layer, {
         className: clsx("recharts-polar-radius-axis", this.props.className)
-      }, axisLine && this.renderAxisLine(), tick && this.renderTicks(), Label$2.renderCallByParent(this.props, this.getViewBox()));
+      }, axisLine && this.renderAxisLine(), tick && this.renderTicks(), Label.renderCallByParent(this.props, this.getViewBox()));
     }
   }], [{
     key: "renderTickItem",
@@ -63953,7 +65454,7 @@ function ReferenceLineImpl(props) {
   });
   return /* @__PURE__ */ React2.createElement(Layer, {
     className: clsx("recharts-reference-line", className)
-  }, renderLine(shape, lineProps), Label$2.renderCallByParent(props, rectWithCoords({
+  }, renderLine(shape, lineProps), Label.renderCallByParent(props, rectWithCoords({
     x1,
     y1,
     x2: x22,
@@ -64166,7 +65667,7 @@ var ReferenceDot = /* @__PURE__ */ function(_React$Component) {
       });
       return /* @__PURE__ */ React2.createElement(Layer, {
         className: clsx("recharts-reference-dot", className)
-      }, ReferenceDot2.renderDot(shape, dotProps), Label$2.renderCallByParent(this.props, {
+      }, ReferenceDot2.renderDot(shape, dotProps), Label.renderCallByParent(this.props, {
         x: cx2 - r2,
         y: cy - r2,
         width: 2 * r2,
@@ -64391,7 +65892,7 @@ var ReferenceArea = /* @__PURE__ */ function(_React$Component) {
         className: clsx("recharts-reference-area", className)
       }, ReferenceArea2.renderRect(shape, _objectSpread$4(_objectSpread$4({
         clipPath
-      }, filterProps(this.props, true)), rect)), Label$2.renderCallByParent(this.props, rect));
+      }, filterProps(this.props, true)), rect)), Label.renderCallByParent(this.props, rect));
     }
   }]);
 }(React2.Component);
@@ -65074,7 +66575,7 @@ var CartesianAxis = /* @__PURE__ */ function(_Component) {
         ref: function ref(_ref2) {
           _this3.layerReference = _ref2;
         }
-      }, axisLine && this.renderAxisLine(), this.renderTicks(finalTicks, this.state.fontSize, this.state.letterSpacing), Label$2.renderCallByParent(this.props));
+      }, axisLine && this.renderAxisLine(), this.renderTicks(finalTicks, this.state.fontSize, this.state.letterSpacing), Label.renderCallByParent(this.props));
     }
   }], [{
     key: "renderTickItem",
@@ -68356,8 +69857,8 @@ function UpgradeModal({
     }
   );
 }
-const Route$7 = createRoute({
-  getParentRoute: () => Route$8,
+const Route$8 = createRoute({
+  getParentRoute: () => Route$a,
   path: "/analytics",
   component: AnalyticsPage
 });
@@ -68862,73 +70363,6 @@ function CSVUploadZone({
           ] })
         ] })
       ]
-    }
-  );
-}
-var NODES$1 = [
-  "a",
-  "button",
-  "div",
-  "form",
-  "h2",
-  "h3",
-  "img",
-  "input",
-  "label",
-  "li",
-  "nav",
-  "ol",
-  "p",
-  "select",
-  "span",
-  "svg",
-  "ul"
-];
-var Primitive$1 = NODES$1.reduce((primitive, node) => {
-  const Slot2 = /* @__PURE__ */ createSlot$1(`Primitive.${node}`);
-  const Node2 = reactExports.forwardRef((props, forwardedRef) => {
-    const { asChild, ...primitiveProps } = props;
-    const Comp = asChild ? Slot2 : node;
-    if (typeof window !== "undefined") {
-      window[Symbol.for("radix-ui")] = true;
-    }
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(Comp, { ...primitiveProps, ref: forwardedRef });
-  });
-  Node2.displayName = `Primitive.${node}`;
-  return { ...primitive, [node]: Node2 };
-}, {});
-var NAME$2 = "Label";
-var Label$1 = reactExports.forwardRef((props, forwardedRef) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Primitive$1.label,
-    {
-      ...props,
-      ref: forwardedRef,
-      onMouseDown: (event) => {
-        var _a3;
-        const target = event.target;
-        if (target.closest("button, input, select, textarea")) return;
-        (_a3 = props.onMouseDown) == null ? void 0 : _a3.call(props, event);
-        if (!event.defaultPrevented && event.detail > 1) event.preventDefault();
-      }
-    }
-  );
-});
-Label$1.displayName = NAME$2;
-var Root$2 = Label$1;
-function Label({
-  className,
-  ...props
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Root$2,
-    {
-      "data-slot": "label",
-      className: cn(
-        "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
-        className
-      ),
-      ...props
     }
   );
 }
@@ -74192,7 +75626,7 @@ function ColumnMapper({
 function FieldRow({ field, headers, value, onChange }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", "data-ocid": `mapper-field-${field.key}`, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { className: "text-xs font-medium text-foreground", children: field.label }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-xs font-medium text-foreground", children: field.label }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Badge,
         {
@@ -74431,8 +75865,8 @@ function PreviewTable({ rows }) {
     ] }) })
   ] });
 }
-const Route$6 = createRoute({
-  getParentRoute: () => Route$8,
+const Route$7 = createRoute({
+  getParentRoute: () => Route$a,
   path: "/import",
   component: ImportPage
 });
@@ -74912,8 +76346,8 @@ function LoadingSpinner({
     }
   );
 }
-const Route$5 = createRoute({
-  getParentRoute: () => Route$8,
+const Route$6 = createRoute({
+  getParentRoute: () => Route$a,
   path: "/",
   component: DashboardPage
 });
@@ -75564,6 +76998,17 @@ function DashboardPage() {
                     "Go Pro Now!"
                   ]
                 }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: () => navigate({ to: "/redeem" }),
+                  className: "relative z-10 text-sm font-semibold transition-colors hover:opacity-80 shrink-0",
+                  style: { color: "#00ffff" },
+                  "data-ocid": "upgrade-banner-redeem-link",
+                  children: "Have a code? Redeem →"
+                }
               )
             ]
           }
@@ -75608,8 +77053,8 @@ function getBestSession(metrics) {
   };
   return map2[best.session] ?? best.session;
 }
-const Route$4 = createRoute({
-  getParentRoute: () => Route$8,
+const Route$5 = createRoute({
+  getParentRoute: () => Route$a,
   path: "/login",
   component: LoginPage
 });
@@ -75782,8 +77227,8 @@ function LoginPage() {
     }
   );
 }
-const Route$3 = createRoute({
-  getParentRoute: () => Route$8,
+const Route$4 = createRoute({
+  getParentRoute: () => Route$a,
   path: "/pricing",
   component: PricingPage
 });
@@ -76045,10 +77490,14 @@ function FaqItem({ q: q2, a: a2, index: index2 }) {
 }
 function PricingPage() {
   const { isPaid, isLoading } = useUserTier();
+  const navigate = useNavigate();
   const handleUpgrade = () => {
     ue.info("Stripe integration coming soon! Stay tuned for Pro launch 🚀", {
       duration: 5e3
     });
+  };
+  const handleRedeemCode = () => {
+    navigate({ to: "/redeem" });
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "div",
@@ -76348,20 +77797,35 @@ function PricingPage() {
               className: "text-center pb-4",
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm mb-4", children: "Ready to trade smarter?" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  NeonButton,
-                  {
-                    variant: "purple",
-                    size: "lg",
-                    onClick: handleUpgrade,
-                    "data-ocid": "pricing-bottom-cta",
-                    style: { boxShadow: "0 0 24px rgba(185,0,255,0.3)" },
-                    children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "h-4 w-4" }),
-                      "Upgrade to Pro — $9.99/month"
-                    ]
-                  }
-                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row items-center justify-center gap-3", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    NeonButton,
+                    {
+                      variant: "purple",
+                      size: "lg",
+                      onClick: handleUpgrade,
+                      "data-ocid": "pricing-bottom-cta",
+                      style: { boxShadow: "0 0 24px rgba(185,0,255,0.3)" },
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "h-4 w-4" }),
+                        "Upgrade to Pro — $9.99/month"
+                      ]
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    NeonButton,
+                    {
+                      variant: "outline",
+                      size: "lg",
+                      onClick: handleRedeemCode,
+                      "data-ocid": "pricing-redeem-code-btn",
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { className: "h-4 w-4" }),
+                        "Redeem a Code"
+                      ]
+                    }
+                  )
+                ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground mt-2", children: [
                   "Payment integration coming soon · Questions?",
                   " ",
@@ -76382,6 +77846,314 @@ function PricingPage() {
           )
         ] })
       ]
+    }
+  );
+}
+function parsePerkApplied(raw) {
+  if (typeof raw === "string") return raw;
+  return "Perk applied successfully";
+}
+function parseCouponResult(raw) {
+  var _a3, _b3, _c2, _d2, _e2, _f2, _g2;
+  const r2 = raw;
+  return {
+    coupon: {
+      id: Number(((_a3 = r2 == null ? void 0 : r2.coupon) == null ? void 0 : _a3.id) ?? 0),
+      code: String(((_b3 = r2 == null ? void 0 : r2.coupon) == null ? void 0 : _b3.code) ?? ""),
+      description: String(((_c2 = r2 == null ? void 0 : r2.coupon) == null ? void 0 : _c2.description) ?? ""),
+      perkType: {
+        kind: "CUSTOM",
+        description: String(((_d2 = r2 == null ? void 0 : r2.coupon) == null ? void 0 : _d2.perkType) ?? "")
+      },
+      usedCount: Number(((_e2 = r2 == null ? void 0 : r2.coupon) == null ? void 0 : _e2.usedCount) ?? 0),
+      isActive: Boolean(((_f2 = r2 == null ? void 0 : r2.coupon) == null ? void 0 : _f2.isActive) ?? false),
+      createdAt: BigInt(((_g2 = r2 == null ? void 0 : r2.coupon) == null ? void 0 : _g2.createdAt) ?? 0)
+    },
+    perkApplied: parsePerkApplied(r2 == null ? void 0 : r2.perkApplied)
+  };
+}
+function useCouponRedemption() {
+  const { actor } = useActor(createActor);
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async (code) => {
+      if (!actor) throw new Error("Not connected");
+      const result = await actor.redeemCoupon(code);
+      if ("err" in result || "notFound" in result) {
+        throw new Error(
+          (result == null ? void 0 : result.err) ?? (result == null ? void 0 : result.notFound) ?? "Invalid coupon code"
+        );
+      }
+      return parseCouponResult("ok" in result ? result.ok : result);
+    },
+    onSuccess: () => {
+      queryClient2.invalidateQueries({ queryKey: ["userTier"] });
+      queryClient2.invalidateQueries({ queryKey: ["isAdmin"] });
+    }
+  });
+}
+const Route$3 = createRoute({
+  getParentRoute: () => Route$a,
+  path: "/redeem",
+  component: RedeemPage
+});
+function PerkDisplay({ perkApplied }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      className: "flex items-start gap-3 p-4 rounded-xl",
+      style: {
+        background: "rgba(0,255,65,0.08)",
+        border: "1px solid rgba(0,255,65,0.3)"
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { className: "h-4 w-4 text-[#00ff41] shrink-0 mt-0.5" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-foreground leading-snug", children: perkApplied })
+      ]
+    }
+  );
+}
+function SuccessCard({
+  result,
+  onReset
+}) {
+  const navigate = useNavigate();
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    motion.div,
+    {
+      initial: { opacity: 0, scale: 0.92 },
+      animate: { opacity: 1, scale: 1 },
+      transition: { type: "spring", stiffness: 200, damping: 18 },
+      className: "text-center space-y-6",
+      "data-ocid": "redeem-success",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            className: "w-20 h-20 rounded-full flex items-center justify-center mx-auto",
+            style: {
+              background: "radial-gradient(circle, rgba(0,255,65,0.2) 0%, transparent 70%)",
+              border: "2px solid rgba(0,255,65,0.5)",
+              boxShadow: "0 0 40px rgba(0,255,65,0.35)"
+            },
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "h-9 w-9 text-[#00ff41]" })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl font-bold text-foreground mb-2", children: "Code Redeemed! 🎉" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-muted-foreground text-sm", children: [
+            "Your coupon",
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono font-bold text-foreground", children: result.coupon.code }),
+            " ",
+            "has been applied successfully."
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(PerkDisplay, { perkApplied: result.perkApplied }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row gap-3 justify-center", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            NeonButton,
+            {
+              variant: "green",
+              size: "lg",
+              onClick: () => navigate({ to: "/" }),
+              "data-ocid": "redeem-go-dashboard",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { className: "h-4 w-4" }),
+                "Go to Dashboard"
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            NeonButton,
+            {
+              variant: "outline",
+              size: "lg",
+              onClick: onReset,
+              "data-ocid": "redeem-another",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Ticket, { className: "h-4 w-4" }),
+                "Redeem Another"
+              ]
+            }
+          )
+        ] })
+      ]
+    }
+  );
+}
+function RedeemPage() {
+  var _a3;
+  const navigate = useNavigate();
+  const [code, setCode] = reactExports.useState("");
+  const [success, setSuccess] = reactExports.useState(null);
+  const redemption = useCouponRedemption();
+  const handleSubmit = async (e3) => {
+    e3.preventDefault();
+    if (!code.trim()) return;
+    try {
+      const result = await redemption.mutateAsync(code.trim().toUpperCase());
+      setSuccess(result);
+    } catch {
+    }
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      className: "min-h-[80vh] flex items-center justify-center py-10",
+      "data-ocid": "redeem-page",
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full max-w-md space-y-6", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          motion.button,
+          {
+            type: "button",
+            initial: { opacity: 0, x: -10 },
+            animate: { opacity: 1, x: 0 },
+            onClick: () => navigate({ to: "/pricing" }),
+            className: "flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors group",
+            "data-ocid": "redeem-back-link",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { className: "h-4 w-4 group-hover:-translate-x-0.5 transition-transform" }),
+              "Back to Pricing"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { mode: "wait", children: success ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+          GlassCard,
+          {
+            style: {
+              border: "1px solid rgba(0,255,65,0.3)",
+              boxShadow: "0 0 50px rgba(0,255,65,0.1)"
+            },
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              SuccessCard,
+              {
+                result: success,
+                onReset: () => {
+                  setSuccess(null);
+                  setCode("");
+                  redemption.reset();
+                }
+              }
+            )
+          },
+          "success"
+        ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+          motion.div,
+          {
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 },
+            exit: { opacity: 0, y: -20 },
+            transition: { type: "spring", stiffness: 200, damping: 22 },
+            children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                className: "relative overflow-hidden rounded-2xl p-7",
+                style: {
+                  background: "linear-gradient(135deg, rgba(0,255,255,0.04) 0%, rgba(185,0,255,0.04) 100%)",
+                  border: "1px solid rgba(0,255,255,0.25)",
+                  boxShadow: "0 0 60px rgba(0,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)",
+                  backdropFilter: "blur(20px)"
+                },
+                "data-ocid": "redeem-glass-card",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "div",
+                    {
+                      className: "absolute -top-12 -right-12 w-40 h-40 rounded-full pointer-events-none",
+                      style: {
+                        background: "radial-gradient(circle, rgba(185,0,255,0.18) 0%, transparent 70%)"
+                      },
+                      "aria-hidden": "true"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "div",
+                    {
+                      className: "absolute -bottom-10 -left-10 w-36 h-36 rounded-full pointer-events-none",
+                      style: {
+                        background: "radial-gradient(circle, rgba(0,255,255,0.12) 0%, transparent 70%)"
+                      },
+                      "aria-hidden": "true"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 space-y-6", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center space-y-3", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "div",
+                        {
+                          className: "w-14 h-14 rounded-xl flex items-center justify-center mx-auto",
+                          style: {
+                            background: "rgba(0,255,255,0.1)",
+                            border: "1px solid rgba(0,255,255,0.3)",
+                            boxShadow: "0 0 20px rgba(0,255,255,0.2)"
+                          },
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Ticket, { className: "h-7 w-7 text-[#00ffff]" })
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-2xl font-bold text-foreground", children: "Redeem a Code" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm mt-1", children: "Enter your coupon code below to unlock perks" })
+                      ] })
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSubmit, className: "space-y-4", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          Input,
+                          {
+                            value: code,
+                            onChange: (e3) => setCode(e3.target.value.toUpperCase()),
+                            placeholder: "ENTER CODE HERE",
+                            className: "font-mono text-center text-lg tracking-widest uppercase h-12 border-[rgba(0,255,255,0.3)] focus:border-[rgba(0,255,255,0.6)] focus:ring-[rgba(0,255,255,0.15)]",
+                            style: { letterSpacing: "0.15em" },
+                            "aria-label": "Coupon code",
+                            "data-ocid": "redeem-code-input",
+                            autoFocus: true,
+                            autoComplete: "off",
+                            spellCheck: false
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: redemption.isError && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                          motion.p,
+                          {
+                            initial: { opacity: 0, y: -4 },
+                            animate: { opacity: 1, y: 0 },
+                            exit: { opacity: 0 },
+                            className: "text-sm text-red-400 text-center flex items-center justify-center gap-1.5",
+                            "data-ocid": "redeem-error",
+                            children: [
+                              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-red-400", children: "✗" }),
+                              ((_a3 = redemption.error) == null ? void 0 : _a3.message) ?? "Invalid or expired coupon code"
+                            ]
+                          }
+                        ) })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        NeonButton,
+                        {
+                          variant: "cyan",
+                          size: "lg",
+                          type: "submit",
+                          className: "w-full",
+                          disabled: !code.trim() || redemption.isPending,
+                          "data-ocid": "redeem-submit-btn",
+                          style: { boxShadow: "0 0 24px rgba(0,255,255,0.25)" },
+                          children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "h-4 w-4" }),
+                            redemption.isPending ? "Redeeming…" : "Redeem Code"
+                          ]
+                        }
+                      )
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground text-center", children: "Got a Pro coupon from a promotion or friend? Enter it here to activate your perks instantly." })
+                  ] })
+                ]
+              }
+            )
+          },
+          "form"
+        ) })
+      ] })
     }
   );
 }
@@ -76924,7 +78696,7 @@ function DialogDescription({
   );
 }
 const Route$2 = createRoute({
-  getParentRoute: () => Route$8,
+  getParentRoute: () => Route$a,
   path: "/trades/$id",
   component: TradeDetailPage
 });
@@ -76990,22 +78762,6 @@ function TradeDetailPage() {
       }
     );
   }
-}
-function Input({ className, type, ...props }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "input",
-    {
-      type,
-      "data-slot": "input",
-      className: cn(
-        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-        className
-      ),
-      ...props
-    }
-  );
 }
 function Sheet({ ...props }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Root, { "data-slot": "sheet", ...props });
@@ -77087,7 +78843,7 @@ function SheetTitle({
   );
 }
 const Route$1 = createRoute({
-  getParentRoute: () => Route$8,
+  getParentRoute: () => Route$a,
   path: "/trades",
   component: TradesPage
 });
@@ -78838,19 +80594,6 @@ function PairAutocomplete({
     ) })
   ] });
 }
-function Textarea({ className, ...props }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "textarea",
-    {
-      "data-slot": "textarea",
-      className: cn(
-        "border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        className
-      ),
-      ...props
-    }
-  );
-}
 const STRATEGY_PRESETS = [
   "Breakout",
   "Reversal",
@@ -79025,7 +80768,7 @@ function TradeForm({ onSuccess, onCancel }) {
             /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-xs text-muted-foreground uppercase tracking-widest mb-4", children: "Trade Details" }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5 col-span-2 sm:col-span-1", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(Label, { htmlFor: "pair", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(Label$1, { htmlFor: "pair", children: [
                   "Pair / Instrument",
                   " ",
                   /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-destructive-foreground", children: "*" })
@@ -79044,7 +80787,7 @@ function TradeForm({ onSuccess, onCancel }) {
                 fieldError("pair") && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-destructive-foreground", children: fieldError("pair") })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5 col-span-2 sm:col-span-1", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Direction" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Direction" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   "div",
                   {
@@ -79086,7 +80829,7 @@ function TradeForm({ onSuccess, onCancel }) {
                 )
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(Label, { htmlFor: "entry", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(Label$1, { htmlFor: "entry", children: [
                   "Entry Price",
                   " ",
                   /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-destructive-foreground", children: "*" })
@@ -79111,7 +80854,7 @@ function TradeForm({ onSuccess, onCancel }) {
                 fieldError("entryPrice") && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-destructive-foreground", children: fieldError("entryPrice") })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(Label, { htmlFor: "exit", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(Label$1, { htmlFor: "exit", children: [
                   "Exit Price",
                   " ",
                   /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-destructive-foreground", children: "*" })
@@ -79136,7 +80879,7 @@ function TradeForm({ onSuccess, onCancel }) {
                 fieldError("exitPrice") && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-destructive-foreground", children: fieldError("exitPrice") })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "stop", children: "Stop Loss (optional)" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { htmlFor: "stop", children: "Stop Loss (optional)" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   Input,
                   {
@@ -79152,7 +80895,7 @@ function TradeForm({ onSuccess, onCancel }) {
                 )
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "pnl", children: "P&L ($)" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { htmlFor: "pnl", children: "P&L ($)" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     Input,
@@ -79186,7 +80929,7 @@ function TradeForm({ onSuccess, onCancel }) {
                 ] })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "rr", children: "Risk:Reward" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { htmlFor: "rr", children: "Risk:Reward" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   Input,
                   {
@@ -79202,7 +80945,7 @@ function TradeForm({ onSuccess, onCancel }) {
                 )
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(Label, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(Label$1, { children: [
                   "Entry Date/Time",
                   " ",
                   /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-destructive-foreground", children: "*" })
@@ -79223,7 +80966,7 @@ function TradeForm({ onSuccess, onCancel }) {
                 )
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(Label, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(Label$1, { children: [
                   "Exit Date/Time",
                   " ",
                   /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-destructive-foreground", children: "*" })
@@ -79249,7 +80992,7 @@ function TradeForm({ onSuccess, onCancel }) {
             /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-xs text-muted-foreground uppercase tracking-widest mb-4", children: "Tags & Context" }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Strategy Tag" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Strategy Tag" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   Select,
                   {
@@ -79280,7 +81023,7 @@ function TradeForm({ onSuccess, onCancel }) {
                 )
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Session" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Session" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   Select,
                   {
@@ -79301,7 +81044,7 @@ function TradeForm({ onSuccess, onCancel }) {
                 )
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Market Condition" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Market Condition" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   Select,
                   {
@@ -79323,7 +81066,7 @@ function TradeForm({ onSuccess, onCancel }) {
               ] })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-4 space-y-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Mistake Tags (optional, select all that apply)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Mistake Tags (optional, select all that apply)" }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "div",
                 {
@@ -79476,7 +81219,7 @@ function TradeForm({ onSuccess, onCancel }) {
   ] });
 }
 const Route2 = createRoute({
-  getParentRoute: () => Route$8,
+  getParentRoute: () => Route$a,
   path: "/trades/new",
   component: NewTradePage
 });
@@ -79516,15 +81259,17 @@ function NewTradePage() {
     }
   );
 }
-const routeTree = Route$8.addChildren([
-  Route$5,
+const routeTree = Route$a.addChildren([
+  Route$6,
   Route2,
   Route$2,
   Route$1,
-  Route$6,
   Route$7,
-  Route$3,
-  Route$4
+  Route$8,
+  Route$4,
+  Route$5,
+  Route$9,
+  Route$3
 ]);
 const router = createRouter({ routeTree });
 function App() {

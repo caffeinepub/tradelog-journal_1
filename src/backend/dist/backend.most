@@ -1,4 +1,29 @@
-// Version: 1.0.0
+// Version: 3.0.0
+type CouponCode__795196252 =
+  {
+    code : Text;
+    createdAt : Timestamp__301639476;
+    description : Text;
+    expiresAt : ?Int;
+    id : Nat;
+    isActive : Bool;
+    maxUses : ?Nat;
+    perkType : CouponPerkType__52606965;
+    usedCount : Nat
+  };
+type CouponPerkType__52606965 =
+  {
+    #custom : Text;
+    #featureUnlock : [Text];
+    #freeMonths : Nat;
+    #upgradeToPhaid
+  };
+type CouponRedemption__882785815 =
+  {
+    couponId : Nat;
+    redeemedAt : Timestamp__301639476;
+    userId : UserId__158757552
+  };
 type Data__791452850<K, V> =
   {var count : Nat__490723111; kvs : [var ?(K, V)]};
 type Direction__568662548 = {#LONG; #SHORT};
@@ -18,12 +43,30 @@ type ImportStatus__409421756 = {#COMPLETE; #FAILED; #PENDING; #PROCESSING};
 type Internal__8484328<K, V> =
   {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
 type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type List__415060402<T> = List__790383201<T>;
+type List__790383201<T> =
+  {
+    var blockIndex : Nat__490723111;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__490723111
+  };
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
 type MarketCondition__984540245 =
   {#CHOPPY; #OTHER; #RANGING; #TRENDING; #VOLATILE};
 type Nat__490723111 = Nat__920180692;
 type Nat__920180692 = Nat;
 type Node__46230540<K, V> =
   {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type OldUser__655922588 =
+  {
+    createdAt : Timestamp__301639476;
+    id : UserId__158757552;
+    var stripeCustomerId : ?Text;
+    var tier : Tier__337424587
+  };
 type PairStats__151252442 =
   {pair : Text; totalPnl : Float; tradeCount : Nat; winRate : Float};
 type PerformanceMetrics__323855633 =
@@ -44,6 +87,8 @@ type PerformanceMetrics__323855633 =
   };
 type PnlDataPoint__740969442 =
   {periodLabel : Text; pnl : Float; tradeCount : Nat};
+type Principal__224692764 = Principal;
+type Principal__390546707 = Principal__224692764;
 type SessionStats__196489802 =
   {
     session : SessionTime__718267856;
@@ -83,10 +128,28 @@ type User__933515552 =
   {
     createdAt : Timestamp__301639476;
     id : UserId__158757552;
+    var paidUntil : ?Int;
     var stripeCustomerId : ?Text;
-    var tier : Tier__337424587
+    var tier : Tier__337424587;
+    var unlockedFeatures : [Text]
   };
-actor {
+actor ({
+  in dailyCounts : Map__605269027<Text, Nat>;
+  in importJobs : List__415060402<ImportJob__16069439>;
+  in metricsCache :
+    Map__605269027<UserId__158757552, PerformanceMetrics__323855633>;
+  in nextImportJobId : [var Nat];
+  in nextTradeId : [var Nat];
+  in trades : List__415060402<Trade__612828401>;
+  in users : List__415060402<OldUser__655922588>
+}, {
+  stable adminPrincipal : [var Principal__390546707];
+  stable coupons :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?CouponCode__795196252]];
+      var elementIndex : Nat__490723111
+    };
   stable dailyCounts :
     {var root : Node__46230540<Text, Nat>; var size : Nat__490723111};
   stable importJobs :
@@ -101,8 +164,15 @@ actor {
         Node__46230540<UserId__158757552, PerformanceMetrics__323855633>;
       var size : Nat__490723111
     };
+  stable nextCouponId : [var Nat];
   stable nextImportJobId : [var Nat];
   stable nextTradeId : [var Nat];
+  stable redemptions :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?CouponRedemption__882785815]];
+      var elementIndex : Nat__490723111
+    };
   stable trades :
     {
       var blockIndex : Nat__490723111;
@@ -115,4 +185,4 @@ actor {
       var blocks : [var [var ?User__933515552]];
       var elementIndex : Nat__490723111
     }
-};
+}) ;

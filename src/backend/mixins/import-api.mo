@@ -8,6 +8,7 @@ import UserLib "../lib/user";
 import MetricsLib "../lib/metrics";
 import List "mo:core/List";
 import Map "mo:core/Map";
+import Principal "mo:core/Principal";
 
 mixin (
   importJobs : List.List<ImportTypes.ImportJob>,
@@ -17,10 +18,12 @@ mixin (
   nextImportJobId : [var Nat],
   nextTradeId : [var Nat],
   metricsCache : Map.Map<CommonTypes.UserId, MetricsTypes.PerformanceMetrics>,
+  adminPrincipal : [var Principal],
 ) {
   /// Start a bulk CSV import job; processes all rows and returns job status.
   public shared ({ caller }) func bulkImportTrades(rows : [TradeTypes.CsvTradeRow]) : async ImportTypes.ImportJobPublic {
-    let tier = UserLib.getTier(users, caller);
+    // Admin always gets unlimited (PAID) access
+    let tier : CommonTypes.Tier = if (Principal.equal(caller, adminPrincipal[0])) #PAID else UserLib.getTier(users, caller);
     // Create the job record
     let _ = CsvImportLib.createJob(importJobs, nextImportJobId[0], caller);
     let jobId = nextImportJobId[0];

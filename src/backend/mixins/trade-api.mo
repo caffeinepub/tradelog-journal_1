@@ -7,6 +7,7 @@ import UserLib "../lib/user";
 import MetricsLib "../lib/metrics";
 import List "mo:core/List";
 import Map "mo:core/Map";
+import Principal "mo:core/Principal";
 
 mixin (
   trades : List.List<TradeTypes.Trade>,
@@ -14,10 +15,12 @@ mixin (
   users : List.List<UserTypes.User>,
   nextTradeId : [var Nat],
   metricsCache : Map.Map<CommonTypes.UserId, MetricsTypes.PerformanceMetrics>,
+  adminPrincipal : [var Principal],
 ) {
-  /// Create a new trade entry; enforces free-tier limits.
+  /// Create a new trade entry; enforces free-tier limits (admin is exempt).
   public shared ({ caller }) func createTrade(input : TradeTypes.TradeInput) : async { #ok : TradeTypes.TradePublic; #limitReached : Text } {
-    let tier = UserLib.getTier(users, caller);
+    // Admin always gets PAID-equivalent unlimited access
+    let tier : CommonTypes.Tier = if (Principal.equal(caller, adminPrincipal[0])) #PAID else UserLib.getTier(users, caller);
     let result = TradeLib.createTrade(trades, dailyCounts, nextTradeId[0], caller, tier, input);
     switch (result) {
       case (#ok(_)) {
@@ -58,7 +61,7 @@ mixin (
 
   /// Get the calling user's trade limit status (daily & total counts vs caps).
   public shared query ({ caller }) func getTradeLimitStatus() : async UserTypes.TierLimitStatus {
-    let tier = UserLib.getTier(users, caller);
+    let tier : CommonTypes.Tier = if (Principal.equal(caller, adminPrincipal[0])) #PAID else UserLib.getTier(users, caller);
     TradeLib.getLimitStatus(trades, dailyCounts, caller, tier);
   };
 

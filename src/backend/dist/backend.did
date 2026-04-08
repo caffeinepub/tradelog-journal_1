@@ -2,8 +2,11 @@ type UserPublic =
  record {
    createdAt: Timestamp;
    id: UserId;
+   isAdmin: bool;
+   paidUntil: opt int;
    stripeCustomerId: opt text;
    tier: Tier;
+   unlockedFeatures: vec text;
  };
 type UserId = principal;
 type TradePublic = 
@@ -173,15 +176,61 @@ type CsvTradeRow =
    sessionTime: opt SessionTime;
    strategyTag: opt text;
  };
+type CreateCouponInput = 
+ record {
+   code: text;
+   description: text;
+   expiresAt: opt int;
+   maxUses: opt nat;
+   perkType: CouponPerkType;
+ };
+type CouponStats = 
+ record {
+   coupon: CouponCode;
+   totalRedemptions: nat;
+ };
+type CouponRedemptionResult = 
+ record {
+   coupon: CouponCode;
+   perkApplied: text;
+ };
+type CouponPerkType = 
+ variant {
+   custom: text;
+   featureUnlock: vec text;
+   freeMonths: nat;
+   upgradeToPhaid;
+ };
+type CouponCode = 
+ record {
+   code: text;
+   createdAt: Timestamp;
+   description: text;
+   expiresAt: opt int;
+   id: nat;
+   isActive: bool;
+   maxUses: opt nat;
+   perkType: CouponPerkType;
+   usedCount: nat;
+ };
 service : {
   bulkImportTrades: (rows: vec CsvTradeRow) -> (ImportJobPublic);
   computeMetrics: () -> (PerformanceMetrics);
+  createCoupon: (input: CreateCouponInput) -> (CouponCode);
   createTrade: (input: TradeInput) ->
    (variant {
       limitReached: text;
       ok: TradePublic;
     });
+  deactivateCoupon: (couponId: nat) -> (variant {
+                                          err: text;
+                                          ok;
+                                        });
   deleteTrade: (tradeId: TradeId) -> (bool);
+  getCouponStats: (couponId: nat) -> (variant {
+                                        err: text;
+                                        ok: CouponStats;
+                                      });
   getImportJob: (jobId: ImportJobId) -> (opt ImportJobPublic) query;
   getMetrics: () -> (opt PerformanceMetrics) query;
   getOrCreateUser: () -> (UserPublic);
@@ -189,8 +238,19 @@ service : {
   getTradeLimitStatus: () -> (TierLimitStatus) query;
   getTrades: (filter: TradeFilter) -> (vec TradePublic) query;
   getUserTier: () -> (Tier) query;
+  isAdmin: () -> (bool) query;
+  listCoupons: () -> (vec CouponCode);
+  redeemCoupon: (code: text) ->
+   (variant {
+      err: text;
+      ok: CouponRedemptionResult;
+    });
   saveChartAnnotation: (tradeId: TradeId, imageUrl: text) ->
    (opt TradePublic);
+  setAdmin: (newAdmin: principal) -> (variant {
+                                        err: text;
+                                        ok;
+                                      });
   updateTrade: (tradeId: TradeId, input: TradeInput) -> (opt TradePublic);
   upgradeToPaid: () -> (UserPublic);
 }

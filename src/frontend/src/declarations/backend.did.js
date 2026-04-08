@@ -98,6 +98,30 @@ export const PerformanceMetrics = IDL.Record({
   'winRate' : IDL.Float64,
   'maxDrawdown' : IDL.Float64,
 });
+export const CouponPerkType = IDL.Variant({
+  'custom' : IDL.Text,
+  'freeMonths' : IDL.Nat,
+  'upgradeToPhaid' : IDL.Null,
+  'featureUnlock' : IDL.Vec(IDL.Text),
+});
+export const CreateCouponInput = IDL.Record({
+  'expiresAt' : IDL.Opt(IDL.Int),
+  'code' : IDL.Text,
+  'description' : IDL.Text,
+  'maxUses' : IDL.Opt(IDL.Nat),
+  'perkType' : CouponPerkType,
+});
+export const CouponCode = IDL.Record({
+  'id' : IDL.Nat,
+  'expiresAt' : IDL.Opt(IDL.Int),
+  'code' : IDL.Text,
+  'createdAt' : Timestamp,
+  'usedCount' : IDL.Nat,
+  'description' : IDL.Text,
+  'isActive' : IDL.Bool,
+  'maxUses' : IDL.Opt(IDL.Nat),
+  'perkType' : CouponPerkType,
+});
 export const TradeInput = IDL.Record({
   'exitDate' : Timestamp,
   'direction' : Direction,
@@ -135,12 +159,19 @@ export const TradePublic = IDL.Record({
   'entryPrice' : IDL.Float64,
   'exitPrice' : IDL.Float64,
 });
+export const CouponStats = IDL.Record({
+  'coupon' : CouponCode,
+  'totalRedemptions' : IDL.Nat,
+});
 export const Tier = IDL.Variant({ 'FREE' : IDL.Null, 'PAID' : IDL.Null });
 export const UserPublic = IDL.Record({
   'id' : UserId,
+  'paidUntil' : IDL.Opt(IDL.Int),
   'createdAt' : Timestamp,
   'tier' : Tier,
   'stripeCustomerId' : IDL.Opt(IDL.Text),
+  'isAdmin' : IDL.Bool,
+  'unlockedFeatures' : IDL.Vec(IDL.Text),
 });
 export const TierLimitStatus = IDL.Record({
   'dailyCount' : IDL.Nat,
@@ -159,16 +190,31 @@ export const TradeFilter = IDL.Record({
   'mistakeTag' : IDL.Opt(IDL.Text),
   'dateFrom' : IDL.Opt(Timestamp),
 });
+export const CouponRedemptionResult = IDL.Record({
+  'perkApplied' : IDL.Text,
+  'coupon' : CouponCode,
+});
 
 export const idlService = IDL.Service({
   'bulkImportTrades' : IDL.Func([IDL.Vec(CsvTradeRow)], [ImportJobPublic], []),
   'computeMetrics' : IDL.Func([], [PerformanceMetrics], []),
+  'createCoupon' : IDL.Func([CreateCouponInput], [CouponCode], []),
   'createTrade' : IDL.Func(
       [TradeInput],
       [IDL.Variant({ 'ok' : TradePublic, 'limitReached' : IDL.Text })],
       [],
     ),
+  'deactivateCoupon' : IDL.Func(
+      [IDL.Nat],
+      [IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text })],
+      [],
+    ),
   'deleteTrade' : IDL.Func([TradeId], [IDL.Bool], []),
+  'getCouponStats' : IDL.Func(
+      [IDL.Nat],
+      [IDL.Variant({ 'ok' : CouponStats, 'err' : IDL.Text })],
+      [],
+    ),
   'getImportJob' : IDL.Func(
       [ImportJobId],
       [IDL.Opt(ImportJobPublic)],
@@ -180,9 +226,21 @@ export const idlService = IDL.Service({
   'getTradeLimitStatus' : IDL.Func([], [TierLimitStatus], ['query']),
   'getTrades' : IDL.Func([TradeFilter], [IDL.Vec(TradePublic)], ['query']),
   'getUserTier' : IDL.Func([], [Tier], ['query']),
+  'isAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'listCoupons' : IDL.Func([], [IDL.Vec(CouponCode)], []),
+  'redeemCoupon' : IDL.Func(
+      [IDL.Text],
+      [IDL.Variant({ 'ok' : CouponRedemptionResult, 'err' : IDL.Text })],
+      [],
+    ),
   'saveChartAnnotation' : IDL.Func(
       [TradeId, IDL.Text],
       [IDL.Opt(TradePublic)],
+      [],
+    ),
+  'setAdmin' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text })],
       [],
     ),
   'updateTrade' : IDL.Func([TradeId, TradeInput], [IDL.Opt(TradePublic)], []),
@@ -282,6 +340,30 @@ export const idlFactory = ({ IDL }) => {
     'winRate' : IDL.Float64,
     'maxDrawdown' : IDL.Float64,
   });
+  const CouponPerkType = IDL.Variant({
+    'custom' : IDL.Text,
+    'freeMonths' : IDL.Nat,
+    'upgradeToPhaid' : IDL.Null,
+    'featureUnlock' : IDL.Vec(IDL.Text),
+  });
+  const CreateCouponInput = IDL.Record({
+    'expiresAt' : IDL.Opt(IDL.Int),
+    'code' : IDL.Text,
+    'description' : IDL.Text,
+    'maxUses' : IDL.Opt(IDL.Nat),
+    'perkType' : CouponPerkType,
+  });
+  const CouponCode = IDL.Record({
+    'id' : IDL.Nat,
+    'expiresAt' : IDL.Opt(IDL.Int),
+    'code' : IDL.Text,
+    'createdAt' : Timestamp,
+    'usedCount' : IDL.Nat,
+    'description' : IDL.Text,
+    'isActive' : IDL.Bool,
+    'maxUses' : IDL.Opt(IDL.Nat),
+    'perkType' : CouponPerkType,
+  });
   const TradeInput = IDL.Record({
     'exitDate' : Timestamp,
     'direction' : Direction,
@@ -319,12 +401,19 @@ export const idlFactory = ({ IDL }) => {
     'entryPrice' : IDL.Float64,
     'exitPrice' : IDL.Float64,
   });
+  const CouponStats = IDL.Record({
+    'coupon' : CouponCode,
+    'totalRedemptions' : IDL.Nat,
+  });
   const Tier = IDL.Variant({ 'FREE' : IDL.Null, 'PAID' : IDL.Null });
   const UserPublic = IDL.Record({
     'id' : UserId,
+    'paidUntil' : IDL.Opt(IDL.Int),
     'createdAt' : Timestamp,
     'tier' : Tier,
     'stripeCustomerId' : IDL.Opt(IDL.Text),
+    'isAdmin' : IDL.Bool,
+    'unlockedFeatures' : IDL.Vec(IDL.Text),
   });
   const TierLimitStatus = IDL.Record({
     'dailyCount' : IDL.Nat,
@@ -343,6 +432,10 @@ export const idlFactory = ({ IDL }) => {
     'mistakeTag' : IDL.Opt(IDL.Text),
     'dateFrom' : IDL.Opt(Timestamp),
   });
+  const CouponRedemptionResult = IDL.Record({
+    'perkApplied' : IDL.Text,
+    'coupon' : CouponCode,
+  });
   
   return IDL.Service({
     'bulkImportTrades' : IDL.Func(
@@ -351,12 +444,23 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'computeMetrics' : IDL.Func([], [PerformanceMetrics], []),
+    'createCoupon' : IDL.Func([CreateCouponInput], [CouponCode], []),
     'createTrade' : IDL.Func(
         [TradeInput],
         [IDL.Variant({ 'ok' : TradePublic, 'limitReached' : IDL.Text })],
         [],
       ),
+    'deactivateCoupon' : IDL.Func(
+        [IDL.Nat],
+        [IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text })],
+        [],
+      ),
     'deleteTrade' : IDL.Func([TradeId], [IDL.Bool], []),
+    'getCouponStats' : IDL.Func(
+        [IDL.Nat],
+        [IDL.Variant({ 'ok' : CouponStats, 'err' : IDL.Text })],
+        [],
+      ),
     'getImportJob' : IDL.Func(
         [ImportJobId],
         [IDL.Opt(ImportJobPublic)],
@@ -368,9 +472,21 @@ export const idlFactory = ({ IDL }) => {
     'getTradeLimitStatus' : IDL.Func([], [TierLimitStatus], ['query']),
     'getTrades' : IDL.Func([TradeFilter], [IDL.Vec(TradePublic)], ['query']),
     'getUserTier' : IDL.Func([], [Tier], ['query']),
+    'isAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'listCoupons' : IDL.Func([], [IDL.Vec(CouponCode)], []),
+    'redeemCoupon' : IDL.Func(
+        [IDL.Text],
+        [IDL.Variant({ 'ok' : CouponRedemptionResult, 'err' : IDL.Text })],
+        [],
+      ),
     'saveChartAnnotation' : IDL.Func(
         [TradeId, IDL.Text],
         [IDL.Opt(TradePublic)],
+        [],
+      ),
+    'setAdmin' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text })],
         [],
       ),
     'updateTrade' : IDL.Func([TradeId, TradeInput], [IDL.Opt(TradePublic)], []),
