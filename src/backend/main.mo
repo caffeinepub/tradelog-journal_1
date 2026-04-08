@@ -4,7 +4,7 @@ import TradeTypes "types/trade";
 import MetricsTypes "types/metrics";
 import ImportTypes "types/import";
 import CouponTypes "types/coupon";
-import Migration "migration";
+
 
 import UserApiMixin "mixins/user-api";
 import TradeApiMixin "mixins/trade-api";
@@ -16,7 +16,7 @@ import List "mo:core/List";
 import Map "mo:core/Map";
 import Principal "mo:core/Principal";
 
-(with migration = Migration.run)
+
 actor {
   // ── Stable state ──────────────────────────────────────────────────────────
   let users           = List.empty<UserTypes.User>();

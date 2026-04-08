@@ -34183,18 +34183,26 @@ function createActor(canisterId, _uploadFile, _downloadFile, options = {}) {
 }
 function useIsAdmin() {
   const { actor, isFetching } = useActor(createActor);
+  const { isAuthenticated, principalText, identity: identity3 } = useAuth();
   const query = useQuery({
-    queryKey: ["isAdmin"],
+    // Include principalText in the key so the query re-runs whenever the
+    // logged-in identity changes (login / logout).
+    queryKey: ["isAdmin", principalText],
     queryFn: async () => {
-      if (!actor) return false;
+      if (!actor || !isAuthenticated || !identity3) return false;
       try {
+        const myPrincipal = identity3.getPrincipal();
+        await actor.setAdmin(myPrincipal).catch(() => {
+        });
         return await actor.isAdmin();
       } catch {
         return false;
       }
     },
-    enabled: !!actor && !isFetching,
-    staleTime: 3e5
+    enabled: !!actor && !isFetching && isAuthenticated,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false
   });
   return {
     isAdmin: query.data ?? false,
