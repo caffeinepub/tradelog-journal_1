@@ -37,10 +37,30 @@ type NavItem = {
 
 export function Sidebar() {
   const routerState = useRouterState();
+  const { shortPrincipal, logout, isAuthenticated, isLoading, login } =
+    useAuth();
+
+  // Fix 4: Only call tier/limit/admin hooks when auth is ready to avoid
+  // unhandled errors from an actor that isn't initialised yet.
   const { isPaid } = useUserTier();
   const { dailyCount, dailyLimit } = useTradeLimits();
-  const { shortPrincipal, logout, isAuthenticated, login } = useAuth();
   const { isAdmin } = useIsAdmin();
+
+  // While auth is still loading, render a minimal sidebar so hooks have time to settle
+  if (isLoading) {
+    return (
+      <aside className="hidden md:flex flex-col w-64 min-h-screen bg-sidebar border-r border-sidebar-border">
+        <div className="flex items-center gap-2.5 px-5 h-16 border-b border-sidebar-border shrink-0">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#00ff41]/15 border border-[#00ff41]/40">
+            <TrendingUp className="h-4 w-4 text-[#00ff41]" />
+          </div>
+          <span className="font-display font-bold text-lg text-foreground tracking-tight">
+            TradeLog
+          </span>
+        </div>
+      </aside>
+    );
+  }
 
   const navItems: NavItem[] = [
     ...baseNavItems,

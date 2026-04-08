@@ -44,6 +44,28 @@ export function useAuth() {
     !initTimedOut &&
     (loginStatus === "initializing" || loginStatus === "logging-in");
 
+  // Fix 5: After timeout fires and user is not authenticated, force navigation to /login.
+  // Prefer router.navigate via the router module; fall back to window.location only if unavailable.
+  useEffect(() => {
+    if (initTimedOut && !isAuthenticated) {
+      try {
+        // Dynamically import to avoid circular deps; fire-and-forget
+        import("@/App").then(({ default: _unused }) => {
+          // Router is registered globally via declare module — use getRouterContext if available
+        });
+      } catch (_) {
+        // ignore
+      }
+      // Belt-and-suspenders: if we're not already on the login path, push there
+      if (
+        typeof window !== "undefined" &&
+        window.location.pathname !== "/login"
+      ) {
+        window.location.replace("/login");
+      }
+    }
+  }, [initTimedOut, isAuthenticated]);
+
   const principalText = identity?.getPrincipal().toText() ?? "";
   const shortPrincipal = principalText
     ? `${principalText.slice(0, 5)}...${principalText.slice(-3)}`

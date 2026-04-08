@@ -1,10 +1,27 @@
 import type { RouterContext } from "@/App";
 import { Layout } from "@/components/layout/Layout";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
-import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
+import {
+  Outlet,
+  createRootRouteWithContext,
+  useRouter,
+  useRouterState,
+} from "@tanstack/react-router";
+import { useEffect } from "react";
 
 function RootComponent() {
   const context = Route.useRouteContext();
+  const router = useRouter();
+  const location = useRouterState({ select: (s) => s.location });
+
+  // Fix 1 + Fix 3: After loading resolves, if not authenticated and not already on /login → navigate there.
+  useEffect(() => {
+    if (!context.isLoading && !context.isAuthenticated) {
+      if (location.pathname !== "/login") {
+        void router.navigate({ to: "/login", replace: true });
+      }
+    }
+  }, [context.isLoading, context.isAuthenticated, location.pathname, router]);
 
   // While auth is initializing, show a full-screen spinner.
   // This prevents unauthenticated content from flashing before the redirect fires.
@@ -31,6 +48,12 @@ function RootComponent() {
         </p>
       </div>
     );
+  }
+
+  // Fix 3 (belt-and-suspenders): If not authenticated and not on /login, render nothing
+  // while the useEffect navigation fires (avoids a flash of protected content).
+  if (!context.isAuthenticated && location.pathname !== "/login") {
+    return null;
   }
 
   return (

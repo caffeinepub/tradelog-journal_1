@@ -27447,6 +27447,70 @@ function checkDCE() {
 }
 var clientExports = client.exports;
 const ReactDOM = /* @__PURE__ */ getDefaultExportFromCjs(clientExports);
+const scriptRel = "modulepreload";
+const assetsURL = function(dep) {
+  return "/" + dep;
+};
+const seen = {};
+const __vitePreload = function preload2(baseModule, deps, importerUrl) {
+  let promise = Promise.resolve();
+  if (deps && deps.length > 0) {
+    document.getElementsByTagName("link");
+    const cspNonceMeta = document.querySelector(
+      "meta[property=csp-nonce]"
+    );
+    const cspNonce = (cspNonceMeta == null ? void 0 : cspNonceMeta.nonce) || (cspNonceMeta == null ? void 0 : cspNonceMeta.getAttribute("nonce"));
+    promise = Promise.allSettled(
+      deps.map((dep) => {
+        dep = assetsURL(dep);
+        if (dep in seen) return;
+        seen[dep] = true;
+        const isCss = dep.endsWith(".css");
+        const cssSelector = isCss ? '[rel="stylesheet"]' : "";
+        if (document.querySelector(`link[href="${dep}"]${cssSelector}`)) {
+          return;
+        }
+        const link = document.createElement("link");
+        link.rel = isCss ? "stylesheet" : scriptRel;
+        if (!isCss) {
+          link.as = "script";
+        }
+        link.crossOrigin = "";
+        link.href = dep;
+        if (cspNonce) {
+          link.setAttribute("nonce", cspNonce);
+        }
+        document.head.appendChild(link);
+        if (isCss) {
+          return new Promise((res, rej) => {
+            link.addEventListener("load", res);
+            link.addEventListener(
+              "error",
+              () => rej(new Error(`Unable to preload CSS for ${dep}`))
+            );
+          });
+        }
+      })
+    );
+  }
+  function handlePreloadError(err) {
+    const e3 = new Event("vite:preloadError", {
+      cancelable: true
+    });
+    e3.payload = err;
+    window.dispatchEvent(e3);
+    if (!e3.defaultPrevented) {
+      throw err;
+    }
+  }
+  return promise.then((res) => {
+    for (const item of res || []) {
+      if (item.status !== "rejected") continue;
+      handlePreloadError(item.reason);
+    }
+    return baseModule().catch(handlePreloadError);
+  });
+};
 var jt = (n2) => {
   switch (n2) {
     case "success":
@@ -27749,6 +27813,21 @@ function useAuth() {
   }, [loginStatus]);
   const isAuthenticated = loginStatus === "success" && identity3 !== void 0;
   const isLoading = !initTimedOut && (loginStatus === "initializing" || loginStatus === "logging-in");
+  reactExports.useEffect(() => {
+    if (initTimedOut && !isAuthenticated) {
+      try {
+        __vitePreload(async () => {
+          const { default: _unused } = await Promise.resolve().then(() => App$1);
+          return { default: _unused };
+        }, true ? void 0 : void 0).then(({ default: _unused }) => {
+        });
+      } catch (_2) {
+      }
+      if (typeof window !== "undefined" && window.location.pathname !== "/login") {
+        window.location.replace("/login");
+      }
+    }
+  }, [initTimedOut, isAuthenticated]);
   const principalText = (identity3 == null ? void 0 : identity3.getPrincipal().toText()) ?? "";
   const shortPrincipal = principalText ? `${principalText.slice(0, 5)}...${principalText.slice(-3)}` : "";
   reactExports.useEffect(() => {
@@ -29871,12 +29950,12 @@ const executeBeforeLoad = (inner, matchId, index2, route) => {
   }
   match._nonReactive.beforeLoadPromise = createControlledPromise();
   const { search, params, cause } = match;
-  const preload2 = resolvePreload(inner, matchId);
+  const preload3 = resolvePreload(inner, matchId);
   const beforeLoadFnContext = {
     search,
     abortController,
     params,
-    preload: preload2,
+    preload: preload3,
     context,
     location: inner.location,
     navigate: (opts) => inner.router.navigate({
@@ -29884,7 +29963,7 @@ const executeBeforeLoad = (inner, matchId, index2, route) => {
       _fromLocation: inner.location
     }),
     buildLocation: inner.router.buildLocation,
-    cause: preload2 ? "preload" : cause,
+    cause: preload3 ? "preload" : cause,
     matches: inner.matches
   };
   const updateContext = (beforeLoadContext2) => {
@@ -29983,11 +30062,11 @@ const executeHead = (inner, matchId, route) => {
 const getLoaderContext = (inner, matchId, index2, route) => {
   const parentMatchPromise = inner.matchPromises[index2 - 1];
   const { params, loaderDeps, abortController, context, cause } = inner.router.getMatch(matchId);
-  const preload2 = resolvePreload(inner, matchId);
+  const preload3 = resolvePreload(inner, matchId);
   return {
     params,
     deps: loaderDeps,
-    preload: !!preload2,
+    preload: !!preload3,
     parentMatchPromise,
     abortController,
     context,
@@ -29996,7 +30075,7 @@ const getLoaderContext = (inner, matchId, index2, route) => {
       ...opts,
       _fromLocation: inner.location
     }),
-    cause: preload2 ? "preload" : cause,
+    cause: preload3 ? "preload" : cause,
     route
   };
 };
@@ -30120,11 +30199,11 @@ const loadRouteMatch = async (inner, index2) => {
       }
     } else {
       const age = Date.now() - prevMatch.updatedAt;
-      const preload2 = resolvePreload(inner, matchId);
-      const staleAge = preload2 ? route.options.preloadStaleTime ?? inner.router.options.defaultPreloadStaleTime ?? 3e4 : route.options.staleTime ?? inner.router.options.defaultStaleTime ?? 0;
+      const preload3 = resolvePreload(inner, matchId);
+      const staleAge = preload3 ? route.options.preloadStaleTime ?? inner.router.options.defaultPreloadStaleTime ?? 3e4 : route.options.staleTime ?? inner.router.options.defaultStaleTime ?? 0;
       const shouldReloadOption = route.options.shouldReload;
       const shouldReload = typeof shouldReloadOption === "function" ? shouldReloadOption(getLoaderContext(inner, matchId, index2, route)) : shouldReloadOption;
-      const nextPreload = !!preload2 && !inner.router.state.matches.some((d2) => d2.id === matchId);
+      const nextPreload = !!preload3 && !inner.router.state.matches.some((d2) => d2.id === matchId);
       const match2 = inner.router.getMatch(matchId);
       match2._nonReactive.loaderPromise = createControlledPromise();
       if (nextPreload !== match2.preload) {
@@ -30135,7 +30214,7 @@ const loadRouteMatch = async (inner, index2) => {
       }
       const { status, invalid } = match2;
       loaderShouldRunAsync = status === "success" && (invalid || (shouldReload ?? age > staleAge));
-      if (preload2 && route.options.preload === false) ;
+      if (preload3 && route.options.preload === false) ;
       else if (loaderShouldRunAsync && !inner.sync) {
         loaderIsRunningAsync = true;
         (async () => {
@@ -30236,8 +30315,8 @@ async function loadRouteChunk(route) {
       var _a3;
       const preloads = [];
       for (const type of componentTypes) {
-        const preload2 = (_a3 = route.options[type]) == null ? void 0 : _a3.preload;
-        if (preload2) preloads.push(preload2());
+        const preload3 = (_a3 = route.options[type]) == null ? void 0 : _a3.preload;
+        if (preload3) preloads.push(preload3());
       }
       if (preloads.length)
         return Promise.all(preloads).then(() => {
@@ -32116,7 +32195,7 @@ function useLinkProps(options, forwardedRef) {
     [router2, _options2]
   );
   const isExternal = type === "external";
-  const preload2 = options.reloadDocument || isExternal ? false : userPreload ?? router2.options.defaultPreload;
+  const preload3 = options.reloadDocument || isExternal ? false : userPreload ?? router2.options.defaultPreload;
   const preloadDelay = userPreloadDelay ?? router2.options.defaultPreloadDelay ?? 0;
   const isActive = useRouterState({
     select: (s2) => {
@@ -32177,17 +32256,17 @@ function useLinkProps(options, forwardedRef) {
     innerRef,
     preloadViewportIoCallback,
     intersectionObserverOptions,
-    { disabled: !!disabled || !(preload2 === "viewport") }
+    { disabled: !!disabled || !(preload3 === "viewport") }
   );
   reactExports.useEffect(() => {
     if (hasRenderFetched.current) {
       return;
     }
-    if (!disabled && preload2 === "render") {
+    if (!disabled && preload3 === "render") {
       doPreload();
       hasRenderFetched.current = true;
     }
-  }, [disabled, doPreload, preload2]);
+  }, [disabled, doPreload, preload3]);
   const handleClick = (e3) => {
     const elementTarget = e3.currentTarget.target;
     const effectiveTarget = target !== void 0 ? target : elementTarget;
@@ -32231,13 +32310,13 @@ function useLinkProps(options, forwardedRef) {
   }
   const handleFocus = (_2) => {
     if (disabled) return;
-    if (preload2) {
+    if (preload3) {
       doPreload();
     }
   };
   const handleTouchStart = handleFocus;
   const handleEnter = (e3) => {
-    if (disabled || !preload2) return;
+    if (disabled || !preload3) return;
     if (!preloadDelay) {
       doPreload();
     } else {
@@ -32253,7 +32332,7 @@ function useLinkProps(options, forwardedRef) {
     }
   };
   const handleLeave = (e3) => {
-    if (disabled || !preload2 || !preloadDelay) return;
+    if (disabled || !preload3 || !preloadDelay) return;
     const eventTarget = e3.target;
     const id2 = timeoutMap.get(eventTarget);
     if (id2) {
@@ -38148,10 +38227,16 @@ const baseNavItems = [
 ];
 function Sidebar() {
   const routerState = useRouterState();
+  const { shortPrincipal, logout, isAuthenticated, isLoading, login } = useAuth();
   const { isPaid } = useUserTier();
   const { dailyCount, dailyLimit } = useTradeLimits();
-  const { shortPrincipal, logout, isAuthenticated, login } = useAuth();
   const { isAdmin } = useIsAdmin();
+  if (isLoading) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("aside", { className: "hidden md:flex flex-col w-64 min-h-screen bg-sidebar border-r border-sidebar-border", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5 px-5 h-16 border-b border-sidebar-border shrink-0", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-center w-8 h-8 rounded-lg bg-[#00ff41]/15 border border-[#00ff41]/40", children: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "h-4 w-4 text-[#00ff41]" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-display font-bold text-lg text-foreground tracking-tight", children: "TradeLog" })
+    ] }) });
+  }
   const navItems = [
     ...baseNavItems,
     ...!isPaid ? [{ to: "/redeem", label: "Redeem Code", icon: Tag }] : [],
@@ -38372,6 +38457,15 @@ function LoadingSpinner({
 }
 function RootComponent() {
   const context = Route$a.useRouteContext();
+  const router2 = useRouter();
+  const location2 = useRouterState({ select: (s2) => s2.location });
+  reactExports.useEffect(() => {
+    if (!context.isLoading && !context.isAuthenticated) {
+      if (location2.pathname !== "/login") {
+        void router2.navigate({ to: "/login", replace: true });
+      }
+    }
+  }, [context.isLoading, context.isAuthenticated, location2.pathname, router2]);
   if (context.isLoading) {
     return /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "div",
@@ -38397,6 +38491,9 @@ function RootComponent() {
         ]
       }
     );
+  }
+  if (!context.isAuthenticated && location2.pathname !== "/login") {
+    return null;
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Layout, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {}) });
 }
@@ -38566,7 +38663,7 @@ function Textarea({ className, ...props }) {
 function requireAuth({ context }) {
   if (context.isLoading) return;
   if (!context.isAuthenticated) {
-    throw redirect({ to: "/login" });
+    throw redirect({ to: "/login", replace: true });
   }
 }
 const LayoutGroupContext = reactExports.createContext({});
@@ -50362,7 +50459,7 @@ function equalArrays$2(array2, other, bitmask, customizer, equalFunc, stack) {
   if (arrStacked && othStacked) {
     return arrStacked == other && othStacked == array2;
   }
-  var index2 = -1, result = true, seen = bitmask & COMPARE_UNORDERED_FLAG$3 ? new SetCache$1() : void 0;
+  var index2 = -1, result = true, seen2 = bitmask & COMPARE_UNORDERED_FLAG$3 ? new SetCache$1() : void 0;
   stack.set(array2, other);
   stack.set(other, array2);
   while (++index2 < arrLength) {
@@ -50377,10 +50474,10 @@ function equalArrays$2(array2, other, bitmask, customizer, equalFunc, stack) {
       result = false;
       break;
     }
-    if (seen) {
+    if (seen2) {
       if (!arraySome$1(other, function(othValue2, othIndex) {
-        if (!cacheHas$1(seen, othIndex) && (arrValue === othValue2 || equalFunc(arrValue, othValue2, bitmask, customizer, stack))) {
-          return seen.push(othIndex);
+        if (!cacheHas$1(seen2, othIndex) && (arrValue === othValue2 || equalFunc(arrValue, othValue2, bitmask, customizer, stack))) {
+          return seen2.push(othIndex);
         }
       })) {
         result = false;
@@ -51002,7 +51099,7 @@ var _createSet = createSet$1;
 var SetCache = _SetCache, arrayIncludes = _arrayIncludes, arrayIncludesWith = _arrayIncludesWith, cacheHas = _cacheHas, createSet = _createSet, setToArray = _setToArray;
 var LARGE_ARRAY_SIZE = 200;
 function baseUniq$1(array2, iteratee, comparator) {
-  var index2 = -1, includes = arrayIncludes, length = array2.length, isCommon = true, result = [], seen = result;
+  var index2 = -1, includes = arrayIncludes, length = array2.length, isCommon = true, result = [], seen2 = result;
   if (comparator) {
     isCommon = false;
     includes = arrayIncludesWith;
@@ -51013,28 +51110,28 @@ function baseUniq$1(array2, iteratee, comparator) {
     }
     isCommon = false;
     includes = cacheHas;
-    seen = new SetCache();
+    seen2 = new SetCache();
   } else {
-    seen = iteratee ? [] : result;
+    seen2 = iteratee ? [] : result;
   }
   outer:
     while (++index2 < length) {
       var value = array2[index2], computed = iteratee ? iteratee(value) : value;
       value = comparator || value !== 0 ? value : 0;
       if (isCommon && computed === computed) {
-        var seenIndex = seen.length;
+        var seenIndex = seen2.length;
         while (seenIndex--) {
-          if (seen[seenIndex] === computed) {
+          if (seen2[seenIndex] === computed) {
             continue outer;
           }
         }
         if (iteratee) {
-          seen.push(computed);
+          seen2.push(computed);
         }
         result.push(value);
-      } else if (!includes(seen, computed, comparator)) {
-        if (seen !== result) {
-          seen.push(computed);
+      } else if (!includes(seen2, computed, comparator)) {
+        if (seen2 !== result) {
+          seen2.push(computed);
         }
         result.push(value);
       }
@@ -81532,6 +81629,10 @@ function App() {
   const { isAuthenticated, isLoading } = useAuth();
   return /* @__PURE__ */ jsxRuntimeExports.jsx(RouterProvider, { router, context: { isAuthenticated, isLoading } });
 }
+const App$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: App
+}, Symbol.toStringTag, { value: "Module" }));
 BigInt.prototype.toJSON = function() {
   return this.toString();
 };
