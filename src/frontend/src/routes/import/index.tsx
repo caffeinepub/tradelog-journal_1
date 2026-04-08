@@ -20,6 +20,7 @@ import {
   AlertTriangle,
   ArrowRight,
   ChevronLeft,
+  Download,
   FileText,
   Zap,
 } from "lucide-react";
@@ -428,6 +429,20 @@ function ImportPage() {
             confirm
           </p>
         </div>
+        <a
+          href="/sample-trades.csv"
+          download="sample-trades.csv"
+          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg transition-smooth hover:bg-[#00ff41]/10"
+          style={{
+            color: "#00ff41",
+            border: "1px solid rgba(0,255,65,0.3)",
+            background: "rgba(0,255,65,0.05)",
+          }}
+          data-ocid="import-download-sample-csv"
+        >
+          <Download className="h-3.5 w-3.5" />
+          Sample CSV
+        </a>
       </div>
 
       {/* Step indicator */}

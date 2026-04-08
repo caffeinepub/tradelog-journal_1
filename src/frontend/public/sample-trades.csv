@@ -1,0 +1,15 @@
+pair,direction,entryPrice,exitPrice,entryDate,exitDate,pnl,riskReward,strategyTag,mistakeTag,notes,sessionTime,marketCondition
+EURUSD,long,1.08520,1.08940,2024-01-08 09:15,2024-01-08 14:30,420,2.1,Breakout,,Clean breakout above resistance with strong London push,london,trending
+BTCUSD,long,42500,43800,2024-01-09 14:00,2024-01-09 18:45,1300,2.6,Trend Follow,,BTC breaking key resistance after consolidation. Held through dip.,ny,trending
+GBPUSD,short,1.27100,1.26650,2024-01-10 08:30,2024-01-10 11:15,450,1.8,London Open,,GBP weakness on UK data miss. Took partial at first target.,london,volatile
+AAPL,long,185.50,188.20,2024-01-11 09:35,2024-01-11 15:55,270,1.5,Earnings Play,Held too long,Entered on gap up open. Should have taken profit sooner at 187.,ny,trending
+EURUSD,short,1.08870,1.08460,2024-01-12 10:00,2024-01-12 16:20,-180,0.9,Reversal,Chased entry,Late entry after the move already happened. Discipline issue.,london,ranging
+GBPJPY,long,187.450,188.900,2024-01-15 08:00,2024-01-15 10:30,1450,2.9,Asian Breakout,,Perfect Asian session breakout with strong momentum carry into London,asian,trending
+ETHUSD,short,2580,2490,2024-01-16 13:30,2024-01-16 17:00,900,3.0,Supply Zone,,ETH rejected hard at major supply zone on 4H. Clean R:R.,ny,ranging
+USDJPY,long,144.800,145.950,2024-01-17 09:15,2024-01-17 14:45,1150,2.3,Pullback BUY,,Dollar strength after CPI data. Bought the pullback on 15m chart.,london,trending
+TSLA,short,220.50,214.30,2024-01-18 10:00,2024-01-18 14:20,620,1.9,Breakdown,FOMO exit,Stock broke below key support. Exited early on a wick, left gains.,ny,volatile
+GBPUSD,long,1.26400,1.27100,2024-01-19 14:30,2024-01-19 16:00,700,2.8,NY Session,,Strong USD weakness during NY session. Quick scalp at demand zone.,ny,trending
+EURUSD,long,1.08200,1.08080,2024-01-22 09:00,2024-01-22 11:30,-120,0.6,Breakout,No confirmation,Entered without proper confirmation. Moved against immediately.,london,choppy
+BTCUSD,short,44200,42900,2024-01-23 20:00,2024-01-24 04:00,1300,2.6,Range Trade,,Clean range rejection at top. Held overnight as planned.,asian,ranging
+NVDA,long,580.00,597.50,2024-01-24 09:40,2024-01-24 13:15,1750,3.5,Earnings Run,,Pre-earnings momentum trade. Tight stop below morning low.,ny,trending
+AUDUSD,short,0.65800,0.65420,2024-01-25 22:00,2024-01-26 02:30,380,1.9,Asian Fade,,AUD weak after RBA comment. Faded the spike in Asian session.,asian,volatile
