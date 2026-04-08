@@ -1,4 +1,5 @@
 import { TradeForm } from "@/components/trade/TradeForm";
+import { requireAuth } from "@/hooks/require-auth";
 import { createRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { Route as RootRoute } from "../__root";
@@ -6,6 +7,7 @@ import { Route as RootRoute } from "../__root";
 export const Route = createRoute({
   getParentRoute: () => RootRoute,
   path: "/trades/new",
+  beforeLoad: requireAuth,
   component: NewTradePage,
 });
 

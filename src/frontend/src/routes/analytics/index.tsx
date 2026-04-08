@@ -8,6 +8,7 @@ import { BlurredTeaser } from "@/components/ui/BlurredTeaser";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { NeonButton } from "@/components/ui/NeonButton";
 import { UpgradeModal } from "@/components/ui/UpgradeModal";
+import { requireAuth } from "@/hooks/require-auth";
 import { useUserTier } from "@/hooks/use-user-tier";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useQuery } from "@tanstack/react-query";
@@ -29,6 +30,7 @@ import { Route as RootRoute } from "../__root";
 export const Route = createRoute({
   getParentRoute: () => RootRoute,
   path: "/analytics",
+  beforeLoad: requireAuth,
   component: AnalyticsPage,
 });
 

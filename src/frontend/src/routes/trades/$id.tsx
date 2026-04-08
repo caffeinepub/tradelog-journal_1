@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { requireAuth } from "@/hooks/require-auth";
 import { createRoute, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -26,6 +27,7 @@ import { Route as RootRoute } from "../__root";
 export const Route = createRoute({
   getParentRoute: () => RootRoute,
   path: "/trades/$id",
+  beforeLoad: requireAuth,
   component: TradeDetailPage,
 });
 

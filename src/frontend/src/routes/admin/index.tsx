@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { requireAuth } from "@/hooks/require-auth";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import type { CouponCode, CouponPerkType, CreateCouponInput } from "@/types";
 import { useActor } from "@caffeineai/core-infrastructure";
@@ -28,6 +29,7 @@ import { Route as RootRoute } from "../__root";
 export const Route = createRoute({
   getParentRoute: () => RootRoute,
   path: "/admin",
+  beforeLoad: requireAuth,
   component: AdminPage,
 });
 

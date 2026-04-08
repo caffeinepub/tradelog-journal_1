@@ -13,6 +13,7 @@ import { PreviewTable } from "@/components/import/PreviewTable";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { NeonButton } from "@/components/ui/NeonButton";
 import { UpgradeModal } from "@/components/ui/UpgradeModal";
+import { requireAuth } from "@/hooks/require-auth";
 import { useTradeLimits } from "@/hooks/use-trade-limits";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { createRoute } from "@tanstack/react-router";
@@ -31,6 +32,7 @@ import { Route as RootRoute } from "../__root";
 export const Route = createRoute({
   getParentRoute: () => RootRoute,
   path: "/import",
+  beforeLoad: requireAuth,
   component: ImportPage,
 });
 

@@ -25,7 +25,19 @@ const queryClient = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
-    <InternetIdentityProvider>
+    <InternetIdentityProvider
+      createOptions={{
+        idleOptions: {
+          disableDefaultIdleCallback: true,
+          disableIdle: true,
+        },
+        loginOptions: {
+          // Open II in a properly-sized popup window so the browser allows it
+          windowOpenerFeatures:
+            "toolbar=0,location=0,menubar=0,width=525,height=705,left=100,top=100",
+        },
+      }}
+    >
       <App />
     </InternetIdentityProvider>
   </QueryClientProvider>,

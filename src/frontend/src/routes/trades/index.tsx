@@ -23,6 +23,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { requireAuth } from "@/hooks/require-auth";
 import type {
   MarketCondition,
   SessionTime,
@@ -52,6 +53,7 @@ import { Route as RootRoute } from "../__root";
 export const Route = createRoute({
   getParentRoute: () => RootRoute,
   path: "/trades",
+  beforeLoad: requireAuth,
   component: TradesPage,
 });
 
