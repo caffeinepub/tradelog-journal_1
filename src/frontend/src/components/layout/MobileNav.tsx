@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/use-auth";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { useUserTier } from "@/hooks/use-user-tier";
 import { cn } from "@/lib/utils";
@@ -7,6 +8,7 @@ import {
   ClipboardList,
   Crown,
   LayoutDashboard,
+  LogIn,
   Menu,
   PlusCircle,
   ShieldCheck,
@@ -40,6 +42,7 @@ export function MobileNav() {
   const routerState = useRouterState();
   const { isAdmin } = useIsAdmin();
   const { isPaid } = useUserTier();
+  const { isAuthenticated, login, logout, shortPrincipal } = useAuth();
 
   const navItems: NavItem[] = [
     ...coreNavItems,
@@ -75,15 +78,37 @@ export function MobileNav() {
             </span>
           )}
         </div>
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors"
-          aria-label={open ? "Close menu" : "Open menu"}
-          data-ocid="mobile-nav-toggle"
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+
+        <div className="flex items-center gap-2">
+          {/* Login button in top-right when not authenticated */}
+          {!isAuthenticated && (
+            <button
+              type="button"
+              onClick={() => login()}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-smooth"
+              style={{
+                background: "rgba(0,255,65,0.12)",
+                border: "1px solid rgba(0,255,65,0.5)",
+                color: "#00ff41",
+                boxShadow: "0 0 12px rgba(0,255,65,0.2)",
+              }}
+              data-ocid="mobile-nav-login-btn"
+              aria-label="Connect with Internet Identity"
+            >
+              <LogIn className="h-3.5 w-3.5" />
+              Login
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors"
+            aria-label={open ? "Close menu" : "Open menu"}
+            data-ocid="mobile-nav-toggle"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </header>
 
       {/* Drawer */}
@@ -107,7 +132,7 @@ export function MobileNav() {
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <div className="flex-1 px-3 py-4 space-y-0.5">
+            <div className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
               {navItems.map(({ to, label, icon: Icon }) => {
                 const isActive =
                   to === "/"
@@ -164,6 +189,48 @@ export function MobileNav() {
                   </Link>
                 );
               })}
+            </div>
+
+            {/* Drawer footer: login or user info */}
+            <div className="border-t border-sidebar-border px-3 py-4">
+              {isAuthenticated ? (
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-mono text-muted-foreground truncate flex-1 min-w-0 mr-3">
+                    {shortPrincipal || "Connected"}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      logout();
+                      setOpen(false);
+                    }}
+                    className="text-xs text-muted-foreground hover:text-foreground transition-colors shrink-0"
+                    data-ocid="mobile-nav-logout"
+                  >
+                    Log out
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    login();
+                    setOpen(false);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-bold text-sm transition-smooth"
+                  style={{
+                    background: "rgba(0,255,65,0.12)",
+                    border: "1px solid rgba(0,255,65,0.5)",
+                    color: "#00ff41",
+                    boxShadow: "0 0 16px rgba(0,255,65,0.2)",
+                  }}
+                  data-ocid="mobile-drawer-login-btn"
+                  aria-label="Connect with Internet Identity"
+                >
+                  <LogIn className="h-4 w-4" />
+                  Connect with Internet Identity
+                </button>
+              )}
             </div>
           </nav>
         </div>

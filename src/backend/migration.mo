@@ -9,12 +9,16 @@ import ImportTypes "types/import";
 import Principal "mo:core/Principal";
 
 module {
-  // ── Old types (copied from .old/src/backend/types/) ──────────────────────
+  // ── Old types — match the previously deployed stable state exactly ─────────
+  // The previous version already had paidUntil, unlockedFeatures, and all
+  // coupon/admin fields. OldUser must include every field actually stored.
   type OldUser = {
     id : CommonTypes.UserId;
     var tier : CommonTypes.Tier;
     createdAt : CommonTypes.Timestamp;
     var stripeCustomerId : ?Text;
+    var paidUntil : ?Int;
+    var unlockedFeatures : [Text];
   };
 
   type OldActor = {
@@ -25,9 +29,13 @@ module {
     dailyCounts     : Map.Map<Text, Nat>;
     nextTradeId     : [var Nat];
     nextImportJobId : [var Nat];
+    coupons         : List.List<CouponTypes.CouponCode>;
+    redemptions     : List.List<CouponTypes.CouponRedemption>;
+    nextCouponId    : [var Nat];
+    adminPrincipal  : [var Principal];
   };
 
-  // ── New types ─────────────────────────────────────────────────────────────
+  // ── New types — identical shape, all fields preserved ────────────────────
   type NewActor = {
     users           : List.List<UserTypes.User>;
     trades          : List.List<TradeTypes.Trade>;
@@ -43,7 +51,8 @@ module {
   };
 
   public func run(old : OldActor) : NewActor {
-    // Migrate each user — add paidUntil and unlockedFeatures with safe defaults
+    // OldUser and UserTypes.User have identical fields — pass users through
+    // without any transformation needed.
     let newUsers = old.users.map<OldUser, UserTypes.User>(
       func(u) {
         {
@@ -51,8 +60,8 @@ module {
           var tier = u.tier;
           createdAt = u.createdAt;
           var stripeCustomerId = u.stripeCustomerId;
-          var paidUntil = null;
-          var unlockedFeatures = [];
+          var paidUntil = u.paidUntil;
+          var unlockedFeatures = u.unlockedFeatures;
         };
       }
     );
@@ -65,10 +74,10 @@ module {
       dailyCounts     = old.dailyCounts;
       nextTradeId     = old.nextTradeId;
       nextImportJobId = old.nextImportJobId;
-      coupons         = List.empty<CouponTypes.CouponCode>();
-      redemptions     = List.empty<CouponTypes.CouponRedemption>();
-      nextCouponId    = [var 0 : Nat];
-      adminPrincipal  = [var Principal.anonymous()];
+      coupons         = old.coupons;
+      redemptions     = old.redemptions;
+      nextCouponId    = old.nextCouponId;
+      adminPrincipal  = old.adminPrincipal;
     };
   };
 };

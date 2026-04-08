@@ -64,8 +64,10 @@ type OldUser__655922588 =
   {
     createdAt : Timestamp__301639476;
     id : UserId__158757552;
+    var paidUntil : ?Int;
     var stripeCustomerId : ?Text;
-    var tier : Tier__337424587
+    var tier : Tier__337424587;
+    var unlockedFeatures : [Text]
   };
 type PairStats__151252442 =
   {pair : Text; totalPnl : Float; tradeCount : Nat; winRate : Float};
@@ -134,12 +136,16 @@ type User__933515552 =
     var unlockedFeatures : [Text]
   };
 actor ({
+  in adminPrincipal : [var Principal];
+  in coupons : List__415060402<CouponCode__795196252>;
   in dailyCounts : Map__605269027<Text, Nat>;
   in importJobs : List__415060402<ImportJob__16069439>;
   in metricsCache :
     Map__605269027<UserId__158757552, PerformanceMetrics__323855633>;
+  in nextCouponId : [var Nat];
   in nextImportJobId : [var Nat];
   in nextTradeId : [var Nat];
+  in redemptions : List__415060402<CouponRedemption__882785815>;
   in trades : List__415060402<Trade__612828401>;
   in users : List__415060402<OldUser__655922588>
 }, {

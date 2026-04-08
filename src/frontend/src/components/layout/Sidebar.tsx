@@ -11,6 +11,7 @@ import {
   ClipboardList,
   Crown,
   LayoutDashboard,
+  LogIn,
   PlusCircle,
   ShieldCheck,
   Tag,
@@ -38,7 +39,7 @@ export function Sidebar() {
   const routerState = useRouterState();
   const { isPaid } = useUserTier();
   const { totalCount, totalLimit, totalPct } = useTradeLimits();
-  const { shortPrincipal, logout } = useAuth();
+  const { shortPrincipal, logout, isAuthenticated, login } = useAuth();
   const { isAdmin } = useIsAdmin();
 
   const navItems: NavItem[] = [
@@ -157,7 +158,7 @@ export function Sidebar() {
       </nav>
 
       {/* Free tier usage */}
-      {!isPaid && (
+      {isAuthenticated && !isPaid && (
         <div className="px-4 py-3 mx-3 mb-3 rounded-lg bg-muted/40 border border-border space-y-2">
           <p className="text-xs text-muted-foreground">Free tier usage</p>
           <ProgressBar value={totalPct} showPercent />
@@ -167,31 +168,67 @@ export function Sidebar() {
         </div>
       )}
 
-      {/* User info */}
-      <div className="border-t border-sidebar-border px-4 py-3 flex items-center gap-2.5">
-        <div className="flex-1 min-w-0">
-          <p
-            className="text-xs font-mono text-muted-foreground truncate"
-            title={shortPrincipal}
+      {/* User info / Login CTA */}
+      {isAuthenticated ? (
+        <div className="border-t border-sidebar-border px-4 py-3 flex items-center gap-2.5">
+          <div className="flex-1 min-w-0">
+            <p
+              className="text-xs font-mono text-muted-foreground truncate"
+              title={shortPrincipal}
+            >
+              {shortPrincipal || "Anonymous"}
+            </p>
+            {isPaid && (
+              <Badge className="text-[10px] py-0 bg-[#00ff41]/10 text-[#00ff41] border-[#00ff41]/30 hover:bg-[#00ff41]/10 mt-0.5">
+                PREMIUM
+              </Badge>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={logout}
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors shrink-0"
+            aria-label="Log out"
+            data-ocid="sidebar-logout"
           >
-            {shortPrincipal || "Anonymous"}
-          </p>
-          {isPaid && (
-            <Badge className="text-[10px] py-0 bg-[#00ff41]/10 text-[#00ff41] border-[#00ff41]/30 hover:bg-[#00ff41]/10 mt-0.5">
-              PREMIUM
-            </Badge>
-          )}
+            Log out
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={logout}
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors shrink-0"
-          aria-label="Log out"
-          data-ocid="sidebar-logout"
-        >
-          Log out
-        </button>
-      </div>
+      ) : (
+        <div className="border-t border-sidebar-border px-3 py-4">
+          <button
+            type="button"
+            onClick={() => login()}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-sm transition-smooth"
+            style={{
+              background: "rgba(0,255,65,0.12)",
+              border: "1px solid rgba(0,255,65,0.5)",
+              color: "#00ff41",
+              boxShadow: "0 0 16px rgba(0,255,65,0.15)",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background =
+                "rgba(0,255,65,0.2)";
+              (e.currentTarget as HTMLButtonElement).style.boxShadow =
+                "0 0 24px rgba(0,255,65,0.3)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background =
+                "rgba(0,255,65,0.12)";
+              (e.currentTarget as HTMLButtonElement).style.boxShadow =
+                "0 0 16px rgba(0,255,65,0.15)";
+            }}
+            data-ocid="sidebar-login-btn"
+            aria-label="Connect with Internet Identity"
+          >
+            <LogIn className="h-4 w-4" />
+            Connect with II
+          </button>
+          <p className="text-[10px] text-muted-foreground text-center mt-2">
+            Internet Identity · Secure login
+          </p>
+        </div>
+      )}
     </aside>
   );
 }

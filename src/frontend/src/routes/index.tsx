@@ -18,6 +18,7 @@ import {
   BarChart3,
   Crown,
   FileUp,
+  LogIn,
   Percent,
   PlusCircle,
   Sparkles,
@@ -250,16 +251,236 @@ function MetricCard({
   );
 }
 
+// ─── Unauthenticated Landing Hero ──────────────────────────────────────────
+
+function LandingHero() {
+  const { login, isLoading } = useAuth();
+
+  const features = [
+    {
+      icon: <BarChart3 className="h-5 w-5" />,
+      color: "#00ff41",
+      label: "Performance Analytics",
+    },
+    {
+      icon: <Activity className="h-5 w-5" />,
+      color: "#00ffff",
+      label: "Live P&L Tracking",
+    },
+    {
+      icon: <TrendingUp className="h-5 w-5" />,
+      color: "#b900ff",
+      label: "Win Rate Insights",
+    },
+  ];
+
+  return (
+    <div
+      className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-4 py-16 relative overflow-hidden"
+      data-ocid="landing-hero"
+    >
+      {/* Background glow blobs */}
+      <div
+        className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(0,255,65,0.07) 0%, transparent 70%)",
+          filter: "blur(40px)",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(185,0,255,0.08) 0%, transparent 70%)",
+          filter: "blur(40px)",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute top-1/2 right-1/3 w-64 h-64 rounded-full pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(0,255,255,0.06) 0%, transparent 70%)",
+          filter: "blur(40px)",
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Content */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="relative z-10 text-center max-w-2xl mx-auto"
+      >
+        {/* Logo mark */}
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="flex items-center justify-center mb-6"
+        >
+          <div
+            className="flex items-center justify-center w-16 h-16 rounded-2xl"
+            style={{
+              background: "rgba(0,255,65,0.1)",
+              border: "1px solid rgba(0,255,65,0.4)",
+              boxShadow: "0 0 32px rgba(0,255,65,0.2)",
+            }}
+          >
+            <TrendingUp className="h-8 w-8 text-[#00ff41]" />
+          </div>
+        </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.15 }}
+          className="text-xs font-mono font-bold tracking-[0.3em] uppercase mb-3"
+          style={{ color: "#00ff41" }}
+        >
+          TradeLog Journal
+        </motion.p>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="font-display text-4xl md:text-6xl font-black text-foreground leading-tight mb-4"
+        >
+          Trade smarter.
+          <br />
+          <span
+            style={{
+              background: "linear-gradient(90deg, #00ff41, #00ffff)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Journal better.
+          </span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-muted-foreground text-base md:text-lg mb-10 max-w-md mx-auto leading-relaxed"
+        >
+          Log every trade, track your performance, and unlock insights that make
+          you a better trader.
+        </motion.p>
+
+        {/* Feature pills */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          className="flex flex-wrap items-center justify-center gap-2.5 mb-10"
+        >
+          {features.map(({ icon, color, label }) => (
+            <span
+              key={label}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold"
+              style={{
+                background: `${color}12`,
+                border: `1px solid ${color}30`,
+                color,
+              }}
+            >
+              <span style={{ color }}>{icon}</span>
+              {label}
+            </span>
+          ))}
+        </motion.div>
+
+        {/* Glassmorphism CTA card */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          <div
+            className="relative inline-flex flex-col items-center gap-4 px-8 py-7 rounded-2xl mx-auto"
+            style={{
+              background: "rgba(0,255,65,0.04)",
+              border: "1px solid rgba(0,255,65,0.3)",
+              backdropFilter: "blur(12px)",
+              boxShadow:
+                "0 0 40px rgba(0,255,65,0.08), inset 0 1px 0 rgba(0,255,65,0.1)",
+            }}
+          >
+            {/* Corner accent */}
+            <div
+              className="absolute -top-px -left-px w-12 h-12 rounded-tl-2xl pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(0,255,65,0.2) 0%, transparent 60%)",
+              }}
+              aria-hidden="true"
+            />
+
+            <button
+              type="button"
+              onClick={() => login()}
+              disabled={isLoading}
+              className="flex items-center gap-3 px-8 py-3.5 rounded-xl font-display font-bold text-base transition-smooth disabled:opacity-60"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(0,255,65,0.2) 0%, rgba(0,255,65,0.12) 100%)",
+                border: "1px solid rgba(0,255,65,0.6)",
+                color: "#00ff41",
+                boxShadow:
+                  "0 0 24px rgba(0,255,65,0.25), inset 0 1px 0 rgba(0,255,65,0.2)",
+              }}
+              data-ocid="landing-hero-login-btn"
+              aria-label="Connect with Internet Identity to get started"
+            >
+              <LogIn className="h-5 w-5" />
+              {isLoading ? "Connecting..." : "Get Started — It's Free"}
+            </button>
+
+            <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+              <span
+                className="inline-block w-1.5 h-1.5 rounded-full"
+                style={{ background: "#00ff41" }}
+              />
+              No password needed · Secured by Internet Identity
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Bottom trust row */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.55 }}
+          className="text-xs text-muted-foreground/50 mt-8"
+        >
+          Free tier · 5 trades/day · No credit card required
+        </motion.p>
+      </motion.div>
+    </div>
+  );
+}
+
 // ─── Main Page ─────────────────────────────────────────────────────────────
 
 function DashboardPage() {
   const navigate = useNavigate();
-  const { shortPrincipal } = useAuth();
+  const { shortPrincipal, isAuthenticated } = useAuth();
   const { tier, isFree } = useUserTier();
   const limits = useTradeLimits();
   const { data: trades, isLoading: tradesLoading } = useRecentTrades();
   const { data: metrics } = useDashboardMetrics();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+
+  // Show landing page for unauthenticated visitors
+  if (!isAuthenticated) {
+    return <LandingHero />;
+  }
 
   const displayTrades = trades ?? [];
 
