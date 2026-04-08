@@ -448,9 +448,7 @@ function LandingPage() {
           transition={{ duration: 0.5, delay: 0.12 }}
           className="mt-5 text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed"
         >
-          TradeLog is a Gen Z-native trading journal. Log trades, track your
-          P&amp;L, analyse your patterns, and level up your strategy — all in
-          one dark, neon-lit dashboard.
+          Log your trades. Spot your patterns. Sharpen your edge.
         </motion.p>
 
         {/* CTA buttons */}

@@ -76991,7 +76991,7 @@ function LandingPage() {
                   animate: { opacity: 1, y: 0 },
                   transition: { duration: 0.5, delay: 0.12 },
                   className: "mt-5 text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed",
-                  children: "TradeLog is a Gen Z-native trading journal. Log trades, track your P&L, analyse your patterns, and level up your strategy — all in one dark, neon-lit dashboard."
+                  children: "Log your trades. Spot your patterns. Sharpen your edge."
                 }
               ),
               /* @__PURE__ */ jsxRuntimeExports.jsxs(
