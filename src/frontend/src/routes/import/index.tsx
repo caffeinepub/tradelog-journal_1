@@ -12,7 +12,6 @@ import { ImportProgress } from "@/components/import/ImportProgress";
 import { PreviewTable } from "@/components/import/PreviewTable";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { NeonButton } from "@/components/ui/NeonButton";
-import { ProgressBar } from "@/components/ui/ProgressBar";
 import { UpgradeModal } from "@/components/ui/UpgradeModal";
 import { useTradeLimits } from "@/hooks/use-trade-limits";
 import { useActor } from "@caffeineai/core-infrastructure";
@@ -285,7 +284,7 @@ function CapBanner({ toImport, available, onUpgrade }: CapBannerProps) {
           </p>
           <p className="text-xs text-muted-foreground mt-0.5">
             {available === 0
-              ? "You've reached your 25-trade limit. Upgrade to import all trades."
+              ? "You've reached today's daily limit. Upgrade to import more today."
               : `You can import ${canImport} trade${canImport !== 1 ? "s" : ""}. ${skipped > 0 ? `${skipped} will be skipped.` : ""}`}
           </p>
         </div>
@@ -316,7 +315,6 @@ function ImportPage() {
   const [mapping, setMapping] = useState<Record<string, string>>({});
   const [previewRows, setPreviewRows] = useState<ParsedRow[]>([]);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
-  const [importAttempts, setImportAttempts] = useState(0);
 
   const [importStatus, setImportStatus] = useState<
     "running" | "done" | "error"
@@ -358,20 +356,8 @@ function ImportPage() {
   };
 
   const handleImport = async () => {
-    // Upgrade prompt on 3rd attempt for free users
-    const nextAttempt = importAttempts + 1;
-    setImportAttempts(nextAttempt);
-    if (limits.tier === "FREE" && nextAttempt >= 3) {
-      setUpgradeOpen(true);
-      return;
-    }
-
-    const available =
-      limits.tier === "FREE"
-        ? Math.max(0, limits.totalLimit - limits.totalCount)
-        : Number.POSITIVE_INFINITY;
-
-    if (limits.tier === "FREE" && available <= 0) {
+    // For free users, only daily limit applies — total is unlimited
+    if (limits.tier === "FREE" && limits.dailyLimitReached) {
       setUpgradeOpen(true);
       return;
     }
@@ -380,12 +366,9 @@ function ImportPage() {
     setImportStatus("running");
 
     const csvRows = buildCsvRows(rawRows, headers, mapping);
-    const limited =
-      limits.tier === "FREE" ? csvRows.slice(0, available) : csvRows;
-
     try {
       if (!actor) throw new Error("Not connected to backend");
-      const job = await actor.bulkImportTrades(limited);
+      const job = await actor.bulkImportTrades(csvRows);
       setImportJob(job);
       setImportedCount(Number(job.importedCount));
       setErrorCount(job.errors.length);
@@ -421,13 +404,12 @@ function ImportPage() {
   const requiredTotal = TRADE_FIELDS.filter((f) => f.required).length;
   const canProceedToPreview = requiredMapped === requiredTotal;
 
+  // Total trades are unlimited for free users — only daily limit applies
   const available =
-    limits.tier === "FREE"
-      ? Math.max(0, limits.totalLimit - limits.totalCount)
-      : rawRows.length;
+    limits.tier === "FREE" && limits.dailyLimitReached ? 0 : rawRows.length;
 
   const showCapBanner =
-    limits.tier === "FREE" && rawRows.length > 0 && available < rawRows.length;
+    limits.tier === "FREE" && rawRows.length > 0 && limits.dailyLimitReached;
 
   return (
     <div
@@ -458,17 +440,6 @@ function ImportPage() {
           available={available}
           onUpgrade={() => setUpgradeOpen(true)}
         />
-      )}
-
-      {/* Free tier usage bar */}
-      {limits.tier === "FREE" && step !== "importing" && step !== "done" && (
-        <GlassCard className="py-3">
-          <ProgressBar
-            value={limits.totalPct}
-            label={`Free tier: ${limits.totalCount} / ${limits.totalLimit} trades used`}
-            showPercent
-          />
-        </GlassCard>
       )}
 
       {/* ── Step: Upload ── */}
@@ -581,11 +552,7 @@ function ImportPage() {
         open={upgradeOpen}
         onClose={() => setUpgradeOpen(false)}
         triggerReason={
-          importAttempts >= 3
-            ? "You've tried to import 3 times — Pro users get unlimited imports and full history access."
-            : available <= 0
-              ? "You've reached the 25-trade free tier limit. Upgrade to import your entire trading history."
-              : `You can only import ${available} more trade${available !== 1 ? "s" : ""} on the free plan.`
+          "You've hit today's daily trade limit. Upgrade to Pro for unlimited imports every day."
         }
       />
     </div>

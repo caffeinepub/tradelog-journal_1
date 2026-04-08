@@ -80,8 +80,7 @@ module {
 
   // ── Limits ─────────────────────────────────────────────────────────────────
 
-  let FREE_DAILY_LIMIT : Nat = 5;
-  let FREE_TOTAL_LIMIT : Nat = 25;
+  let FREE_DAILY_LIMIT : Nat = 3;
 
   public func getLimitStatus(
     trades : List.List<TradeTypes.Trade>,
@@ -96,7 +95,7 @@ module {
       case null { 0 };
     };
     let (dailyLimit, totalLimit) = switch (tier) {
-      case (#FREE) { (FREE_DAILY_LIMIT, FREE_TOTAL_LIMIT) };
+      case (#FREE) { (FREE_DAILY_LIMIT, 1_000_000) };
       case (#PAID) { (999999, 999999) };
     };
     {
@@ -106,7 +105,7 @@ module {
       dailyLimit;
       totalLimit;
       dailyLimitReached = dailyCount >= dailyLimit;
-      totalLimitReached = totalCount >= totalLimit;
+      totalLimitReached = false; // FREE tier has no total cap
     };
   };
 
@@ -123,10 +122,6 @@ module {
     // Enforce free-tier limits
     switch (tier) {
       case (#FREE) {
-        let totalCount = trades.filter(func(t : TradeTypes.Trade) : Bool { Principal.equal(t.userId, caller) }).size();
-        if (totalCount >= FREE_TOTAL_LIMIT) {
-          return #limitReached("Free tier total trade limit of " # FREE_TOTAL_LIMIT.toText() # " reached. Upgrade to Pro for unlimited trades.");
-        };
         let todayKey = dailyKey(caller, Time.now());
         let dailyCount = switch (dailyCounts.get(todayKey)) {
           case (?c) { c };

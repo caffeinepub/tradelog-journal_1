@@ -3,8 +3,8 @@ import type { TierLimitStatus } from "@/types";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useQuery } from "@tanstack/react-query";
 
-const FREE_DAILY_LIMIT = 5;
-const FREE_TOTAL_LIMIT = 25;
+const FREE_DAILY_LIMIT = 3;
+const FREE_TOTAL_LIMIT = 1_000_000;
 
 const DEFAULT_LIMITS: TierLimitStatus = {
   dailyCount: 0,

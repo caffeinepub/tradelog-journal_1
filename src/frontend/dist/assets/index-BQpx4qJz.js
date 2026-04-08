@@ -38041,8 +38041,8 @@ function Badge({
     }
   );
 }
-const FREE_DAILY_LIMIT = 5;
-const FREE_TOTAL_LIMIT = 25;
+const FREE_DAILY_LIMIT = 3;
+const FREE_TOTAL_LIMIT = 1e6;
 const DEFAULT_LIMITS = {
   dailyCount: 0,
   totalCount: 0,
@@ -38094,7 +38094,7 @@ const baseNavItems = [
 function Sidebar() {
   const routerState = useRouterState();
   const { isPaid } = useUserTier();
-  const { totalCount, totalLimit, totalPct } = useTradeLimits();
+  const { dailyCount, dailyLimit } = useTradeLimits();
   const { shortPrincipal, logout, isAuthenticated, login } = useAuth();
   const { isAdmin } = useIsAdmin();
   const navItems = [
@@ -38172,13 +38172,22 @@ function Sidebar() {
           );
         }) }),
         isAuthenticated && !isPaid && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-4 py-3 mx-3 mb-3 rounded-lg bg-muted/40 border border-border space-y-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Free tier usage" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar, { value: totalPct, showPercent: true }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Today's entries" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            ProgressBar,
+            {
+              value: Math.min(
+                100,
+                Math.round(dailyCount / Math.max(dailyLimit, 1) * 100)
+              ),
+              showPercent: true
+            }
+          ),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground", children: [
-            totalCount,
+            dailyCount,
             " / ",
-            totalLimit,
-            " trades used"
+            dailyLimit,
+            " trades today"
           ] })
         ] }),
         isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border-t border-sidebar-border px-4 py-3 flex items-center gap-2.5", children: [
@@ -76146,7 +76155,7 @@ function CapBanner({ toImport, available, onUpgrade }) {
       /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { className: "h-4 w-4 text-yellow-400 shrink-0 mt-0.5" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-foreground", children: "Free tier limit approaching" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mt-0.5", children: available === 0 ? "You've reached your 25-trade limit. Upgrade to import all trades." : `You can import ${canImport} trade${canImport !== 1 ? "s" : ""}. ${skipped > 0 ? `${skipped} will be skipped.` : ""}` })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mt-0.5", children: available === 0 ? "You've reached today's daily limit. Upgrade to import more today." : `You can import ${canImport} trade${canImport !== 1 ? "s" : ""}. ${skipped > 0 ? `${skipped} will be skipped.` : ""}` })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -76174,7 +76183,6 @@ function ImportPage() {
   const [mapping, setMapping] = reactExports.useState({});
   const [previewRows, setPreviewRows] = reactExports.useState([]);
   const [upgradeOpen, setUpgradeOpen] = reactExports.useState(false);
-  const [importAttempts, setImportAttempts] = reactExports.useState(0);
   const [importStatus, setImportStatus] = reactExports.useState("running");
   const [importedCount, setImportedCount] = reactExports.useState(0);
   const [errorCount, setErrorCount] = reactExports.useState(0);
@@ -76209,24 +76217,16 @@ function ImportPage() {
     setStep("preview");
   };
   const handleImport = async () => {
-    const nextAttempt = importAttempts + 1;
-    setImportAttempts(nextAttempt);
-    if (limits.tier === "FREE" && nextAttempt >= 3) {
-      setUpgradeOpen(true);
-      return;
-    }
-    const available2 = limits.tier === "FREE" ? Math.max(0, limits.totalLimit - limits.totalCount) : Number.POSITIVE_INFINITY;
-    if (limits.tier === "FREE" && available2 <= 0) {
+    if (limits.tier === "FREE" && limits.dailyLimitReached) {
       setUpgradeOpen(true);
       return;
     }
     setStep("importing");
     setImportStatus("running");
     const csvRows = buildCsvRows(rawRows, headers, mapping);
-    const limited = limits.tier === "FREE" ? csvRows.slice(0, available2) : csvRows;
     try {
       if (!actor) throw new Error("Not connected to backend");
-      const job = await actor.bulkImportTrades(limited);
+      const job = await actor.bulkImportTrades(csvRows);
       setImportJob(job);
       setImportedCount(Number(job.importedCount));
       setErrorCount(job.errors.length);
@@ -76259,8 +76259,8 @@ function ImportPage() {
   ).length;
   const requiredTotal = TRADE_FIELDS.filter((f2) => f2.required).length;
   const canProceedToPreview = requiredMapped === requiredTotal;
-  const available = limits.tier === "FREE" ? Math.max(0, limits.totalLimit - limits.totalCount) : rawRows.length;
-  const showCapBanner = limits.tier === "FREE" && rawRows.length > 0 && available < rawRows.length;
+  const available = limits.tier === "FREE" && limits.dailyLimitReached ? 0 : rawRows.length;
+  const showCapBanner = limits.tier === "FREE" && rawRows.length > 0 && limits.dailyLimitReached;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "div",
     {
@@ -76283,14 +76283,6 @@ function ImportPage() {
             onUpgrade: () => setUpgradeOpen(true)
           }
         ),
-        limits.tier === "FREE" && step !== "importing" && step !== "done" && /* @__PURE__ */ jsxRuntimeExports.jsx(GlassCard, { className: "py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          ProgressBar,
-          {
-            value: limits.totalPct,
-            label: `Free tier: ${limits.totalCount} / ${limits.totalLimit} trades used`,
-            showPercent: true
-          }
-        ) }),
         step === "upload" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             CSVUploadZone,
@@ -76416,7 +76408,7 @@ function ImportPage() {
           {
             open: upgradeOpen,
             onClose: () => setUpgradeOpen(false),
-            triggerReason: importAttempts >= 3 ? "You've tried to import 3 times — Pro users get unlimited imports and full history access." : available <= 0 ? "You've reached the 25-trade free tier limit. Upgrade to import your entire trading history." : `You can only import ${available} more trade${available !== 1 ? "s" : ""} on the free plan.`
+            triggerReason: "You've hit today's daily trade limit. Upgrade to Pro for unlimited imports every day."
           }
         )
       ]
@@ -76882,7 +76874,7 @@ function LandingHero() {
                   animate: { opacity: 1 },
                   transition: { delay: 0.55 },
                   className: "text-xs text-muted-foreground/50 mt-8",
-                  children: "Free tier · 5 trades/day · No credit card required"
+                  children: "Free tier · 3 trades/day · No credit card required"
                 }
               )
             ]
@@ -77024,39 +77016,47 @@ function DashboardPage() {
         initial: { opacity: 0, scaleX: 0.95 },
         animate: { opacity: 1, scaleX: 1 },
         transition: { delay: 0.1 },
-        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(
           GlassCard,
           {
             className: "border border-border/60",
             "data-ocid": "free-tier-usage-bar",
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-foreground", children: limits.totalLimitReached ? "🚫 Free tier limit reached!" : "Free tier usage" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono text-xs font-bold text-muted-foreground", children: [
-                  limits.totalCount,
-                  "/",
-                  limits.totalLimit,
-                  " trades used"
-                ] })
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar, { value: limits.totalPct, showPercent: false }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mt-1.5", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground", children: limits.totalLimit - limits.totalCount > 0 ? `${limits.totalLimit - limits.totalCount} trades remaining` : "Upgrade to unlock unlimited trades" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                  "span",
-                  {
-                    className: "text-xs font-semibold font-mono",
-                    style: {
-                      color: limits.totalPct >= 80 ? "#f87171" : limits.totalPct >= 50 ? "#facc15" : "#00ff41"
-                    },
-                    children: [
-                      limits.totalPct,
-                      "%"
-                    ]
-                  }
+            children: (() => {
+              const dailyPct = Math.min(
+                100,
+                Math.round(
+                  limits.dailyCount / Math.max(limits.dailyLimit, 1) * 100
                 )
-              ] })
-            ]
+              );
+              return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-foreground", children: limits.dailyLimitReached ? "🚫 Daily limit reached!" : "Today's entries" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "font-mono text-xs font-bold text-muted-foreground", children: [
+                    limits.dailyCount,
+                    "/",
+                    limits.dailyLimit,
+                    " today"
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar, { value: dailyPct, showPercent: false }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mt-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground", children: limits.dailyLimitReached ? "Resets tomorrow — or upgrade for unlimited" : `${limits.dailyLimit - limits.dailyCount} entries left today` }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "span",
+                    {
+                      className: "text-xs font-semibold font-mono",
+                      style: {
+                        color: dailyPct >= 100 ? "#f87171" : dailyPct >= 66 ? "#facc15" : "#00ff41"
+                      },
+                      children: [
+                        dailyPct,
+                        "%"
+                      ]
+                    }
+                  )
+                ] })
+              ] });
+            })()
           }
         )
       }
@@ -77371,7 +77371,7 @@ function DashboardPage() {
       {
         open: upgradeOpen,
         onClose: () => setUpgradeOpen(false),
-        triggerReason: limits.totalLimitReached ? "You've hit your free tier limit of 25 trades. Upgrade to keep journaling." : limits.dailyLimitReached ? "You've logged 5 trades today — the daily free limit. Upgrade for unlimited." : void 0
+        triggerReason: limits.dailyLimitReached ? "You've logged 3 trades today — the daily free limit. Upgrade for unlimited." : void 0
       }
     )
   ] });
@@ -77584,12 +77584,13 @@ const Route$4 = createRoute({
   component: PricingPage
 });
 const comparisonFeatures = [
-  { label: "Trade entries per day", free: "5 trades", pro: "Unlimited" },
-  { label: "Total trade cap", free: "25 trades", pro: "Unlimited" },
+  { label: "Trade entries per day", free: "3 trades", pro: "Unlimited" },
+  { label: "Total trade entries", free: "Unlimited", pro: "Unlimited" },
   { label: "Trade log (pair, direction, P&L)", free: true, pro: true },
   { label: "Win rate tracking", free: true, pro: true },
   { label: "Basic dashboard", free: true, pro: true },
-  { label: "CSV bulk import", free: "25-trade cap", pro: true },
+  { label: "Chart annotation (limited tools)", free: true, pro: true },
+  { label: "CSV bulk import", free: false, pro: true },
   { label: "Chart screenshot uploads", free: false, pro: true },
   { label: "Full annotation tools", free: false, pro: true },
   { label: "Complete performance analytics", free: false, pro: true },
@@ -77608,8 +77609,8 @@ const proFeatures = [
   "Priority support"
 ];
 const freeFeatures = [
-  "Up to 5 trade entries per day",
-  "25 total trades",
+  "Up to 3 trade entries per day",
+  "Unlimited total trade entries",
   "Basic trade log (pair, direction, P&L)",
   "Win rate & basic dashboard",
   "Chart annotation (limited tools)"
@@ -77628,7 +77629,7 @@ const testimonials = [
     color: "#b900ff"
   },
   {
-    quote: "upgraded after hitting the 25 trade cap on my second week 💀 the analytics on sessions alone saved me from bad NY opens fr.",
+    quote: "upgraded after hitting the 3 trades/day limit on my second week 💀 the analytics on sessions alone saved me from bad NY opens fr.",
     name: "Tyler S.",
     handle: "@tylerinthemarket",
     color: "#00ffff"
@@ -77636,8 +77637,8 @@ const testimonials = [
 ];
 const faqItems = [
   {
-    q: "What happens when I hit the free tier cap?",
-    a: "Once you reach 25 total trades or 5 trades in a day, you'll need to wait until the next day for the daily limit, or upgrade to Pro for unlimited entries. Your existing trades are always accessible."
+    q: "What happens when I hit the free tier daily limit?",
+    a: "Once you log 3 trades in a day, you'll need to wait until the next day to log more — or upgrade to Pro for unlimited daily entries. Your total trade history is always unlimited and accessible."
   },
   {
     q: "What features are locked on the free tier?",
@@ -81061,8 +81062,8 @@ function TradeForm({ onSuccess, onCancel }) {
       ue.error("Not connected. Please log in.");
       return;
     }
-    if (limits.dailyLimitReached || limits.totalLimitReached) {
-      const reason = limits.totalLimitReached ? `You've hit your ${limits.totalLimit}-trade cap. Upgrade to log unlimited trades.` : `You've hit today's ${limits.dailyLimit}-trade daily limit. Upgrade for unlimited daily entries.`;
+    if (limits.dailyLimitReached) {
+      const reason = `You've hit today's ${limits.dailyLimit}-trade daily limit. Upgrade for unlimited daily entries.`;
       setUpgradeReason(reason);
       setShowUpgradeModal(true);
       return;
@@ -81502,33 +81503,40 @@ function TradeForm({ onSuccess, onCancel }) {
               }
             )
           ] }),
-          limits.tier === "FREE" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl bg-muted/30 border border-border p-4 space-y-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between text-xs text-muted-foreground", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Free tier usage" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-                limits.totalCount,
-                " / ",
-                limits.totalLimit,
-                " trades"
+          limits.tier === "FREE" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rounded-xl bg-muted/30 border border-border p-4 space-y-2", children: (() => {
+            const dailyPct = Math.min(
+              100,
+              Math.round(
+                limits.dailyCount / Math.max(limits.dailyLimit, 1) * 100
+              )
+            );
+            return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between text-xs text-muted-foreground", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Today's entries" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+                  limits.dailyCount,
+                  " / ",
+                  limits.dailyLimit,
+                  " today"
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-2 rounded-full bg-muted overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "div",
+                {
+                  className: cn(
+                    "h-full rounded-full transition-all duration-500",
+                    dailyPct < 66 ? "bg-[#00ff41]" : dailyPct < 100 ? "bg-[#00ffff]" : "bg-[#ff3b30]"
+                  ),
+                  style: { width: `${dailyPct}%` },
+                  "data-ocid": "usage-progress-bar"
+                }
+              ) }),
+              dailyPct >= 66 && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-[#ff3b30]/80", children: [
+                dailyPct >= 100 ? "Daily limit reached. " : "Almost at today's limit. ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/pricing", className: "underline text-[#b900ff]", children: "Upgrade for unlimited daily entries." })
               ] })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-2 rounded-full bg-muted overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "div",
-              {
-                className: cn(
-                  "h-full rounded-full transition-all duration-500",
-                  limits.totalPct < 60 ? "bg-[#00ff41]" : limits.totalPct < 85 ? "bg-[#00ffff]" : "bg-[#ff3b30]"
-                ),
-                style: { width: `${limits.totalPct}%` },
-                "data-ocid": "usage-progress-bar"
-              }
-            ) }),
-            limits.totalPct >= 80 && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-[#ff3b30]/80", children: [
-              "You're nearly at your cap.",
-              " ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/pricing", className: "underline text-[#b900ff]", children: "Upgrade for unlimited trades." })
-            ] })
-          ] }),
+            ] });
+          })() }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-end gap-3 pb-6", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               NeonButton,

@@ -38,7 +38,7 @@ type NavItem = {
 export function Sidebar() {
   const routerState = useRouterState();
   const { isPaid } = useUserTier();
-  const { totalCount, totalLimit, totalPct } = useTradeLimits();
+  const { dailyCount, dailyLimit } = useTradeLimits();
   const { shortPrincipal, logout, isAuthenticated, login } = useAuth();
   const { isAdmin } = useIsAdmin();
 
@@ -157,13 +157,19 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Free tier usage */}
+      {/* Free tier daily usage */}
       {isAuthenticated && !isPaid && (
         <div className="px-4 py-3 mx-3 mb-3 rounded-lg bg-muted/40 border border-border space-y-2">
-          <p className="text-xs text-muted-foreground">Free tier usage</p>
-          <ProgressBar value={totalPct} showPercent />
+          <p className="text-xs text-muted-foreground">Today&apos;s entries</p>
+          <ProgressBar
+            value={Math.min(
+              100,
+              Math.round((dailyCount / Math.max(dailyLimit, 1)) * 100),
+            )}
+            showPercent
+          />
           <p className="text-xs text-muted-foreground">
-            {totalCount} / {totalLimit} trades used
+            {dailyCount} / {dailyLimit} trades today
           </p>
         </div>
       )}

@@ -10,8 +10,7 @@ import Nat "mo:core/Nat";
 import Principal "mo:core/Principal";
 
 module {
-  let FREE_DAILY_LIMIT : Nat = 5;
-  let FREE_TOTAL_LIMIT : Nat = 25;
+  let FREE_DAILY_LIMIT : Nat = 3;
 
   public func toPublic(job : ImportTypes.ImportJob) : ImportTypes.ImportJobPublic {
     {
@@ -71,23 +70,14 @@ module {
       var blocked = false;
       switch (tier) {
         case (#FREE) {
-          let totalCount = trades.filter(func(t : TradeTypes.Trade) : Bool { Principal.equal(t.userId, caller) }).size();
-          if (totalCount >= FREE_TOTAL_LIMIT) {
+          let todayKey = TradeLib.dailyKey(caller, Time.now());
+          let dailyCount = switch (dailyCounts.get(todayKey)) { case (?c) c; case null 0 };
+          if (dailyCount >= FREE_DAILY_LIMIT) {
             errorList.add({
               lineNumber;
-              reason = "Free tier total limit reached (" # FREE_TOTAL_LIMIT.toText() # " trades)";
+              reason = "Free tier daily limit reached (" # FREE_DAILY_LIMIT.toText() # " trades/day)";
             });
             blocked := true;
-          } else {
-            let todayKey = TradeLib.dailyKey(caller, Time.now());
-            let dailyCount = switch (dailyCounts.get(todayKey)) { case (?c) c; case null 0 };
-            if (dailyCount >= FREE_DAILY_LIMIT) {
-              errorList.add({
-                lineNumber;
-                reason = "Free tier daily limit reached (" # FREE_DAILY_LIMIT.toText() # " trades/day)";
-              });
-              blocked := true;
-            };
           };
         };
         case (#PAID) {};

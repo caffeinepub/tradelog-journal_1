@@ -18,12 +18,13 @@ export const Route = createRoute({
 // ─── Feature comparison data ─────────────────────────────────────────────────
 
 const comparisonFeatures = [
-  { label: "Trade entries per day", free: "5 trades", pro: "Unlimited" },
-  { label: "Total trade cap", free: "25 trades", pro: "Unlimited" },
+  { label: "Trade entries per day", free: "3 trades", pro: "Unlimited" },
+  { label: "Total trade entries", free: "Unlimited", pro: "Unlimited" },
   { label: "Trade log (pair, direction, P&L)", free: true, pro: true },
   { label: "Win rate tracking", free: true, pro: true },
   { label: "Basic dashboard", free: true, pro: true },
-  { label: "CSV bulk import", free: "25-trade cap", pro: true },
+  { label: "Chart annotation (limited tools)", free: true, pro: true },
+  { label: "CSV bulk import", free: false, pro: true },
   { label: "Chart screenshot uploads", free: false, pro: true },
   { label: "Full annotation tools", free: false, pro: true },
   { label: "Complete performance analytics", free: false, pro: true },
@@ -44,8 +45,8 @@ const proFeatures = [
 ];
 
 const freeFeatures = [
-  "Up to 5 trade entries per day",
-  "25 total trades",
+  "Up to 3 trade entries per day",
+  "Unlimited total trade entries",
   "Basic trade log (pair, direction, P&L)",
   "Win rate & basic dashboard",
   "Chart annotation (limited tools)",
@@ -68,7 +69,7 @@ const testimonials = [
   },
   {
     quote:
-      "upgraded after hitting the 25 trade cap on my second week 💀 the analytics on sessions alone saved me from bad NY opens fr.",
+      "upgraded after hitting the 3 trades/day limit on my second week 💀 the analytics on sessions alone saved me from bad NY opens fr.",
     name: "Tyler S.",
     handle: "@tylerinthemarket",
     color: "#00ffff",
@@ -77,8 +78,8 @@ const testimonials = [
 
 const faqItems = [
   {
-    q: "What happens when I hit the free tier cap?",
-    a: "Once you reach 25 total trades or 5 trades in a day, you'll need to wait until the next day for the daily limit, or upgrade to Pro for unlimited entries. Your existing trades are always accessible.",
+    q: "What happens when I hit the free tier daily limit?",
+    a: "Once you log 3 trades in a day, you'll need to wait until the next day to log more — or upgrade to Pro for unlimited daily entries. Your total trade history is always unlimited and accessible.",
   },
   {
     q: "What features are locked on the free tier?",

@@ -187,10 +187,8 @@ export function TradeForm({ onSuccess, onCancel }: TradeFormProps) {
     }
 
     // Check limits before submit
-    if (limits.dailyLimitReached || limits.totalLimitReached) {
-      const reason = limits.totalLimitReached
-        ? `You've hit your ${limits.totalLimit}-trade cap. Upgrade to log unlimited trades.`
-        : `You've hit today's ${limits.dailyLimit}-trade daily limit. Upgrade for unlimited daily entries.`;
+    if (limits.dailyLimitReached) {
+      const reason = `You've hit today's ${limits.dailyLimit}-trade daily limit. Upgrade for unlimited daily entries.`;
       setUpgradeReason(reason);
       setShowUpgradeModal(true);
       return;
@@ -657,37 +655,51 @@ export function TradeForm({ onSuccess, onCancel }: TradeFormProps) {
           />
         </GlassCard>
 
-        {/* Usage progress bar for free users */}
+        {/* Daily usage progress bar for free users */}
         {limits.tier === "FREE" && (
           <div className="rounded-xl bg-muted/30 border border-border p-4 space-y-2">
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>Free tier usage</span>
-              <span>
-                {limits.totalCount} / {limits.totalLimit} trades
-              </span>
-            </div>
-            <div className="h-2 rounded-full bg-muted overflow-hidden">
-              <div
-                className={cn(
-                  "h-full rounded-full transition-all duration-500",
-                  limits.totalPct < 60
-                    ? "bg-[#00ff41]"
-                    : limits.totalPct < 85
-                      ? "bg-[#00ffff]"
-                      : "bg-[#ff3b30]",
-                )}
-                style={{ width: `${limits.totalPct}%` }}
-                data-ocid="usage-progress-bar"
-              />
-            </div>
-            {limits.totalPct >= 80 && (
-              <p className="text-xs text-[#ff3b30]/80">
-                You're nearly at your cap.{" "}
-                <a href="/pricing" className="underline text-[#b900ff]">
-                  Upgrade for unlimited trades.
-                </a>
-              </p>
-            )}
+            {(() => {
+              const dailyPct = Math.min(
+                100,
+                Math.round(
+                  (limits.dailyCount / Math.max(limits.dailyLimit, 1)) * 100,
+                ),
+              );
+              return (
+                <>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>Today&apos;s entries</span>
+                    <span>
+                      {limits.dailyCount} / {limits.dailyLimit} today
+                    </span>
+                  </div>
+                  <div className="h-2 rounded-full bg-muted overflow-hidden">
+                    <div
+                      className={cn(
+                        "h-full rounded-full transition-all duration-500",
+                        dailyPct < 66
+                          ? "bg-[#00ff41]"
+                          : dailyPct < 100
+                            ? "bg-[#00ffff]"
+                            : "bg-[#ff3b30]",
+                      )}
+                      style={{ width: `${dailyPct}%` }}
+                      data-ocid="usage-progress-bar"
+                    />
+                  </div>
+                  {dailyPct >= 66 && (
+                    <p className="text-xs text-[#ff3b30]/80">
+                      {dailyPct >= 100
+                        ? "Daily limit reached. "
+                        : "Almost at today's limit. "}
+                      <a href="/pricing" className="underline text-[#b900ff]">
+                        Upgrade for unlimited daily entries.
+                      </a>
+                    </p>
+                  )}
+                </>
+              );
+            })()}
           </div>
         )}
 

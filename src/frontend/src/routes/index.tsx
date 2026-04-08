@@ -459,7 +459,7 @@ function LandingHero() {
           transition={{ delay: 0.55 }}
           className="text-xs text-muted-foreground/50 mt-8"
         >
-          Free tier · 5 trades/day · No credit card required
+          Free tier · 3 trades/day · No credit card required
         </motion.p>
       </motion.div>
     </div>
@@ -602,37 +602,49 @@ function DashboardPage() {
             className="border border-border/60"
             data-ocid="free-tier-usage-bar"
           >
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-semibold text-foreground">
-                {limits.totalLimitReached
-                  ? "🚫 Free tier limit reached!"
-                  : "Free tier usage"}
-              </p>
-              <span className="font-mono text-xs font-bold text-muted-foreground">
-                {limits.totalCount}/{limits.totalLimit} trades used
-              </span>
-            </div>
-            <ProgressBar value={limits.totalPct} showPercent={false} />
-            <div className="flex items-center justify-between mt-1.5">
-              <span className="text-xs text-muted-foreground">
-                {limits.totalLimit - limits.totalCount > 0
-                  ? `${limits.totalLimit - limits.totalCount} trades remaining`
-                  : "Upgrade to unlock unlimited trades"}
-              </span>
-              <span
-                className="text-xs font-semibold font-mono"
-                style={{
-                  color:
-                    limits.totalPct >= 80
-                      ? "#f87171"
-                      : limits.totalPct >= 50
-                        ? "#facc15"
-                        : "#00ff41",
-                }}
-              >
-                {limits.totalPct}%
-              </span>
-            </div>
+            {(() => {
+              const dailyPct = Math.min(
+                100,
+                Math.round(
+                  (limits.dailyCount / Math.max(limits.dailyLimit, 1)) * 100,
+                ),
+              );
+              return (
+                <>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-sm font-semibold text-foreground">
+                      {limits.dailyLimitReached
+                        ? "🚫 Daily limit reached!"
+                        : "Today's entries"}
+                    </p>
+                    <span className="font-mono text-xs font-bold text-muted-foreground">
+                      {limits.dailyCount}/{limits.dailyLimit} today
+                    </span>
+                  </div>
+                  <ProgressBar value={dailyPct} showPercent={false} />
+                  <div className="flex items-center justify-between mt-1.5">
+                    <span className="text-xs text-muted-foreground">
+                      {limits.dailyLimitReached
+                        ? "Resets tomorrow — or upgrade for unlimited"
+                        : `${limits.dailyLimit - limits.dailyCount} entries left today`}
+                    </span>
+                    <span
+                      className="text-xs font-semibold font-mono"
+                      style={{
+                        color:
+                          dailyPct >= 100
+                            ? "#f87171"
+                            : dailyPct >= 66
+                              ? "#facc15"
+                              : "#00ff41",
+                      }}
+                    >
+                      {dailyPct}%
+                    </span>
+                  </div>
+                </>
+              );
+            })()}
           </GlassCard>
         </motion.div>
       )}
@@ -939,11 +951,9 @@ function DashboardPage() {
         open={upgradeOpen}
         onClose={() => setUpgradeOpen(false)}
         triggerReason={
-          limits.totalLimitReached
-            ? "You've hit your free tier limit of 25 trades. Upgrade to keep journaling."
-            : limits.dailyLimitReached
-              ? "You've logged 5 trades today — the daily free limit. Upgrade for unlimited."
-              : undefined
+          limits.dailyLimitReached
+            ? "You've logged 3 trades today — the daily free limit. Upgrade for unlimited."
+            : undefined
         }
       />
     </div>
