@@ -4,6 +4,13 @@ import { toast } from "sonner";
 
 const INIT_TIMEOUT_MS = 3000;
 
+// Routes that are publicly accessible — the timeout redirect must NOT fire on these.
+const PUBLIC_PATHS = ["/", "/login", "/pricing", "/redeem"];
+
+function isPublicPath(pathname: string): boolean {
+  return PUBLIC_PATHS.includes(pathname);
+}
+
 export function useAuth() {
   const { identity, loginStatus, login, clear, loginError, isLoginError } =
     useInternetIdentity();
@@ -44,22 +51,13 @@ export function useAuth() {
     !initTimedOut &&
     (loginStatus === "initializing" || loginStatus === "logging-in");
 
-  // Fix 5: After timeout fires and user is not authenticated, force navigation to /login.
-  // Prefer router.navigate via the router module; fall back to window.location only if unavailable.
+  // After timeout fires and user is not authenticated, force navigation to /login —
+  // BUT only if the user is NOT already on a public page (/, /login, /pricing, /redeem).
   useEffect(() => {
     if (initTimedOut && !isAuthenticated) {
-      try {
-        // Dynamically import to avoid circular deps; fire-and-forget
-        import("@/App").then(({ default: _unused }) => {
-          // Router is registered globally via declare module — use getRouterContext if available
-        });
-      } catch (_) {
-        // ignore
-      }
-      // Belt-and-suspenders: if we're not already on the login path, push there
       if (
         typeof window !== "undefined" &&
-        window.location.pathname !== "/login"
+        !isPublicPath(window.location.pathname)
       ) {
         window.location.replace("/login");
       }

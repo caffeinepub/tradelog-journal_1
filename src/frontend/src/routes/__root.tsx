@@ -9,23 +9,30 @@ import {
 } from "@tanstack/react-router";
 import { useEffect } from "react";
 
+// Routes that are publicly accessible without authentication.
+const PUBLIC_PATHS = ["/", "/login", "/pricing", "/redeem"];
+
+function isPublicPath(pathname: string): boolean {
+  return PUBLIC_PATHS.includes(pathname);
+}
+
 function RootComponent() {
   const context = Route.useRouteContext();
   const router = useRouter();
   const location = useRouterState({ select: (s) => s.location });
 
-  // Fix 1 + Fix 3: After loading resolves, if not authenticated and not already on /login → navigate there.
-  useEffect(() => {
-    if (!context.isLoading && !context.isAuthenticated) {
-      if (location.pathname !== "/login") {
-        void router.navigate({ to: "/login", replace: true });
-      }
-    }
-  }, [context.isLoading, context.isAuthenticated, location.pathname, router]);
+  const isPublic = isPublicPath(location.pathname);
 
-  // While auth is initializing, show a full-screen spinner.
-  // This prevents unauthenticated content from flashing before the redirect fires.
-  if (context.isLoading) {
+  // After loading resolves, if not authenticated and NOT on a public path → send to /login.
+  useEffect(() => {
+    if (!context.isLoading && !context.isAuthenticated && !isPublic) {
+      void router.navigate({ to: "/login", replace: true });
+    }
+  }, [context.isLoading, context.isAuthenticated, isPublic, router]);
+
+  // While auth is initializing on a protected route, show a full-screen spinner.
+  // On public routes, skip the spinner entirely — show the page immediately.
+  if (context.isLoading && !isPublic) {
     return (
       <div
         className="min-h-screen flex flex-col items-center justify-center gap-4 bg-background"
@@ -50,9 +57,9 @@ function RootComponent() {
     );
   }
 
-  // Fix 3 (belt-and-suspenders): If not authenticated and not on /login, render nothing
-  // while the useEffect navigation fires (avoids a flash of protected content).
-  if (!context.isAuthenticated && location.pathname !== "/login") {
+  // Belt-and-suspenders: on a protected route that resolved as unauthenticated,
+  // render nothing while the useEffect redirect fires to avoid content flash.
+  if (!context.isAuthenticated && !isPublic) {
     return null;
   }
 

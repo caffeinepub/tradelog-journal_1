@@ -27447,70 +27447,6 @@ function checkDCE() {
 }
 var clientExports = client.exports;
 const ReactDOM = /* @__PURE__ */ getDefaultExportFromCjs(clientExports);
-const scriptRel = "modulepreload";
-const assetsURL = function(dep) {
-  return "/" + dep;
-};
-const seen = {};
-const __vitePreload = function preload2(baseModule, deps, importerUrl) {
-  let promise = Promise.resolve();
-  if (deps && deps.length > 0) {
-    document.getElementsByTagName("link");
-    const cspNonceMeta = document.querySelector(
-      "meta[property=csp-nonce]"
-    );
-    const cspNonce = (cspNonceMeta == null ? void 0 : cspNonceMeta.nonce) || (cspNonceMeta == null ? void 0 : cspNonceMeta.getAttribute("nonce"));
-    promise = Promise.allSettled(
-      deps.map((dep) => {
-        dep = assetsURL(dep);
-        if (dep in seen) return;
-        seen[dep] = true;
-        const isCss = dep.endsWith(".css");
-        const cssSelector = isCss ? '[rel="stylesheet"]' : "";
-        if (document.querySelector(`link[href="${dep}"]${cssSelector}`)) {
-          return;
-        }
-        const link = document.createElement("link");
-        link.rel = isCss ? "stylesheet" : scriptRel;
-        if (!isCss) {
-          link.as = "script";
-        }
-        link.crossOrigin = "";
-        link.href = dep;
-        if (cspNonce) {
-          link.setAttribute("nonce", cspNonce);
-        }
-        document.head.appendChild(link);
-        if (isCss) {
-          return new Promise((res, rej) => {
-            link.addEventListener("load", res);
-            link.addEventListener(
-              "error",
-              () => rej(new Error(`Unable to preload CSS for ${dep}`))
-            );
-          });
-        }
-      })
-    );
-  }
-  function handlePreloadError(err) {
-    const e3 = new Event("vite:preloadError", {
-      cancelable: true
-    });
-    e3.payload = err;
-    window.dispatchEvent(e3);
-    if (!e3.defaultPrevented) {
-      throw err;
-    }
-  }
-  return promise.then((res) => {
-    for (const item of res || []) {
-      if (item.status !== "rejected") continue;
-      handlePreloadError(item.reason);
-    }
-    return baseModule().catch(handlePreloadError);
-  });
-};
 var jt = (n2) => {
   switch (n2) {
     case "success":
@@ -27788,6 +27724,10 @@ var $e = reactExports.forwardRef(function(e3, t2) {
   }));
 });
 const INIT_TIMEOUT_MS = 3e3;
+const PUBLIC_PATHS$1 = ["/", "/login", "/pricing", "/redeem"];
+function isPublicPath$1(pathname) {
+  return PUBLIC_PATHS$1.includes(pathname);
+}
 function useAuth() {
   const { identity: identity3, loginStatus, login, clear, loginError, isLoginError } = useInternetIdentity();
   const [initTimedOut, setInitTimedOut] = reactExports.useState(false);
@@ -27815,15 +27755,7 @@ function useAuth() {
   const isLoading = !initTimedOut && (loginStatus === "initializing" || loginStatus === "logging-in");
   reactExports.useEffect(() => {
     if (initTimedOut && !isAuthenticated) {
-      try {
-        __vitePreload(async () => {
-          const { default: _unused } = await Promise.resolve().then(() => App$1);
-          return { default: _unused };
-        }, true ? void 0 : void 0).then(({ default: _unused }) => {
-        });
-      } catch (_2) {
-      }
-      if (typeof window !== "undefined" && window.location.pathname !== "/login") {
+      if (typeof window !== "undefined" && !isPublicPath$1(window.location.pathname)) {
         window.location.replace("/login");
       }
     }
@@ -29950,12 +29882,12 @@ const executeBeforeLoad = (inner, matchId, index2, route) => {
   }
   match._nonReactive.beforeLoadPromise = createControlledPromise();
   const { search, params, cause } = match;
-  const preload3 = resolvePreload(inner, matchId);
+  const preload2 = resolvePreload(inner, matchId);
   const beforeLoadFnContext = {
     search,
     abortController,
     params,
-    preload: preload3,
+    preload: preload2,
     context,
     location: inner.location,
     navigate: (opts) => inner.router.navigate({
@@ -29963,7 +29895,7 @@ const executeBeforeLoad = (inner, matchId, index2, route) => {
       _fromLocation: inner.location
     }),
     buildLocation: inner.router.buildLocation,
-    cause: preload3 ? "preload" : cause,
+    cause: preload2 ? "preload" : cause,
     matches: inner.matches
   };
   const updateContext = (beforeLoadContext2) => {
@@ -30062,11 +29994,11 @@ const executeHead = (inner, matchId, route) => {
 const getLoaderContext = (inner, matchId, index2, route) => {
   const parentMatchPromise = inner.matchPromises[index2 - 1];
   const { params, loaderDeps, abortController, context, cause } = inner.router.getMatch(matchId);
-  const preload3 = resolvePreload(inner, matchId);
+  const preload2 = resolvePreload(inner, matchId);
   return {
     params,
     deps: loaderDeps,
-    preload: !!preload3,
+    preload: !!preload2,
     parentMatchPromise,
     abortController,
     context,
@@ -30075,7 +30007,7 @@ const getLoaderContext = (inner, matchId, index2, route) => {
       ...opts,
       _fromLocation: inner.location
     }),
-    cause: preload3 ? "preload" : cause,
+    cause: preload2 ? "preload" : cause,
     route
   };
 };
@@ -30199,11 +30131,11 @@ const loadRouteMatch = async (inner, index2) => {
       }
     } else {
       const age = Date.now() - prevMatch.updatedAt;
-      const preload3 = resolvePreload(inner, matchId);
-      const staleAge = preload3 ? route.options.preloadStaleTime ?? inner.router.options.defaultPreloadStaleTime ?? 3e4 : route.options.staleTime ?? inner.router.options.defaultStaleTime ?? 0;
+      const preload2 = resolvePreload(inner, matchId);
+      const staleAge = preload2 ? route.options.preloadStaleTime ?? inner.router.options.defaultPreloadStaleTime ?? 3e4 : route.options.staleTime ?? inner.router.options.defaultStaleTime ?? 0;
       const shouldReloadOption = route.options.shouldReload;
       const shouldReload = typeof shouldReloadOption === "function" ? shouldReloadOption(getLoaderContext(inner, matchId, index2, route)) : shouldReloadOption;
-      const nextPreload = !!preload3 && !inner.router.state.matches.some((d2) => d2.id === matchId);
+      const nextPreload = !!preload2 && !inner.router.state.matches.some((d2) => d2.id === matchId);
       const match2 = inner.router.getMatch(matchId);
       match2._nonReactive.loaderPromise = createControlledPromise();
       if (nextPreload !== match2.preload) {
@@ -30214,7 +30146,7 @@ const loadRouteMatch = async (inner, index2) => {
       }
       const { status, invalid } = match2;
       loaderShouldRunAsync = status === "success" && (invalid || (shouldReload ?? age > staleAge));
-      if (preload3 && route.options.preload === false) ;
+      if (preload2 && route.options.preload === false) ;
       else if (loaderShouldRunAsync && !inner.sync) {
         loaderIsRunningAsync = true;
         (async () => {
@@ -30315,8 +30247,8 @@ async function loadRouteChunk(route) {
       var _a3;
       const preloads = [];
       for (const type of componentTypes) {
-        const preload3 = (_a3 = route.options[type]) == null ? void 0 : _a3.preload;
-        if (preload3) preloads.push(preload3());
+        const preload2 = (_a3 = route.options[type]) == null ? void 0 : _a3.preload;
+        if (preload2) preloads.push(preload2());
       }
       if (preloads.length)
         return Promise.all(preloads).then(() => {
@@ -32195,7 +32127,7 @@ function useLinkProps(options, forwardedRef) {
     [router2, _options2]
   );
   const isExternal = type === "external";
-  const preload3 = options.reloadDocument || isExternal ? false : userPreload ?? router2.options.defaultPreload;
+  const preload2 = options.reloadDocument || isExternal ? false : userPreload ?? router2.options.defaultPreload;
   const preloadDelay = userPreloadDelay ?? router2.options.defaultPreloadDelay ?? 0;
   const isActive = useRouterState({
     select: (s2) => {
@@ -32256,17 +32188,17 @@ function useLinkProps(options, forwardedRef) {
     innerRef,
     preloadViewportIoCallback,
     intersectionObserverOptions,
-    { disabled: !!disabled || !(preload3 === "viewport") }
+    { disabled: !!disabled || !(preload2 === "viewport") }
   );
   reactExports.useEffect(() => {
     if (hasRenderFetched.current) {
       return;
     }
-    if (!disabled && preload3 === "render") {
+    if (!disabled && preload2 === "render") {
       doPreload();
       hasRenderFetched.current = true;
     }
-  }, [disabled, doPreload, preload3]);
+  }, [disabled, doPreload, preload2]);
   const handleClick = (e3) => {
     const elementTarget = e3.currentTarget.target;
     const effectiveTarget = target !== void 0 ? target : elementTarget;
@@ -32310,13 +32242,13 @@ function useLinkProps(options, forwardedRef) {
   }
   const handleFocus = (_2) => {
     if (disabled) return;
-    if (preload3) {
+    if (preload2) {
       doPreload();
     }
   };
   const handleTouchStart = handleFocus;
   const handleEnter = (e3) => {
-    if (disabled || !preload3) return;
+    if (disabled || !preload2) return;
     if (!preloadDelay) {
       doPreload();
     } else {
@@ -32332,7 +32264,7 @@ function useLinkProps(options, forwardedRef) {
     }
   };
   const handleLeave = (e3) => {
-    if (disabled || !preload3 || !preloadDelay) return;
+    if (disabled || !preload2 || !preloadDelay) return;
     const eventTarget = e3.target;
     const id2 = timeoutMap.get(eventTarget);
     if (id2) {
@@ -38455,18 +38387,21 @@ function LoadingSpinner({
     }
   );
 }
+const PUBLIC_PATHS = ["/", "/login", "/pricing", "/redeem"];
+function isPublicPath(pathname) {
+  return PUBLIC_PATHS.includes(pathname);
+}
 function RootComponent() {
   const context = Route$a.useRouteContext();
   const router2 = useRouter();
   const location2 = useRouterState({ select: (s2) => s2.location });
+  const isPublic = isPublicPath(location2.pathname);
   reactExports.useEffect(() => {
-    if (!context.isLoading && !context.isAuthenticated) {
-      if (location2.pathname !== "/login") {
-        void router2.navigate({ to: "/login", replace: true });
-      }
+    if (!context.isLoading && !context.isAuthenticated && !isPublic) {
+      void router2.navigate({ to: "/login", replace: true });
     }
-  }, [context.isLoading, context.isAuthenticated, location2.pathname, router2]);
-  if (context.isLoading) {
+  }, [context.isLoading, context.isAuthenticated, isPublic, router2]);
+  if (context.isLoading && !isPublic) {
     return /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "div",
       {
@@ -38492,7 +38427,7 @@ function RootComponent() {
       }
     );
   }
-  if (!context.isAuthenticated && location2.pathname !== "/login") {
+  if (!context.isAuthenticated && !isPublic) {
     return null;
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Layout, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {}) });
@@ -50459,7 +50394,7 @@ function equalArrays$2(array2, other, bitmask, customizer, equalFunc, stack) {
   if (arrStacked && othStacked) {
     return arrStacked == other && othStacked == array2;
   }
-  var index2 = -1, result = true, seen2 = bitmask & COMPARE_UNORDERED_FLAG$3 ? new SetCache$1() : void 0;
+  var index2 = -1, result = true, seen = bitmask & COMPARE_UNORDERED_FLAG$3 ? new SetCache$1() : void 0;
   stack.set(array2, other);
   stack.set(other, array2);
   while (++index2 < arrLength) {
@@ -50474,10 +50409,10 @@ function equalArrays$2(array2, other, bitmask, customizer, equalFunc, stack) {
       result = false;
       break;
     }
-    if (seen2) {
+    if (seen) {
       if (!arraySome$1(other, function(othValue2, othIndex) {
-        if (!cacheHas$1(seen2, othIndex) && (arrValue === othValue2 || equalFunc(arrValue, othValue2, bitmask, customizer, stack))) {
-          return seen2.push(othIndex);
+        if (!cacheHas$1(seen, othIndex) && (arrValue === othValue2 || equalFunc(arrValue, othValue2, bitmask, customizer, stack))) {
+          return seen.push(othIndex);
         }
       })) {
         result = false;
@@ -51099,7 +51034,7 @@ var _createSet = createSet$1;
 var SetCache = _SetCache, arrayIncludes = _arrayIncludes, arrayIncludesWith = _arrayIncludesWith, cacheHas = _cacheHas, createSet = _createSet, setToArray = _setToArray;
 var LARGE_ARRAY_SIZE = 200;
 function baseUniq$1(array2, iteratee, comparator) {
-  var index2 = -1, includes = arrayIncludes, length = array2.length, isCommon = true, result = [], seen2 = result;
+  var index2 = -1, includes = arrayIncludes, length = array2.length, isCommon = true, result = [], seen = result;
   if (comparator) {
     isCommon = false;
     includes = arrayIncludesWith;
@@ -51110,28 +51045,28 @@ function baseUniq$1(array2, iteratee, comparator) {
     }
     isCommon = false;
     includes = cacheHas;
-    seen2 = new SetCache();
+    seen = new SetCache();
   } else {
-    seen2 = iteratee ? [] : result;
+    seen = iteratee ? [] : result;
   }
   outer:
     while (++index2 < length) {
       var value = array2[index2], computed = iteratee ? iteratee(value) : value;
       value = comparator || value !== 0 ? value : 0;
       if (isCommon && computed === computed) {
-        var seenIndex = seen2.length;
+        var seenIndex = seen.length;
         while (seenIndex--) {
-          if (seen2[seenIndex] === computed) {
+          if (seen[seenIndex] === computed) {
             continue outer;
           }
         }
         if (iteratee) {
-          seen2.push(computed);
+          seen.push(computed);
         }
         result.push(value);
-      } else if (!includes(seen2, computed, comparator)) {
-        if (seen2 !== result) {
-          seen2.push(computed);
+      } else if (!includes(seen, computed, comparator)) {
+        if (seen !== result) {
+          seen.push(computed);
         }
         result.push(value);
       }
@@ -76660,8 +76595,8 @@ function ImportPage() {
 const Route$6 = createRoute({
   getParentRoute: () => Route$a,
   path: "/",
-  beforeLoad: requireAuth,
-  component: DashboardPage
+  // No requireAuth — this route is publicly accessible
+  component: IndexPage
 });
 function useRecentTrades() {
   const { actor, isFetching } = useActor(createActor);
@@ -76758,10 +76693,7 @@ function TierBadge({ tier }) {
     }
   );
 }
-function DailyChip({
-  count: count2,
-  limit
-}) {
+function DailyChip({ count: count2, limit }) {
   const over = count2 >= limit;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "span",
@@ -76855,6 +76787,420 @@ function MetricCard({
       ) : card
     }
   );
+}
+function InsightRow({
+  icon,
+  color: color2,
+  label,
+  value
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between gap-2", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: color2 }, children: icon }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground", children: label })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-mono font-bold text-foreground", children: value })
+  ] });
+}
+function getBestSession(metrics) {
+  var _a3;
+  if (!((_a3 = metrics == null ? void 0 : metrics.pnlBySession) == null ? void 0 : _a3.length)) return "—";
+  const best = [...metrics.pnlBySession].sort(
+    (a2, b2) => b2.totalPnl - a2.totalPnl
+  )[0];
+  const map2 = {
+    LONDON: "London Open",
+    NY: "NY Open",
+    ASIAN: "Asian Session",
+    OTHER: "Off-hours"
+  };
+  return map2[best.session] ?? best.session;
+}
+const FEATURES = [
+  {
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ChartNoAxesColumn, { className: "h-5 w-5" }),
+    color: "#00ff41",
+    title: "Performance Dashboard",
+    desc: "Win rate, P&L, drawdown, best pairs, and weekly summaries at a glance."
+  },
+  {
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Activity, { className: "h-5 w-5" }),
+    color: "#00ffff",
+    title: "Trade Journal",
+    desc: "Log every trade with strategy tags, session, market condition, and annotated charts."
+  },
+  {
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(ChartColumn, { className: "h-5 w-5" }),
+    color: "#b900ff",
+    title: "Advanced Analytics",
+    desc: "Drill into your edge — by pair, session, strategy, and time-of-day patterns."
+  },
+  {
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FileUp, { className: "h-5 w-5" }),
+    color: "#facc15",
+    title: "CSV Import",
+    desc: "Bulk-load your trade history with the column-mapping wizard. Any broker export works."
+  },
+  {
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "h-5 w-5" }),
+    color: "#00ffff",
+    title: "Privacy-First Auth",
+    desc: "Login with Internet Identity — no passwords, no email, secured by device biometrics."
+  },
+  {
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { className: "h-5 w-5" }),
+    color: "#b900ff",
+    title: "AI Insights (Pro)",
+    desc: "Unlock pattern recognition and AI-powered coaching tailored to your trading style."
+  }
+];
+function LandingPage() {
+  const { login, isLoading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      className: "dark min-h-screen bg-background text-foreground flex flex-col",
+      "data-ocid": "landing-page",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "header",
+          {
+            className: "sticky top-0 z-40 border-b border-border/50 backdrop-blur-xl",
+            style: { background: "rgba(8,8,12,0.85)" },
+            "data-ocid": "landing-nav",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-6xl mx-auto px-5 h-14 flex items-center justify-between", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "div",
+                  {
+                    className: "w-7 h-7 rounded-lg flex items-center justify-center",
+                    style: {
+                      background: "rgba(0,255,65,0.12)",
+                      border: "1px solid rgba(0,255,65,0.4)",
+                      boxShadow: "0 0 12px rgba(0,255,65,0.2)"
+                    },
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      TrendingUp,
+                      {
+                        className: "h-3.5 w-3.5",
+                        style: { color: "#00ff41" }
+                      }
+                    )
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-display font-bold text-base tracking-tight text-foreground", children: "TradeLog" })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: () => navigate({ to: "/pricing" }),
+                    className: "text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block",
+                    "data-ocid": "landing-nav-pricing",
+                    children: "Pricing"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  NeonButton,
+                  {
+                    variant: "green",
+                    size: "sm",
+                    onClick: () => login(),
+                    disabled: authLoading,
+                    "data-ocid": "landing-nav-login-btn",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "h-3.5 w-3.5" }),
+                      authLoading ? "Loading…" : "Log In"
+                    ]
+                  }
+                )
+              ] })
+            ] })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "section",
+          {
+            className: "flex-1 flex flex-col items-center justify-center px-5 py-20 text-center relative overflow-hidden",
+            "data-ocid": "landing-hero",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "div",
+                {
+                  className: "absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full pointer-events-none",
+                  style: {
+                    background: "radial-gradient(ellipse, rgba(0,255,65,0.06) 0%, transparent 70%)"
+                  },
+                  "aria-hidden": "true"
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "div",
+                {
+                  className: "absolute bottom-10 right-10 w-72 h-72 rounded-full pointer-events-none",
+                  style: {
+                    background: "radial-gradient(circle, rgba(185,0,255,0.07) 0%, transparent 70%)"
+                  },
+                  "aria-hidden": "true"
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                motion.div,
+                {
+                  initial: { opacity: 0, y: -12 },
+                  animate: { opacity: 1, y: 0 },
+                  transition: { duration: 0.4 },
+                  className: "mb-5",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "span",
+                    {
+                      className: "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold",
+                      style: {
+                        background: "rgba(0,255,65,0.08)",
+                        border: "1px solid rgba(0,255,65,0.3)",
+                        color: "#00ff41"
+                      },
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(Zap, { className: "h-3 w-3" }),
+                        "Built for serious traders"
+                      ]
+                    }
+                  )
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                motion.h1,
+                {
+                  initial: { opacity: 0, y: 16 },
+                  animate: { opacity: 1, y: 0 },
+                  transition: { duration: 0.5, delay: 0.05 },
+                  className: "font-display text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight max-w-3xl",
+                  children: [
+                    "Your trading edge,",
+                    " ",
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "#00ff41" }, children: "finally visible." })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                motion.p,
+                {
+                  initial: { opacity: 0, y: 12 },
+                  animate: { opacity: 1, y: 0 },
+                  transition: { duration: 0.5, delay: 0.12 },
+                  className: "mt-5 text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed",
+                  children: "TradeLog is a Gen Z-native trading journal. Log trades, track your P&L, analyse your patterns, and level up your strategy — all in one dark, neon-lit dashboard."
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                motion.div,
+                {
+                  initial: { opacity: 0, y: 10 },
+                  animate: { opacity: 1, y: 0 },
+                  transition: { duration: 0.5, delay: 0.2 },
+                  className: "mt-8 flex flex-col sm:flex-row items-center gap-3",
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                      NeonButton,
+                      {
+                        variant: "green",
+                        size: "lg",
+                        onClick: () => login(),
+                        disabled: authLoading,
+                        "data-ocid": "landing-hero-login-btn",
+                        children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "h-4 w-4" }),
+                          authLoading ? "Loading…" : "Get Started Free"
+                        ]
+                      }
+                    ),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      NeonButton,
+                      {
+                        variant: "outline",
+                        size: "lg",
+                        onClick: () => navigate({ to: "/pricing" }),
+                        "data-ocid": "landing-hero-pricing-btn",
+                        children: "View Pricing"
+                      }
+                    )
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                motion.p,
+                {
+                  initial: { opacity: 0 },
+                  animate: { opacity: 1 },
+                  transition: { delay: 0.35 },
+                  className: "mt-4 text-xs text-muted-foreground/60",
+                  children: "Free plan available · No credit card required · Internet Identity login"
+                }
+              )
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "section",
+          {
+            className: "py-16 px-5",
+            style: { background: "rgba(255,255,255,0.02)" },
+            "data-ocid": "landing-features",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-6xl mx-auto", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                motion.div,
+                {
+                  initial: { opacity: 0, y: 12 },
+                  whileInView: { opacity: 1, y: 0 },
+                  viewport: { once: true },
+                  className: "text-center mb-10",
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display text-2xl sm:text-3xl font-bold text-foreground", children: "Everything you need to trade smarter" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm text-muted-foreground max-w-md mx-auto", children: "From journaling to analytics — all your trading insights in one place." })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4", children: FEATURES.map((f2, i) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                motion.div,
+                {
+                  initial: { opacity: 0, y: 20 },
+                  whileInView: { opacity: 1, y: 0 },
+                  viewport: { once: true },
+                  transition: { delay: i * 0.07 },
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsxs(GlassCard, { hover: true, className: "h-full", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "div",
+                      {
+                        className: "w-10 h-10 rounded-xl flex items-center justify-center mb-3",
+                        style: {
+                          background: `${f2.color}14`,
+                          border: `1px solid ${f2.color}35`
+                        },
+                        children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: f2.color }, children: f2.icon })
+                      }
+                    ),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-display font-bold text-sm text-foreground mb-1", children: f2.title }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground leading-relaxed", children: f2.desc })
+                  ] })
+                },
+                f2.title
+              )) })
+            ] })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("section", { className: "py-16 px-5", "data-ocid": "landing-pricing-teaser", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "max-w-3xl mx-auto text-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          motion.div,
+          {
+            initial: { opacity: 0, y: 12 },
+            whileInView: { opacity: 1, y: 0 },
+            viewport: { once: true },
+            children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                className: "relative overflow-hidden rounded-2xl p-8",
+                style: {
+                  background: "linear-gradient(135deg, rgba(0,255,65,0.05) 0%, rgba(0,255,255,0.03) 50%, rgba(185,0,255,0.05) 100%)",
+                  border: "1px solid rgba(0,255,65,0.2)",
+                  boxShadow: "0 0 40px rgba(0,255,65,0.06)"
+                },
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "div",
+                    {
+                      className: "absolute top-0 right-0 w-52 h-52 rounded-full pointer-events-none",
+                      style: {
+                        background: "radial-gradient(circle, rgba(185,0,255,0.1) 0%, transparent 70%)"
+                      },
+                      "aria-hidden": "true"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "font-display text-2xl sm:text-3xl font-extrabold text-foreground relative z-10", children: [
+                    "Start free.",
+                    " ",
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: "#b900ff" }, children: "Unlock everything" }),
+                    " for $9.99/mo."
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm text-muted-foreground relative z-10 max-w-md mx-auto", children: "Free plan includes 3 trade entries per day, basic journal, and win rate dashboard. Upgrade for unlimited entries, full analytics, and priority support." }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 relative z-10", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                      NeonButton,
+                      {
+                        variant: "green",
+                        size: "lg",
+                        onClick: () => login(),
+                        disabled: authLoading,
+                        "data-ocid": "landing-pricing-cta-btn",
+                        children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "h-4 w-4" }),
+                          authLoading ? "Loading…" : "Start for Free"
+                        ]
+                      }
+                    ),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                      NeonButton,
+                      {
+                        variant: "outline",
+                        size: "lg",
+                        onClick: () => navigate({ to: "/pricing" }),
+                        "data-ocid": "landing-pricing-view-btn",
+                        children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(Crown, { className: "h-4 w-4" }),
+                          "See All Plans"
+                        ]
+                      }
+                    )
+                  ] })
+                ]
+              }
+            )
+          }
+        ) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "footer",
+          {
+            className: "border-t border-border bg-muted/20 px-5 py-4 text-center",
+            "data-ocid": "landing-footer",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground", children: [
+              "© ",
+              (/* @__PURE__ */ new Date()).getFullYear(),
+              " TradeLog. Built with love using",
+              " ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "a",
+                {
+                  href: `https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== "undefined" ? window.location.hostname : "")}`,
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                  className: "transition-colors hover:opacity-80",
+                  style: { color: "#00ff41" },
+                  children: "caffeine.ai"
+                }
+              )
+            ] })
+          }
+        )
+      ]
+    }
+  );
+}
+function IndexPage() {
+  const { isAuthenticated, isLoading } = useAuth();
+  if (isLoading) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "flex items-center justify-center py-24",
+        "data-ocid": "index-auth-check",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(LoadingSpinner, { size: "sm", label: "Loading…" })
+      }
+    );
+  }
+  if (!isAuthenticated) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(LandingPage, {});
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(DashboardPage, {});
 }
 function DashboardPage() {
   const navigate = useNavigate();
@@ -77038,7 +77384,8 @@ function DashboardPage() {
           {
             type: "button",
             onClick: () => setUpgradeOpen(true),
-            className: "text-xs text-[#b900ff] hover:text-[#b900ff]/80 transition-colors flex items-center gap-1",
+            className: "text-xs transition-colors flex items-center gap-1 hover:opacity-80",
+            style: { color: "#b900ff" },
             "data-ocid": "metrics-unlock-prompt",
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { className: "h-3 w-3" }),
@@ -77074,7 +77421,8 @@ function DashboardPage() {
                 {
                   type: "button",
                   onClick: () => navigate({ to: "/trades" }),
-                  className: "text-xs text-[#00ffff] hover:text-[#00ffff]/80 transition-colors",
+                  className: "text-xs transition-colors hover:opacity-80",
+                  style: { color: "#00ffff" },
                   "data-ocid": "view-all-trades-link",
                   children: "View all →"
                 }
@@ -77101,7 +77449,8 @@ function DashboardPage() {
                       {
                         type: "button",
                         onClick: () => navigate({ to: "/trades/new" }),
-                        className: "text-[#00ff41] hover:underline",
+                        className: "hover:underline",
+                        style: { color: "#00ff41" },
                         "data-ocid": "recent-trades-empty-cta",
                         children: "Log your first trade"
                       }
@@ -77151,7 +77500,8 @@ function DashboardPage() {
                     /* @__PURE__ */ jsxRuntimeExports.jsxs(
                       "td",
                       {
-                        className: `px-4 py-3 text-right font-mono font-bold ${t2.pnl >= 0 ? "text-[#00ff41]" : "text-red-400"}`,
+                        className: `px-4 py-3 text-right font-mono font-bold ${t2.pnl >= 0 ? "" : "text-red-400"}`,
+                        style: t2.pnl >= 0 ? { color: "#00ff41" } : void 0,
                         children: [
                           t2.pnl >= 0 ? "+" : "-",
                           "$",
@@ -77162,7 +77512,8 @@ function DashboardPage() {
                     /* @__PURE__ */ jsxRuntimeExports.jsxs(
                       "td",
                       {
-                        className: `px-4 py-3 text-right font-mono text-xs font-semibold ${t2.riskReward >= 0 ? "text-[#00ffff]" : "text-red-400"}`,
+                        className: `px-4 py-3 text-right font-mono text-xs font-semibold ${t2.riskReward < 0 ? "text-red-400" : ""}`,
+                        style: t2.riskReward >= 0 ? { color: "#00ffff" } : void 0,
                         children: [
                           t2.riskReward >= 0 ? "+" : "",
                           t2.riskReward.toFixed(1),
@@ -77255,7 +77606,7 @@ function DashboardPage() {
               )
             ] }),
             isFree && /* @__PURE__ */ jsxRuntimeExports.jsx(GlassCard, { className: "p-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground leading-snug", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[#b900ff] font-semibold", children: "Pro tip:" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold", style: { color: "#b900ff" }, children: "Pro tip:" }),
               " ",
               "Upgrade to Pro to see which sessions and pairs you perform best in —",
               " ",
@@ -77264,7 +77615,8 @@ function DashboardPage() {
                 {
                   type: "button",
                   onClick: () => setUpgradeOpen(true),
-                  className: "text-[#b900ff] hover:underline",
+                  className: "hover:underline",
+                  style: { color: "#b900ff" },
                   "data-ocid": "insight-unlock-btn",
                   children: "unlock to see more"
                 }
@@ -77344,34 +77696,6 @@ function DashboardPage() {
       }
     )
   ] });
-}
-function InsightRow({
-  icon,
-  color: color2,
-  label,
-  value
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between gap-2", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { style: { color: color2 }, children: icon }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground", children: label })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-mono font-bold text-foreground", children: value })
-  ] });
-}
-function getBestSession(metrics) {
-  var _a3;
-  if (!((_a3 = metrics == null ? void 0 : metrics.pnlBySession) == null ? void 0 : _a3.length)) return "—";
-  const best = [...metrics.pnlBySession].sort(
-    (a2, b2) => b2.totalPnl - a2.totalPnl
-  )[0];
-  const map2 = {
-    LONDON: "London Open",
-    NY: "NY Open",
-    ASIAN: "Asian Session",
-    OTHER: "Off-hours"
-  };
-  return map2[best.session] ?? best.session;
 }
 const Route$5 = createRoute({
   getParentRoute: () => Route$a,
@@ -81629,10 +81953,6 @@ function App() {
   const { isAuthenticated, isLoading } = useAuth();
   return /* @__PURE__ */ jsxRuntimeExports.jsx(RouterProvider, { router, context: { isAuthenticated, isLoading } });
 }
-const App$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: App
-}, Symbol.toStringTag, { value: "Module" }));
 BigInt.prototype.toJSON = function() {
   return this.toString();
 };

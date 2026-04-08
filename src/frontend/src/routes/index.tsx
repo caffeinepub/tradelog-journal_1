@@ -6,7 +6,6 @@ import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { NeonButton } from "@/components/ui/NeonButton";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { UpgradeModal } from "@/components/ui/UpgradeModal";
-import { requireAuth } from "@/hooks/require-auth";
 import { useAuth } from "@/hooks/use-auth";
 import { useTradeLimits } from "@/hooks/use-trade-limits";
 import { useUserTier } from "@/hooks/use-user-tier";
@@ -16,9 +15,12 @@ import { useQuery } from "@tanstack/react-query";
 import { createRoute, useNavigate } from "@tanstack/react-router";
 import {
   Activity,
+  BarChart2,
   BarChart3,
   Crown,
   FileUp,
+  Lock,
+  LogIn,
   Percent,
   PlusCircle,
   Sparkles,
@@ -33,11 +35,11 @@ import { Route as RootRoute } from "./__root";
 export const Route = createRoute({
   getParentRoute: () => RootRoute,
   path: "/",
-  beforeLoad: requireAuth,
-  component: DashboardPage,
+  // No requireAuth — this route is publicly accessible
+  component: IndexPage,
 });
 
-// ─── Data hooks ────────────────────────────────────────────────────────────
+// ─── Data hooks ─────────────────────────────────────────────────────────────
 
 function useRecentTrades() {
   const { actor, isFetching } = useActor(createActor);
@@ -91,7 +93,7 @@ function useDashboardMetrics() {
   });
 }
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function formatPnl(v: number) {
   const abs = Math.abs(v).toFixed(2);
@@ -109,7 +111,7 @@ function relativeDate(ts: bigint) {
   });
 }
 
-// ─── Sub-components ────────────────────────────────────────────────────────
+// ─── Sub-components (shared) ────────────────────────────────────────────────
 
 function TierBadge({ tier }: { tier: "FREE" | "PAID" }) {
   return tier === "PAID" ? (
@@ -141,13 +143,7 @@ function TierBadge({ tier }: { tier: "FREE" | "PAID" }) {
   );
 }
 
-function DailyChip({
-  count,
-  limit,
-}: {
-  count: number;
-  limit: number;
-}) {
+function DailyChip({ count, limit }: { count: number; limit: number }) {
   const over = count >= limit;
   return (
     <span
@@ -252,7 +248,412 @@ function MetricCard({
   );
 }
 
-// ─── Main Page ─────────────────────────────────────────────────────────────
+function InsightRow({
+  icon,
+  color,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  color: string;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center gap-2">
+        <span style={{ color }}>{icon}</span>
+        <span className="text-xs text-muted-foreground">{label}</span>
+      </div>
+      <span className="text-xs font-mono font-bold text-foreground">
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function getBestSession(metrics: BackendMetrics | null | undefined): string {
+  if (!metrics?.pnlBySession?.length) return "—";
+  const best = [...metrics.pnlBySession].sort(
+    (a, b) => b.totalPnl - a.totalPnl,
+  )[0];
+  const map: Record<string, string> = {
+    LONDON: "London Open",
+    NY: "NY Open",
+    ASIAN: "Asian Session",
+    OTHER: "Off-hours",
+  };
+  return map[best.session] ?? best.session;
+}
+
+// ─── Public Landing Page ─────────────────────────────────────────────────────
+
+const FEATURES = [
+  {
+    icon: <BarChart2 className="h-5 w-5" />,
+    color: "#00ff41",
+    title: "Performance Dashboard",
+    desc: "Win rate, P&L, drawdown, best pairs, and weekly summaries at a glance.",
+  },
+  {
+    icon: <Activity className="h-5 w-5" />,
+    color: "#00ffff",
+    title: "Trade Journal",
+    desc: "Log every trade with strategy tags, session, market condition, and annotated charts.",
+  },
+  {
+    icon: <BarChart3 className="h-5 w-5" />,
+    color: "#b900ff",
+    title: "Advanced Analytics",
+    desc: "Drill into your edge — by pair, session, strategy, and time-of-day patterns.",
+  },
+  {
+    icon: <FileUp className="h-5 w-5" />,
+    color: "#facc15",
+    title: "CSV Import",
+    desc: "Bulk-load your trade history with the column-mapping wizard. Any broker export works.",
+  },
+  {
+    icon: <Lock className="h-5 w-5" />,
+    color: "#00ffff",
+    title: "Privacy-First Auth",
+    desc: "Login with Internet Identity — no passwords, no email, secured by device biometrics.",
+  },
+  {
+    icon: <Sparkles className="h-5 w-5" />,
+    color: "#b900ff",
+    title: "AI Insights (Pro)",
+    desc: "Unlock pattern recognition and AI-powered coaching tailored to your trading style.",
+  },
+];
+
+function LandingPage() {
+  const { login, isLoading: authLoading } = useAuth();
+  const navigate = useNavigate();
+
+  return (
+    <div
+      className="dark min-h-screen bg-background text-foreground flex flex-col"
+      data-ocid="landing-page"
+    >
+      {/* ── Navbar ───────────────────────────────────────────────────── */}
+      <header
+        className="sticky top-0 z-40 border-b border-border/50 backdrop-blur-xl"
+        style={{ background: "rgba(8,8,12,0.85)" }}
+        data-ocid="landing-nav"
+      >
+        <div className="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
+          {/* Logo */}
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-7 h-7 rounded-lg flex items-center justify-center"
+              style={{
+                background: "rgba(0,255,65,0.12)",
+                border: "1px solid rgba(0,255,65,0.4)",
+                boxShadow: "0 0 12px rgba(0,255,65,0.2)",
+              }}
+            >
+              <TrendingUp
+                className="h-3.5 w-3.5"
+                style={{ color: "#00ff41" }}
+              />
+            </div>
+            <span className="font-display font-bold text-base tracking-tight text-foreground">
+              TradeLog
+            </span>
+          </div>
+
+          {/* Nav actions */}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => navigate({ to: "/pricing" })}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
+              data-ocid="landing-nav-pricing"
+            >
+              Pricing
+            </button>
+            <NeonButton
+              variant="green"
+              size="sm"
+              onClick={() => login()}
+              disabled={authLoading}
+              data-ocid="landing-nav-login-btn"
+            >
+              <LogIn className="h-3.5 w-3.5" />
+              {authLoading ? "Loading…" : "Log In"}
+            </NeonButton>
+          </div>
+        </div>
+      </header>
+
+      {/* ── Hero ─────────────────────────────────────────────────────── */}
+      <section
+        className="flex-1 flex flex-col items-center justify-center px-5 py-20 text-center relative overflow-hidden"
+        data-ocid="landing-hero"
+      >
+        {/* Background glow orbs */}
+        <div
+          className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse, rgba(0,255,65,0.06) 0%, transparent 70%)",
+          }}
+          aria-hidden="true"
+        />
+        <div
+          className="absolute bottom-10 right-10 w-72 h-72 rounded-full pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(185,0,255,0.07) 0%, transparent 70%)",
+          }}
+          aria-hidden="true"
+        />
+
+        {/* Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mb-5"
+        >
+          <span
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
+            style={{
+              background: "rgba(0,255,65,0.08)",
+              border: "1px solid rgba(0,255,65,0.3)",
+              color: "#00ff41",
+            }}
+          >
+            <Zap className="h-3 w-3" />
+            Built for serious traders
+          </span>
+        </motion.div>
+
+        {/* Headline */}
+        <motion.h1
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.05 }}
+          className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight max-w-3xl"
+        >
+          Your trading edge,{" "}
+          <span style={{ color: "#00ff41" }}>finally visible.</span>
+        </motion.h1>
+
+        {/* Subheadline */}
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.12 }}
+          className="mt-5 text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed"
+        >
+          TradeLog is a Gen Z-native trading journal. Log trades, track your
+          P&amp;L, analyse your patterns, and level up your strategy — all in
+          one dark, neon-lit dashboard.
+        </motion.p>
+
+        {/* CTA buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mt-8 flex flex-col sm:flex-row items-center gap-3"
+        >
+          <NeonButton
+            variant="green"
+            size="lg"
+            onClick={() => login()}
+            disabled={authLoading}
+            data-ocid="landing-hero-login-btn"
+          >
+            <LogIn className="h-4 w-4" />
+            {authLoading ? "Loading…" : "Get Started Free"}
+          </NeonButton>
+          <NeonButton
+            variant="outline"
+            size="lg"
+            onClick={() => navigate({ to: "/pricing" })}
+            data-ocid="landing-hero-pricing-btn"
+          >
+            View Pricing
+          </NeonButton>
+        </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.35 }}
+          className="mt-4 text-xs text-muted-foreground/60"
+        >
+          Free plan available · No credit card required · Internet Identity
+          login
+        </motion.p>
+      </section>
+
+      {/* ── Features Grid ────────────────────────────────────────────── */}
+      <section
+        className="py-16 px-5"
+        style={{ background: "rgba(255,255,255,0.02)" }}
+        data-ocid="landing-features"
+      >
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-10"
+          >
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-foreground">
+              Everything you need to trade smarter
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">
+              From journaling to analytics — all your trading insights in one
+              place.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {FEATURES.map((f, i) => (
+              <motion.div
+                key={f.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.07 }}
+              >
+                <GlassCard hover className="h-full">
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
+                    style={{
+                      background: `${f.color}14`,
+                      border: `1px solid ${f.color}35`,
+                    }}
+                  >
+                    <span style={{ color: f.color }}>{f.icon}</span>
+                  </div>
+                  <h3 className="font-display font-bold text-sm text-foreground mb-1">
+                    {f.title}
+                  </h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {f.desc}
+                  </p>
+                </GlassCard>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Pricing teaser ───────────────────────────────────────────── */}
+      <section className="py-16 px-5" data-ocid="landing-pricing-teaser">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <div
+              className="relative overflow-hidden rounded-2xl p-8"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(0,255,65,0.05) 0%, rgba(0,255,255,0.03) 50%, rgba(185,0,255,0.05) 100%)",
+                border: "1px solid rgba(0,255,65,0.2)",
+                boxShadow: "0 0 40px rgba(0,255,65,0.06)",
+              }}
+            >
+              <div
+                className="absolute top-0 right-0 w-52 h-52 rounded-full pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(185,0,255,0.1) 0%, transparent 70%)",
+                }}
+                aria-hidden="true"
+              />
+              <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-foreground relative z-10">
+                Start free.{" "}
+                <span style={{ color: "#b900ff" }}>Unlock everything</span> for
+                $9.99/mo.
+              </h2>
+              <p className="mt-3 text-sm text-muted-foreground relative z-10 max-w-md mx-auto">
+                Free plan includes 3 trade entries per day, basic journal, and
+                win rate dashboard. Upgrade for unlimited entries, full
+                analytics, and priority support.
+              </p>
+              <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 relative z-10">
+                <NeonButton
+                  variant="green"
+                  size="lg"
+                  onClick={() => login()}
+                  disabled={authLoading}
+                  data-ocid="landing-pricing-cta-btn"
+                >
+                  <LogIn className="h-4 w-4" />
+                  {authLoading ? "Loading…" : "Start for Free"}
+                </NeonButton>
+                <NeonButton
+                  variant="outline"
+                  size="lg"
+                  onClick={() => navigate({ to: "/pricing" })}
+                  data-ocid="landing-pricing-view-btn"
+                >
+                  <Crown className="h-4 w-4" />
+                  See All Plans
+                </NeonButton>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Footer ───────────────────────────────────────────────────── */}
+      <footer
+        className="border-t border-border bg-muted/20 px-5 py-4 text-center"
+        data-ocid="landing-footer"
+      >
+        <p className="text-xs text-muted-foreground">
+          © {new Date().getFullYear()} TradeLog. Built with love using{" "}
+          <a
+            href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== "undefined" ? window.location.hostname : "")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:opacity-80"
+            style={{ color: "#00ff41" }}
+          >
+            caffeine.ai
+          </a>
+        </p>
+      </footer>
+    </div>
+  );
+}
+
+// ─── Main Page (route-level component) ──────────────────────────────────────
+
+function IndexPage() {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  // Show nothing while auth is still resolving — avoids a flash of the landing page
+  // for users who are already logged in (they'll see the dashboard momentarily).
+  if (isLoading) {
+    return (
+      <div
+        className="flex items-center justify-center py-24"
+        data-ocid="index-auth-check"
+      >
+        <LoadingSpinner size="sm" label="Loading…" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <LandingPage />;
+  }
+
+  return <DashboardPage />;
+}
+
+// ─── Dashboard Page ──────────────────────────────────────────────────────────
 
 function DashboardPage() {
   const navigate = useNavigate();
@@ -265,7 +666,6 @@ function DashboardPage() {
 
   const displayTrades = trades ?? [];
 
-  // Metric values — real if available, zero/empty otherwise
   const winRate = metrics ? `${metrics.winRate.toFixed(1)}%` : "0.0%";
   const totalPnl = metrics ? formatPnl(metrics.totalPnl) : "$0.00";
   const totalTrades = String(limits.totalCount || displayTrades.length);
@@ -306,7 +706,7 @@ function DashboardPage() {
 
   return (
     <div className="space-y-7 fade-in" data-ocid="dashboard-page">
-      {/* ── Header ─────────────────────────────────────────────────── */}
+      {/* ── Header ───────────────────────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -440,7 +840,8 @@ function DashboardPage() {
             <button
               type="button"
               onClick={() => setUpgradeOpen(true)}
-              className="text-xs text-[#b900ff] hover:text-[#b900ff]/80 transition-colors flex items-center gap-1"
+              className="text-xs transition-colors flex items-center gap-1 hover:opacity-80"
+              style={{ color: "#b900ff" }}
               data-ocid="metrics-unlock-prompt"
             >
               <Sparkles className="h-3 w-3" />
@@ -480,7 +881,8 @@ function DashboardPage() {
             <button
               type="button"
               onClick={() => navigate({ to: "/trades" })}
-              className="text-xs text-[#00ffff] hover:text-[#00ffff]/80 transition-colors"
+              className="text-xs transition-colors hover:opacity-80"
+              style={{ color: "#00ffff" }}
               data-ocid="view-all-trades-link"
             >
               View all →
@@ -506,7 +908,8 @@ function DashboardPage() {
                   <button
                     type="button"
                     onClick={() => navigate({ to: "/trades/new" })}
-                    className="text-[#00ff41] hover:underline"
+                    className="hover:underline"
+                    style={{ color: "#00ff41" }}
                     data-ocid="recent-trades-empty-cta"
                   >
                     Log your first trade
@@ -562,12 +965,16 @@ function DashboardPage() {
                         </span>
                       </td>
                       <td
-                        className={`px-4 py-3 text-right font-mono font-bold ${t.pnl >= 0 ? "text-[#00ff41]" : "text-red-400"}`}
+                        className={`px-4 py-3 text-right font-mono font-bold ${t.pnl >= 0 ? "" : "text-red-400"}`}
+                        style={t.pnl >= 0 ? { color: "#00ff41" } : undefined}
                       >
                         {t.pnl >= 0 ? "+" : "-"}${Math.abs(t.pnl).toFixed(2)}
                       </td>
                       <td
-                        className={`px-4 py-3 text-right font-mono text-xs font-semibold ${t.riskReward >= 0 ? "text-[#00ffff]" : "text-red-400"}`}
+                        className={`px-4 py-3 text-right font-mono text-xs font-semibold ${t.riskReward < 0 ? "text-red-400" : ""}`}
+                        style={
+                          t.riskReward >= 0 ? { color: "#00ffff" } : undefined
+                        }
                       >
                         {t.riskReward >= 0 ? "+" : ""}
                         {t.riskReward.toFixed(1)}R
@@ -647,17 +1054,19 @@ function DashboardPage() {
             </GlassCard>
           )}
 
-          {/* Strategy teaser */}
           {isFree && (
             <GlassCard className="p-4">
               <p className="text-xs text-muted-foreground leading-snug">
-                <span className="text-[#b900ff] font-semibold">Pro tip:</span>{" "}
+                <span className="font-semibold" style={{ color: "#b900ff" }}>
+                  Pro tip:
+                </span>{" "}
                 Upgrade to Pro to see which sessions and pairs you perform best
                 in —{" "}
                 <button
                   type="button"
                   onClick={() => setUpgradeOpen(true)}
-                  className="text-[#b900ff] hover:underline"
+                  className="hover:underline"
+                  style={{ color: "#b900ff" }}
                   data-ocid="insight-unlock-btn"
                 >
                   unlock to see more
@@ -685,7 +1094,6 @@ function DashboardPage() {
             }}
             data-ocid="upgrade-cta-banner"
           >
-            {/* Decorative corner glow */}
             <div
               className="absolute top-0 right-0 w-40 h-40 rounded-full pointer-events-none"
               style={{
@@ -739,44 +1147,4 @@ function DashboardPage() {
       />
     </div>
   );
-}
-
-// ─── Insight Row ────────────────────────────────────────────────────────────
-
-function InsightRow({
-  icon,
-  color,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  color: string;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-2">
-      <div className="flex items-center gap-2">
-        <span style={{ color }}>{icon}</span>
-        <span className="text-xs text-muted-foreground">{label}</span>
-      </div>
-      <span className="text-xs font-mono font-bold text-foreground">
-        {value}
-      </span>
-    </div>
-  );
-}
-
-function getBestSession(metrics: BackendMetrics | null | undefined): string {
-  if (!metrics?.pnlBySession?.length) return "—";
-  const best = [...metrics.pnlBySession].sort(
-    (a, b) => b.totalPnl - a.totalPnl,
-  )[0];
-  const map: Record<string, string> = {
-    LONDON: "London Open",
-    NY: "NY Open",
-    ASIAN: "Asian Session",
-    OTHER: "Off-hours",
-  };
-  return map[best.session] ?? best.session;
 }
